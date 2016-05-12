@@ -31,7 +31,7 @@ Write down how you would construct the following lists:
 ((all these problems)) can be constructed by (cons (cons a (cons b (cons c d))) d)
 ```
 
-###1.4 What is (car (conos a l)), where a is french, and l is (fries), and what is (cdr (cons a l)), where a is oranges, and l is (apples and peaches)?###
+###1.4 What is (car (cons a l)), where a is french, and l is (fries), and what is (cdr (cons a l)), where a is oranges, and l is (apples and peaches)?###
 
 ```lisp
 (car (cons a l)) is french which is a, where a is french, and l is (fries).
