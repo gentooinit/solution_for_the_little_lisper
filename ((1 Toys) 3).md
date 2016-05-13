@@ -85,9 +85,15 @@ What is
 3. (and (coffee))
 ```
     
-To get the atom and in (peanut butter and jelly on toast) we can write (car //EDIT: pdf not clear
-t would you write to get.
-            Harry in l, where l is (apples in (Harry has a backyard))
-                        where l is (apples and Harry)
+To get the atom and in (peanut butter and jelly on toast) we can write (car (cdr (cdr (peanut butter and jelly on toast))))
+What would you write to get.  
+            Harry in l, where l is (apples in (Harry has a backyard))  
+                        where l is (apples and Harry)  
                         where l is (((apples) and ((Harry))) in his backyard)
+                        
+```lisp
+1. (car (car (cdr (cdr l))))
+2. (car (cdr (cdr l)))
+3. (car (car (car (cdr (cdr (car l))))))
+```
           
