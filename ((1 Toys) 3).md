@@ -43,3 +43,9 @@ Write down how you would construct the following lists:
 ```lisp
 x is lisp
 ```
+
+###1.6 If a is atom, is there a list l that make (null? (cons a l)) true?###
+
+```lisp
+No, because (cons a l) is a list which contains at least an atom a.
+```
