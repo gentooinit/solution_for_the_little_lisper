@@ -51,7 +51,8 @@ No, because (cons a l) is a list which contains at least an atom a.
 ```
 
 ###1.7###
- Determine the value of  
+ Determine the value of
+ 
                             (cons s l), where s is x, and l is y  
                             (cons s l), where s is (), and l is ()  
                                (car s), where s is ()  
@@ -64,7 +65,8 @@ No, because (cons a l) is a list which contains at least an atom a.
 4. ()
 ```
                                
-True or false,  
+True or false,
+
                             (atom? (car l)), where l is ((meatballs) and spaghetti)  
                             (null? (cdr l)), where l is ((meatballs))  
                 (eq? (car l) (car (cdr l))), where l is (two meatballs)  
