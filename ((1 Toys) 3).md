@@ -75,9 +75,10 @@ True or false,
 3. False. Because (car l) is two, (cdr l) is (meatballs), (car (cdr l)) is meatballs, so two is not equals to meatballs.
 4. False. Because (cons a l) is (meat ball) that is a list.
 ```
-What is  
-    (car (cdr (cdr (car l)))) where l is ((kiwis mangoes lemons) and (more))  
-    (car (cdr (car (cdr l)))) where l is (() (eggs and (bacon)) (for) (breakfast))  
+What is
+
+    (car (cdr (cdr (car l)))) where l is ((kiwis mangoes lemons) and (more))
+    (car (cdr (car (cdr l)))) where l is (() (eggs and (bacon)) (for) (breakfast)) 
     (car (cdr (cdr (cdr l)))) where l is (() () () (and (coffee)) please)
 ```lisp
 1. lemons
@@ -85,10 +86,11 @@ What is
 3. (and (coffee))
 ```
     
-To get the atom and in (peanut butter and jelly on toast) we can write (car (cdr (cdr (peanut butter and jelly on toast))))
-What would you write to get.  
-            Harry in l, where l is (apples in (Harry has a backyard))  
-                        where l is (apples and Harry)  
+To get the atom and in (peanut butter and jelly on toast) we can write (car (cdr (cdr (peanut butter and jelly on toast))))  
+What would you write to get.
+
+            Harry in l, where l is (apples in (Harry has a backyard))
+                        where l is (apples and Harry)
                         where l is (((apples) and ((Harry))) in his backyard)
                         
 ```lisp
