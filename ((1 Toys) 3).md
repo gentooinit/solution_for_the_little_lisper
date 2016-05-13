@@ -49,3 +49,45 @@ x is lisp
 ```lisp
 No, because (cons a l) is a list which contains at least an atom a.
 ```
+
+###1.7###
+ Determine the value of  
+                            (cons s l), where s is x, and l is y  
+                            (cons s l), where s is (), and l is ()  
+                               (car s), where s is ()  
+                               (cdr l), where l is (())
+
+```lisp
+1. No answer, l is an atom
+2. (())
+3. No answer. You can not ask for the car of null list.
+4. ()
+```
+                               
+True or false,  
+                            (atom? (car l)), where l is ((meatballs) and spaghetti)  
+                            (null? (cdr l)), where l is ((meatballs))  
+                (eq? (car l) (car (cdr l))), where l is (two meatballs)  
+                       (atom? (cons a l)), where l is (ball) and a is meat
+```lisp
+1. False. Because (car l) is (meatballs), so (meatballs) is a list.
+2. True. Because (cdr l) is (), (null? ()) is True
+3. False. Because (car l) is two, (cdr l) is (meatballs), (car (cdr l)) is meatballs, so two is not equals to meatballs.
+4. False. Because (cons a l) is (meat ball) that is a list.
+```
+What is  
+    (car (cdr (cdr (car l)))) where l is ((kiwis mangoes lemons) and (more))  
+    (car (cdr (car (cdr l)))) where l is (() (eggs and (bacon)) (for) (breakfast))  
+    (car (cdr (cdr (cdr l)))) where l is (() () () (and (coffee)) please)
+```lisp
+1. lemons
+2. and
+3. (and (coffee))
+```
+    
+To get the atom and in (peanut butter and jelly on toast) we can write (car //EDIT: pdf not clear
+t would you write to get.
+            Harry in l, where l is (apples in (Harry has a backyard))
+                        where l is (apples and Harry)
+                        where l is (((apples) and ((Harry))) in his backyard)
+          
