@@ -73,7 +73,7 @@ True or false,
                        (atom? (cons a l)), where l is (ball) and a is meat
 ```lisp
 1. False. Because (car l) is (meatballs), so (meatballs) is a list.
-2. True. Because (cdr l) is (), (null? ()) is True
+2. True. Because (cdr l) is (), (null? ()) is True.
 3. False. Because (car l) is two, (cdr l) is (meatballs), (car (cdr l)) is meatballs, so two is not equals to meatballs.
 4. False. Because (cons a l) is (meat ball) that is a list.
 ```
