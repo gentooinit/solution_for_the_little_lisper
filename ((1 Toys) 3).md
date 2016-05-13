@@ -37,3 +37,9 @@ Write down how you would construct the following lists:
 (car (cons a l)) is french which is a, where a is french, and l is (fries).
 (cdr (cons a l)) is (apples and peaches) which is l, where a is oranges, and l is (apples and peaches).
 ```
+
+###1.5 Find an atom x that makes (eq? x y) true, where y is lisp. Are there any?###
+
+```lisp
+x is lisp
+```
