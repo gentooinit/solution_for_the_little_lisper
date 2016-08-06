@@ -244,7 +244,7 @@ Q6: What is the meaning of the question t
 A6: t asks if t is true.
 
 Q7: Is t true?
-A7: Yes, because the question t if always true!
+A7: Yes, because the question t is always true!
 
 Q8: t
 Q8: t
