@@ -21,9 +21,9 @@ This is the function lat? again:
 (define lat?
   (lambda (l)
     (cond
-      ((null? l) #t)
+      ((null? l) t)
       ((atom? (car l)) (lat? (cdr l)))
-      (else #f))))
+      (t nil))))
 
 What is the value of (lat? l1)
 where l1 is now (german chocolate cake)
@@ -36,11 +36,11 @@ Note:
   (define ...) gives it a name.
   
 Q2: What is the meaning of the line
-     ((null? l1) #t)
+     ((null? l1) t)
     where
       l1 is (german chocolate cake)
 A2: (null? l1) asks if the argument l1 is the null list. If it is, the value is 
-#t. If l is not null, move to the next question. In this case, it is not null, 
+t. If l is not null, move to the next question. In this case, it is not null, 
 so we ask the next question.
 
 Q3: What is the next question?
@@ -61,11 +61,11 @@ A5: (lat? (cdr l1)) checks to see if the rest of the list l1 is composed only of
 atoms, by referring to lat? with l1 replaced by (cdr l1).
 
 Q6: What is the meaning of the line
-     ((null? l1) #t)
+     ((null? l1) t)
     where
      l1 is now (chocolate cake)
 A6: (null? l1) asks if the argument l1 is the null list. If it is null, the 
-value is #t. If it is not null, we ask the next question. In this case, l1 is 
+value is t. If it is not null, we ask the next question. In this case, l1 is 
 not null, so move to the next questioin.
 
 Q7: What is the next question?
@@ -86,11 +86,11 @@ A9: (lat? (cdr l1)) finds out if the rest of the list l1 is composed only of
 atoms, by referring to the function with a new argument.
 
 Q10: What is the meaning of the line
-      ((null? l1) #t)
+      ((null? l1) t)
      where
       l1 is now (cake)
 A10: (null? l1) asks if the argument l1 is the null list. If it is null, the 
-value is #t. If it is not null, we ask the next question. In this case, l1 is 
+value is t. If it is not null, we ask the next question. In this case, l1 is 
 not null, so move to the next question.
 
 Q11: What is the next question?
@@ -114,14 +114,14 @@ Q14: Now, what is the argument for lat?
 A14: ().
 
 Q15: What is the meaning of the line
-      ((null? l1) #t)
+      ((null? l1) t)
      where
       l1 is now ()
 A15: (null? l1) asks if the argument l1 is the null list. If it is null, the 
-value is #t. If it is not null, we ask the next question. In this case, () is 
+value is t. If it is not null, we ask the next question. In this case, () is 
 null list. So the value of the application (lat? l1)
 where
- l1 is the (german chocolate cake), is #t-true.
+ l1 is the (german chocolate cake), is t-true.
 
 
 What is the value of (lat? l2)
@@ -131,11 +131,11 @@ Q1: What is the first question?
 A1: (null? l2).
 
 Q2: What is the meaning of the line
-     ((null? l2) #t)
+     ((null? l2) t)
     where
      l2 is (poppy seed cake)
-A2: ((null? l2) #t) asks if the argument l2 is the null list. If it is, the 
-value is #t. If it is not null, we ask the next question. In this case, it is 
+A2: ((null? l2) t) asks if the argument l2 is the null list. If it is, the 
+value is t. If it is not null, we ask the next question. In this case, it is 
 not null. So we ask the next question.
 
 Q3: What is the next question?
@@ -156,10 +156,10 @@ A5: (lat? (cdr l2)) checks to see if the rest of the list l2 is composed only
 of atoms, by referring to lat? with l2 replaced by (cdr l2).
 
 Q6: What is the meaning of the line
-     ((null? l2) #t)
+     ((null? l2) t)
     where
      l2 is now (seed cake)
-A6: ((null? l2) #t) asks if the argument l2 is the null list. If it is, the value is #t.
+A6: ((null? l2) t) asks if the argument l2 is the null list. If it is, the value is t.
 If it is not, we ask the next question. In this case, it is not null. So we 
 ask the next question.
 
@@ -178,10 +178,10 @@ A8: (lat? (cdr l2)) checks to see if the rest of the list l2 is composed only
 of atoms, by referring to lat? with l2 replaced by (cdr l2).
 
 Q9: What is the meaning of the line
-     ((null? l2) #t)
+     ((null? l2) t)
     where
      l2 is now (cake)
-A9: (null? l2) asks if the argument l2 is the null list. If it is, the value is #t. If 
+A9: (null? l2) asks if the argument l2 is the null list. If it is, the value is t. If 
 it is not, we ask the next question. In this case, it is not null. So we ask
 the next question.
 
@@ -203,13 +203,13 @@ Q12: Now, what is the argument for lat?
 A12: ().
 
 Q13: What s the meaning of the line
-      ((null? l2) #t)
+      ((null? l2) t)
      where
       l2 is now ()
 A13: (null? l2) asks if the argument l2 is the null list. If it is, the value 
-is #t. If it is not, we ask the next question. In this case, () is null list. 
+is t. If it is not, we ask the next question. In this case, () is null list. 
 So the value of the application of (lat? l2) where l2 is (poppy seed cake), is 
-#t-true.
+t-true.
 
 
 What is the value of (lat? l3)
@@ -219,11 +219,11 @@ Q1: What is the first question asked by (lat? l3)
 A1: (null? l3).
 
 Q2: What is the meaning of the line
-     ((null? l3) #t)
+     ((null? l3) t)
     where
      l3 is ((linzer) (torte) ())
 A2: (null? l3) asks if the argument l3 is the null list. If it is, the value is 
-#t. If it is not, we ask the next question. In this case, it is not null. So we
+t. If it is not, we ask the next question. In this case, it is not null. So we
 ask the next question.
 
 Q3: What is the next question?
@@ -238,18 +238,18 @@ A4: (atom? (car l3)) asks if (car l3) is an atom. If it is, the value is
 is not an atom. So we ask the next question.
 
 Q5: What is the next question?
-A5: else.
+A5: t.
 
-Q6: What is the meaning of the question else
-A6: else asks if else is true.
+Q6: What is the meaning of the question t
+A6: t asks if t is true.
 
-Q7: Is else true?
-A7: Yes, because the question else if always true!
+Q7: Is t true?
+A7: Yes, because the question t if always true!
 
-Q8: else
-Q8: Of course.
+Q8: t
+Q8: t
 
-Q9: Why is else the last question?
+Q9: Why is t the last question?
 A9: Because we do not need to ask any more questions.
 
 Q10: Why do we not need to ask any more questions
@@ -257,9 +257,9 @@ A10: Because a list can be empty, can have an atom in the first position. or can
 have a list in the first position.
 
 Q11: What is the meaning of the line
-      (else #f)
-A11: else asks if else is true. If else is true -as it always is- then the
-answer is #f -false.
+      (t nil)
+A11: t asks if t is true. If t is true -as it always is- then the
+answer is nil -false.
 
 Q12: What is
       )))
