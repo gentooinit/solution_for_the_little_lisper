@@ -473,3 +473,38 @@ Q11: What is the value of (member? a lat)
 A11: t - namely true.
    
 ```
+###2.4 Most Lisp dialects have an (if     ) form. In general an (if     ) form looks like this###
+              (if aexp bexp cexp)
+        when aexp is true, (if aexp bexp cexp) is bexp; when it is false, (if aexp bexp cexp) is cexp
+        example,
+          (cond
+            ((null? l) nil)
+            (t (or
+                 (eq? (car l) a)
+                 (member? a (cdr l)))))
+        in member? can be replaced by:
+          (if (null? l)
+              nil
+              (or
+                (eq? (car l) a)
+                (member? a (cdr l))))
+        Rewrite all the functions in the chapter using (if     ) instead of (cond     )
+```lisp
+Function lat?:
+(define lat?
+  (lambda (l)
+    (if (null? l)
+        t
+        (if (atom? (car l))
+            (lat? (cdr l))
+            nil))))
+        
+Function member?:
+(define member?
+  (lambda (a lat)
+    (if (null? lat)
+        nil
+        (or
+          (eq? (car lat) a)
+          (member? a (cdr lat))))))
+```
