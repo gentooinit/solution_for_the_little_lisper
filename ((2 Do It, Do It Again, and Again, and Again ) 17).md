@@ -508,3 +508,16 @@ Function member?:
           (eq? (car lat) a)
           (member? a (cdr lat))))))
 ```
+###2.5 Write the function nonlat? which determines whether a list is the empty list or does not contain atomic S-expressions###
+    Example: (nonlat? l1) is false,
+             (nonlat? l2) is false,
+             (nonlat? l3) is false,
+             (nonlat? l4) is true
+```lisp
+(define nonlat?
+  (lambda (l)
+    (cond
+      ((null? l) t)
+      ((atom? (car l)) nil)
+      (t (nonlat? (cdr l))))))
+```
