@@ -277,7 +277,7 @@ The value of (member? a1 l1) is false, where a1 is coffee, l1 is (german chocola
       ((null? lat) nil)
       (t (or
            (eq? (car lat) a)
-	   (member? a (cdr lat)))))))
+           (member? a (cdr lat)))))))
 
 Q1: What is the first question asked by
      (member? a lat)
