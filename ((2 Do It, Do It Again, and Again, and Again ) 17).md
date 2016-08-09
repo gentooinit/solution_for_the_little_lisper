@@ -267,3 +267,209 @@ A12: There are the closing or matching parentheses of (cond ..., (lambda ...,
 and (define ..., which appear at the beginning of a function definition.
 
 ```
+###2.3 What is the value of (member? a1 l1), and (member? a2 l2)? Step through the application for each case.###
+```lisp
+
+The value of (member? a1 l1) is false, where a1 is coffee, l1 is (german chocolate cake).
+(define member?
+  (lambda (a lat)
+    (cond
+      ((null? lat) nil)
+      (t (or
+           (eq? (car lat) a)
+	   (member? a (cdr lat)))))))
+
+Q1: What is the first question asked by
+     (member? a lat)
+A1: (null? lat)
+
+Q2: What is the meaning of the line
+     ((null? lat) nil)
+    where
+     lat is (german chocolate cake)
+A2: (null? lat) asks if lat is the null list. If it is, then the value is nil,
+since the atom coffee was not found in lat. If not, then we ask the next question.
+In this case, it is not null, so we ask the next question.
+
+Q3: What is the next question?
+A3: t
+
+Q4: Why is t the next question?
+A4: Because we do not need to ask any more questions.
+
+Q5: Is t really a question?
+A5: Yes, t is a question whose value is always true.
+
+Q6: What is the meaning of the line
+     (t (or
+          (eq? (car lat) a)
+	  (member? a (cdr lat))))
+A6: Now that we know that lat is not null?, we have to find out whether the car
+of lat is the same atom as a, or whethera is somewhere in the rest of the lat.
+The question
+    (or
+      (eq? (car lat) a)
+      (member? a (cdr lat)))
+    does this.
+
+Q7: What is the second question for (or  )
+A7: (member? a (cdr lat)). This refers to the function with the argument lat
+replaced by (cdr lat).
+
+Q8: Now what are the arguments for member?
+A8: a is coffee, and lat is now (cdr lat), specifically (chocolate cake)
+
+Q9: What is the next question?
+A9: (null? lat)
+
+Q10: Is (null? lat) true or false, where
+     lat is (chocolate cake)
+A10: nil, namely false.
+
+Q11: What do we do now?
+A11: Ask the next question.
+
+Q12: What is the next question?
+A12: t.
+
+Q13: What is t?
+A13: t, namely true.
+
+Q14: What is the meaning of
+      (or
+        (eq? (car lat) a)
+	(member? a (cdr lat)))
+A14: (or (eq? (car lat) a) (member? a (cdr lat))) finds out if a is eq? to the
+car of lat or if a is a member of the cdr of lat by referring to the funciton.
+
+Q15: Is a eq? to the car of lat?
+A15: No, because a is coffee and the car of lat is chocolate.
+
+Q16: Now, what are the arguments of member?
+A16: a is coffee, and lat is (cake).
+
+Q17: What is the next question?
+A17: (null? lat)
+
+Q18: What do we do now?
+A18: Ask the next question, since (null? lat) is false.
+
+Q19: What is the next question?
+A19: t
+
+Q20: What is the value of
+      (or
+        (eq? (car lat) a)
+	(member? a (cdr lat)))
+A20: The value of (member? a (cdr lat))
+
+Q21: Why?
+A21: Because (eq? (car lat) a) is false.
+
+Q22: What do we do now?
+A22: Recur - refer to the function with new arguments.
+
+Q23: What are the new arguments?
+A23: a is coffee, and lat is ()
+
+Q24: What is the next question?
+A24: (null? lat)
+
+Q25: Is (null? lat) true or false
+     where
+       lat is ()
+A25: true. So the value of ((null? lat) nil) is nil - namely false.
+
+Q26: What is the value of (member? a lat)
+     where a is coffee, and lat is ()
+A26: false
+
+Q27: What is the value of
+     (or
+       (eq? (car lat) a)
+       (member? a (cdr lat)))
+     where a is coffee, and lat is (cake)
+A27: false
+
+Q28: What is the value of (member? a lat)
+     where a is coffee, and lat is (cake)
+A28: false
+
+Q29: What is the value of
+     (or
+       (eq? (car lat) a)
+       (member? a (cdr lat)))
+     where a is coffee, and lat is (chocolate cake)
+A29: false
+
+Q30: What is the value of (member? a lat)
+     where a is coffee, and lat is (chocolate cake)
+A30: false
+
+Q31: What is the value of
+     (or
+       (eq? (car lat) a)
+       (member? a (cdr lat)))
+     where a is coffee, and lat is (german chocolate cake)
+A31: false
+
+Q32: What is the value of (member? a lat)
+     where a is coffee, and lat is (german chocolate cake)
+A32: false
+
+
+
+The value of (member? a2 l2) is true, where a2 is seed, l2 is (poppy seed cake).
+
+Q1: What is the first question?
+A1: (null? lat)
+
+Q2: What is the meaning of the line
+    ((null? lat) nil)
+A2: (null? lat) asks if lat is null list. If it is, the value is nil. If it is
+not, we ask the next question. In this case, it is not null, so we ask the next
+question.
+
+Q3: What is the next question?
+A3: t
+
+Q4: t
+A4: t
+
+Q5: What is the value of the line
+    (or
+      (eq? (car lat) a)
+      (member? a (cdr lat)))
+A5: The value is (member? a (cdr lat)). Because (car lat) is poppy, and a is 
+seed. So we ask the second question for (or  ) with new arguments.
+
+Q6: What is the value of (null? lat)
+    where lat is (seed cake)
+A6: false. So we ask the next question.
+
+Q7: t
+A7: t
+
+Q8: What is the value of the line
+    (or
+      (eq? (car lat) a)
+      (member? a (cdr lat)))
+    where a is seed, lat is (seed cake)
+A8: The value is t. Because (car lat) eq? to seed.
+
+Q9: What is the value of (member? a lat)
+    where a is seed, lat is (seed cake)
+A9: t
+
+Q10: What is the value of the line
+     (or
+       (eq? (car lat) a)
+       (member? a (cdr lat)))
+     where a is seed, lat is (poppy seed cake)
+A10: t
+
+Q11: What is the value of (member? a lat)
+     where a is seed, lat is (poppy seed cake)
+A11: t - namely true.
+   
+```
