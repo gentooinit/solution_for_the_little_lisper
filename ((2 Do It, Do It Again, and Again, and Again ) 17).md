@@ -521,3 +521,17 @@ Function member?:
       ((atom? (car l)) nil)
       (t (nonlat? (cdr l))))))
 ```
+
+###2.6 Write a function member-cake? which determines whether a lat contains the  atom cake###
+    Example: (member-cake? l1) is true,
+             (member-cake? l2) is true,
+	     (member-cake? l5) is false.
+```lisp
+(define member-cake?
+  (lambda (l)
+    (cond
+      ((null? l) nil)
+      (t (or
+           (eq? cake (car l))
+	   (member-cake? (cdr l)))))))
+```
