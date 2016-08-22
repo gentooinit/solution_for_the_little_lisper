@@ -305,7 +305,7 @@ Q6: What is the meaning of the line
           (eq? (car lat) a)
 	  (member? a (cdr lat))))
 A6: Now that we know that lat is not null?, we have to find out whether the car
-of lat is the same atom as a, or whethera is somewhere in the rest of the lat.
+of lat is the same atom as a, or whether a is somewhere in the rest of the lat.
 The question
     (or
       (eq? (car lat) a)
@@ -534,4 +534,294 @@ Function member?:
       (t (or
            (eq? cake (car l))
 	   (member-cake? (cdr l)))))))
+```
+
+###2.7 Consider the following new definition of member?###
+```lisp
+(define member2?
+  (lambda (a lat))
+    (cond
+      ((null? lat) nil)
+      (t (or
+           (member2? a (cdr lat))
+	   (eq? a (car lat))))))
+Do (member2? a l) and (member? a l) give the same answer when we use the same arguments?
+Consider the examples a1 and l1, a1 and l2, and a2 and l2
+```
+```lisp
+(member2? a1 l1) is false
+(member2? a1 l2) is false
+(member2? a2 l2) is true
+
+(member? a1 l1) is false
+(member? a1 l2) is false
+(member? a2 l2) is true
+
+Yes, (member2 a l) and (member? a l) give the same answer when  we use the same arguments.
+```
+
+##2.8 Step through the applications (member? a3 l2) and (member2? a3 l2). Compare the steps of the two applications###
+
+```lisp
+(define member?
+  (lambda (a lat)
+    (cond
+      ((null? lat) nil)
+      (t (or
+           (eq? (car lat) a)
+	   (member? a (cdr lat)))))))
+What is the value of (member? a3 l2)
+where
+  a3 is poppy, and
+  l2 is (poppy seed cake)
+
+Q1: What is the first question asked by
+     (member? a3 l2)
+A1: (null? l2)
+
+Q2: What is the meaning of the line
+     ((null? l2) nil)
+    where
+     l2 is (poppy seed cake)
+A2: (null? l2) asks if l2 is the null list. If it is, then the value is nil,
+since the atom poppy was not found in l2. If not, then we ask the next question.
+In this case, it is not null, so we ask the next question.
+
+Q3: What is the next question?
+A3: t
+
+Q4: What is the meaing of the line
+    (t (or
+         (eq? (car l2)  a3)
+	 (member? a3 (cdr l2))))
+A4: Now that we know that l2 is not null?, we have to find out whether the car
+of l2 is the same atom as a3, or whether a3 is somewhere in the rest of the l2.
+The question
+    (or
+      (eq? (car l2) a3)
+      (member? a3 (cdr l2)))
+does this.
+
+Q5: Is
+      (or
+        (eq? (car l2) a3)
+	(member? a3 (cdr l2)))
+true or false, where
+   a3 is poppy, and
+   l2 is (poppy seed cake)
+A5: We will find out by looking at each question in turn.
+
+Q6: Is (eq? (car l2) a3) true or false
+where a3 is poppy
+and
+  l2 is (poppy seed cake)
+A6: True,
+      because poppy is eq? to poppy, the car of
+      (poppy seed cake). Therefore, (or  ..) answers with t.
+
+Q7: What is the value of the applicaton
+     (member? a3 (cdr l2))
+    where
+      a3 is poppy, and
+      l2 is (poppy seed cake)
+A7: t,
+      because we have found that poppy is a member of (poppy seed cake).
+
+(define member2?
+  (lambda (a lat)
+    (cond
+      ((null? lat) nil)
+      (t (or
+           (member2? a (cdr lat))
+	   (eq? a (car lat)))))))
+What is the value of (member2? a3 l2)
+where
+  a3 is poppy, and
+  l2 is (poppy seed cake)
+
+Q1: What is first question asked by
+     (member2? a3 l2)
+A1: (null? l2)
+
+Q2: What is the meaning of the line
+     ((null? l2) nil)
+    where
+     l2 is (poppy seed cake)
+A2: (null? l2) asks if l2 is the null list. If it is, then the value is nil,
+since the atom poppy was not found in l2. If not, then we ask the next question.
+In this case, it is not null, so we ask the next question.
+
+Q3: What is the next question?
+A3: t
+
+Q4: What is the meaing of the line
+    (t (or
+	 (member2? a3 (cdr l2))))
+         (eq? a3 (car l2))
+A4: Now that we know that l2 is not null?, we have to find out whether a3 is
+somewhere in the rest of the l2, or whether the car of l2 is the same atom as a3.
+The question
+    (or
+      (member2? a3 (cdr l2)))
+      (eq? a3 (car l2))
+does this.
+
+Q5: Is
+      (or
+	(member2? a3 (cdr l2)))
+        (eq? a3 (car l2))
+true or false, where
+   a3 is poppy, and
+   l2 is (poppy seed cake)
+A5: We will find out by looking at each question in turn.
+
+Q6: Is (member2? a3 (cdr l2)) true or false,
+where
+  a3 is poppy, and
+  l2 is (poppy seed cake)
+A6: We will find out by referring to the function with the argument l2 replaced
+by (cdr l2).
+
+Q7: Now what are the arguments for member2?
+A7: a3 is poppy, and l2 is now (cdr l2), specifically (seed cake).
+
+Q8: What is the next question?
+A8: (null? l2)
+
+Q9: Is (null? l2) true or false, where
+    l2 is (seed cake)
+A9: nil, namely false.
+
+Q10: What do we do now?
+A10: Ask the next question.
+
+Q11: What is the next question?
+A11: t
+
+Q12: What is t?
+A12: t, namely true
+
+Q13: What is the meaning of
+      (or
+        (member2? a3 (cdr l2))
+	(eq? a3 (car l2)))
+A13: (or (member2? a3 (cdr l2)) (eq? a3 (car l2))) finds out if a3 is a member
+of the cdr of l2 by referring to the function
+
+Q14: What next?
+A14: Recur with a3 and (cdr l2), where a3 is poppy and (cdr l2) is (cake)
+
+Q15: (null? l2)
+A15: NO. Move to the next line.
+
+Q16: t
+A16: Yes. Recur with a3 and (cdr l2), where a3 is poppy, and (cdr l2) is ()
+
+Q17: (null? l2)
+A17: Yes, therefore (member2? a3 (cdr l2)) where a3 is poppy, 
+and (cdr l2) is () answers nil, namely false.
+
+Q18: What next?
+A18: (member2? a3 (cdr l2)) where a3 is poppy, and (cdr l2) is () answers false,
+so we ask the next question, (eq? a3 (car l2)).
+
+Q19: What is the value of the line
+      (eq? a3 (car l2))
+     where
+      a3 is poppy, and
+      l2 is cake
+A19: nil
+
+Q20: What next?
+A20: (member2? a3 (cdr l2)) where a3 is poppy, and (cdr l2) is (cake) answers false,
+so we ask the next question, (eq? a3 (car l2)).
+
+Q21: What is the value of the line
+      (eq? a3 (car l2))
+     where
+      a3 is poppy, and
+      l2 is (seed cake)
+A21: nil
+
+Q22: What next?
+A22: (member2? a3 (cdr l2)) where a3 is poppy, and (cdr l2) is (seed cake) answers false,
+so we ask the next question, (eq? a3 (car l2)).
+
+Q23: What is the value of the line
+      (eq? a3 (car l2))
+     where
+      a3 is poppy, and
+      l2 is (poppy seed cake)
+A23: t
+
+Q24: What next?
+Q24: Now, we return to the original question, (member2? a3 l2) answers true.
+
+```
+
+###2.9 What happens when you step throught (member? a2 l3)? Fix this problem by having member? ignore list###
+
+```lisp
+(define member?
+  (lambda (a lat)
+    (cond
+      ((null? lat) nil)
+      (t (or
+           (eq? (car lat) a)
+	   (member? a (cdr lat)))))))
+
+What is the value of the line
+ (member? a2 l3)
+where
+ a2 is seed, and
+ l3 is ((linzer) (torte) ())
+
+Q1: What is the first question asked by
+     (member? a2 l3)
+A1: (null? l3)
+
+Q2: What is the meaning of the line
+     ((null? l3) nil)
+    where l3 is ((linzer) (torte) ())
+A2: (null? l3) asks if l3 is the null list. If it is, then the value is nil, 
+since the atom seed was not found in l3. If it is not, we ask the next question.
+In this case, l3 is not null list, so we ask the next question.
+
+Q3: What is the next question?
+A3: t
+
+Q4: t
+A4: t
+
+Q5: What is the meaning of the line
+     (or
+       (eq? (car l3) a2)
+       (member? a2 (cdr l3)))
+    where a2 is seed, and l3 is ((linzer) (torte) ())
+A5: It finds out whether a2 is eq? to (car l3), or whether a2 is somewhere in the
+rest of l3.
+
+Q6: (eq? (car l3) a2), where (car l3) is (linzer), and a2 is seed.
+A6: Oops, (linzer) is list, and a2 is atom. Refer to The Law of Eq?, each argument
+must be an atom, so it is no answer.
+
+Fix:
+(define member?
+  (lambda (a lat)
+    (cond
+      ((null? lat) nil)
+      (atom? (car lat) (eq? (car lat) a))
+      (t (member? a (cdr lat))))))
+                         
+```
+
+###2.10 The function member? tells whether some atom appears at least once in a lat. Write a function member-twice? which tells whether some atom appears at least twice in a list###
+
+```lisp
+(define member-twice?
+  (lambda (a lat)
+    (cond
+      ((null? lat) nil)
+      ((member? a lat) (member? a (cdr lat)))
+      (t nil))))
 ```
