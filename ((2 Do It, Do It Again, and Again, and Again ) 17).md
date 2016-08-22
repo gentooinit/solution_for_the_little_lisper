@@ -822,6 +822,6 @@ Fix:
   (lambda (a lat)
     (cond
       ((null? lat) nil)
-      ((member? a lat) (member? a (cdr lat)))
-      (t nil))))
+      ((member? a (cons (car lat) ())) (member? a (cdr lat)))
+      (t (member-twice? a (cdr lat))))))
 ```
