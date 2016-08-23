@@ -826,4 +826,12 @@ Fix:
       ((null? lat) nil)
       ((member? a (cons (car lat) ())) (member? a (cdr lat)))
       (t (member-twice? a (cdr lat))))))
+
+More concise solution:
+(define member-twice?
+  (lambda (a lat)
+    (cond
+      ((null? lat) nil)
+      ((eq? (car lat) a) (member? a (cdr lat)))
+      (t (member-twice? a (cdr lat))))))
 ```
