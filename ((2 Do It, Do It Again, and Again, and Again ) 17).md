@@ -810,7 +810,9 @@ Fix:
   (lambda (a lat)
     (cond
       ((null? lat) nil)
-      (atom? (car lat) (eq? (car lat) a))
+      ((atom? (car lat)) (or
+                           (eq? (car lat) a)
+                           (member? a (cdr lat))))
       (t (member? a (cdr lat))))))
                          
 ```
