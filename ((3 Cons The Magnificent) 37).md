@@ -18,7 +18,7 @@ For these exercises,
 ```lisp
 Example: (seconds l1) is (spanish red beans)
          (seconds l2) is ()
-	 (seconds l7) is (hot dogs)
+         (seconds l7) is (hot dogs)
 ```
 ```lisp
 (define seconds
@@ -27,5 +27,5 @@ Example: (seconds l1) is (spanish red beans)
       ((null? l) (quote ()))
       (t (cons
            (car (cdr (car l)))
-	   (seconds (cdr l)))))))
+           (seconds (cdr l)))))))
 ```
