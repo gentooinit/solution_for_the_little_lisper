@@ -29,3 +29,32 @@ Example: (seconds l1) is (spanish red beans)
            (car (cdr (car l)))
            (seconds (cdr l)))))))
 ```
+
+###3.2 Write the function dupla of a and l which makes a new lat containing as many a's as there are elements in l###
+```lisp
+Example: (dupla a2 l4) is (hot hot hot)
+         (dupla a2 l2) is ()
+         (dupla a1 l5) is (chili chili chili chili chili)
+```
+```lisp
+(define dupla
+  (lambda (a l)
+    (cond
+      ((null? l) (quote ()))
+      (t (cons a (dupla a (cdr l)))))))
+```
+
+###3.3 Write the function double of a and l which is a converse to rember The function doubles the first a in l instead of removing it###
+```lisp
+Example: (double a2 l2) is ()
+         (double a1 l3) is (cincinnati chili chili)
+         (double a2 l4) is (texas hot hot chili)
+```
+```lisp
+(define double
+  (lambda (a l)
+    (cond
+      ((null? l) (quote ()))
+      ((eq? a (car l)) (cons a l))
+      (t (cons (car l) (double a (cdr l)))))))
+```
