@@ -73,3 +73,21 @@ Example: (subst-sauce a1 l4) is (texas hot chili)
       ((eq? (quote sauce) (car l)) (cons a (cdr l)))
       (t (cons (car l) (subst-sauce a (cdr l)))))))
 ```
+###3.5 Write the function subst3 of new, o1, o2, o3 and lat which -like subst2- replaces the first occurrence of either o1, o2, or o3 in lat by new###
+```lisp
+Example: (subst3 a5 a1 a2 a4 l5) is (soy soy and tomato sauce)
+         (subst3 a4 a1 a2 a3 l4) is (texas sauce chili)
+         (subst3 a3 a1 a2 a5 l2) is ()
+```
+```lisp
+(define subst3
+  (lambda (new o1 o2 o3 lat)
+    (cond
+      ((null? lat) (quote ()))
+      ((or
+        (eq? (car lat) o1)
+        (eq? (car lat) o2)
+        (eq? (car lat) o3))
+       (cons new (cdr lat)))
+      (t (cons (car lat) (subst3 new o1 o2 o3 (cdr lat)))))))
+```
