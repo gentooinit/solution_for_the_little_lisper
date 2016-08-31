@@ -58,3 +58,18 @@ Example: (double a2 l2) is ()
       ((eq? a (car l)) (cons a l))
       (t (cons (car l) (double a (cdr l)))))))
 ```
+
+###3.4 Write the function subst sauce of a and l which substitutes a for the first atom sauce in l###
+```lisp
+Example: (subst-sauce a1 l4) is (texas hot chili)
+         (subst-sauce a1 l5) is (soy chili and tomato sauce)
+         (subst-sauce a4 l2) is ()
+```
+```lisp
+(define subst-sauce
+  (lambda (a l)
+    (cond
+      ((null? l) (quote ()))
+      ((eq? (quote sauce) (car l)) (cons a (cdr l)))
+      (t (cons (car l) (subst-sauce a (cdr l)))))))
+```
