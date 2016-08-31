@@ -91,3 +91,18 @@ Example: (subst3 a5 a1 a2 a4 l5) is (soy soy and tomato sauce)
        (cons new (cdr lat)))
       (t (cons (car lat) (subst3 new o1 o2 o3 (cdr lat)))))))
 ```
+
+###3.6 Write the function substN of new, slat and lat which replaces the first atom in lat that also occurs in slat by the atom new###
+```lisp
+Example: (substN a2 l3 l4) is (texas hot hot)
+         (substN a4 l3 l5) is (soy sauce and tomato sauce)
+         (substN a4 l3 l2) is ()
+```
+```lisp
+(define substN
+  (lambda (new slat lat)
+    (cond
+      ((null? lat) (quote ()))
+      ((member? (car lat) slat) (cons new (cdr lat)))
+      (t (cons (car lat) (substN new slat (cdr lat)))))))
+```
