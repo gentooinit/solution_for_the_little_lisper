@@ -612,3 +612,30 @@ A42: (soy sauce and tomato sauce).
 And the l5 is the original l5, done.
 ```
 
+###3.8 Determine the typical elements and the natural recursions of the functions that you have written so far###
+```lisp
+for (seconds ...):
+typical element is (cdr (car l)),
+natural recursion is (seconds (cdr l))
+
+for (dupla ...):
+typical element is a,
+natural recursion is (dupla a (cdr l))
+
+for (double ...):
+typical element is (car l),
+natural recursion is (double a (cdr l))
+
+for (subst-sauce ...):
+typical element is (car l),
+natural recursion is (subst-sauce a (cdr l))
+
+for (subst3 ...):
+typical element is (car lat),
+natural recursion is (subst3 new o1 o2 o3 (cdr lat))
+
+for (substN ...):
+typical element is (car lat),
+natural recursion is (substN new slat (cdr lat))
+```
+
