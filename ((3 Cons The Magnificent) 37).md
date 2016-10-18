@@ -652,5 +652,5 @@ Hint: Use the function rember
     (cond
       ((null? lat) (quote ()))
       ((eq? a (car lat)) (cons a (rember a (cdr lat))))
-      (t (cons a (rember2 a (cdr lat)))))))
+      (t (cons (car lat) (rember2 a (cdr lat)))))))
 ```
