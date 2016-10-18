@@ -654,3 +654,51 @@ Hint: Use the function rember
       ((eq? a (car lat)) (cons a (rember a (cdr lat))))
       (t (cons (car lat) (rember2 a (cdr lat)))))))
 ```
+
+###3.10 Consider the functions insertR, insertL, and subst. They are all very similar. Write the functions next to each other and draw boxes around the parts that they have in common. Can you see what rember has in common with these functions?###
+```lisp
+(define insertR
+  (lambda (new old lat)
+    (cond----------------------------------------------------v
+      ((null? lat) (quote ()))   Terminate with () and       |
+      (t (cond                   testing the the first atom  |
+           ((eq? (car lat) old)------------------------------^
+	    (cons old
+              (cons new (cdr lat))))
+           (t (cons (car lat)--------------------------------v
+                (insertR         Recur and build list        |
+                  new old (cdr lat)))))))))------------------^
+
+(define insertL
+  (lambda (new old lat)
+    (cond----------------------------------------------------v
+      ((null? lat) (quote ()))   Terminate with () and       |
+      (t (cond                   testing the the first atom  |
+           ((eq? (car lat) old)------------------------------^
+            (cons new
+              (cons old (cdr lat))))
+           (t (cons (car lat)--------------------------------v
+                (insertL         Recur and build list        |
+                  new old (cdr lat)))))))))------------------^
+
+(define subst
+  (lambda (new old lat)
+    (cond----------------------------------------------------v
+      ((null? lat) (quote ()))   Terminate with () and       |
+      (t (cond                   testing the the first atom  |
+           ((eq? (car lat) old)------------------------------^
+            (cons new (cdr lat)))
+           (t (cons (car lat)--------------------------------v
+                (subst           Recur and build list        |
+                  new old (cdr lat)))))))))------------------^
+
+And the rember is
+(define rember
+  (lambda (a lat)
+    (cond----------------------------------------------------v
+      ((null? lat) (quote ()))   Terminate with () and       |
+      ((eq? (car lat) a) (cdr lat))-testing the first atom---^
+      (t (cons (car lat)-------------------------------------v
+           (rember a (cdr lat)))))))---Recur and build list--^
+
+```
