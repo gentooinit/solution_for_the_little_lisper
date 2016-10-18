@@ -639,3 +639,18 @@ typical element is (car lat),
 natural recursion is (substN new slat (cdr lat))
 ```
 
+###3.9 Write the function rember2 of a and l which removes the second occurrence of a in l###
+```lisp
+Example: (rember2 a1 l3) is (cincinnati chili)
+         (rember2 a4 l5) is (soy sauce and tomato)
+         (rember2 a4 l2) is ()
+Hint: Use the function rember
+```
+```lisp
+(define rember2
+  (lambda (a lat)
+    (cond
+      ((null? lat) (quote ()))
+      ((eq? a (car lat)) (cons a (rember a (cdr lat))))
+      (t (cons a (rember2 a (cdr lat)))))))
+```
