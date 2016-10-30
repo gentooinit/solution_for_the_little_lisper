@@ -106,3 +106,19 @@ Example: (dot-product vec2 vec2) is 29,
       (t (+ (* (car vec1) (car vec2))
             (dot-product (cdr vec1) (cdr vec2)))))))
 ```
+
+###4.8 Write the function / that divides nonnegative integers###
+```lisp
+Example: (/ n m) is 1, when n is 7 and m is 5,
+         (/ n m) is 4, when n is 8 and m is 2,
+         (/ n m) is 0, when n is 2 and m is 3
+Hint: A number is now defined as a rest (between 0 and m - 1) and a multiple addition of m.
+The number of additions is the result.
+```
+```lisp
+(define /
+  (lambda (n m)
+    (cond
+      ((< n m) 0)
+      (t (add1 (/ (- n m) m))))))
+```
