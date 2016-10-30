@@ -90,3 +90,19 @@ Example: (product vec1 vec2) is (3 4 4),
            (product
 	     (cdr vec1) (cdr vec2))))
 ```
+
+###4.7 Write the function dot product of vec1 and vec2 that multiplies corresponding numbers in vec1 and vec2 and builds a new number by summing the results. The vecs, vec1 and vec2, are the same length###
+```lisp
+Example: (dot-product vec2 vec2) is 29,
+         (dot-product vec2 vec4) is 26,
+	 (dot-product vec3 vec4) is 17
+```
+```lisp
+(define dot-product
+  (lambda (vec1 vec2)
+    (cond
+      ((null? vec1) 0)
+      ((null? vec2) 0)
+      (t (+ (* (car vec1) (car vec2))
+            (dot-product (cdr vec1) (cdr vec2)))))))
+```
