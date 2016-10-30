@@ -38,6 +38,19 @@ Example: (multvec vec2) is 24,
       ((null? vec) 1)
       (t (* (car vec) (multvec (cdr vec)))))))
 ```
+
 ###4.3 When building a value with ^, which value should you use for the terminal line?###
 
 1
+
+###4.4 Argue the correctness for the function ^ as we did for (x n m) Use 3 and 4 as data###
+```
+3 ^ 4 = 3 ^ 3 * 3
+3 ^ 3 = 3 ^ 2 * 3
+3 ^ 2 = 3 ^ 1 * 3
+3 ^ 1 = 3 ^ 0 * 3
+3 ^ 0 = 1
+3 ^ 4 = 1 * 3 * 3 * 3 * 3
+      = 81
+```
+
