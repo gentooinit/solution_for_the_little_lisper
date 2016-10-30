@@ -11,7 +11,7 @@ For these exercises,
                    obj is (x y)
 ```
 
-###4.1 Write the functioin duplicate of n and obj which builds a list containing n objects obj###
+###4.1 Write the function duplicate of n and obj which builds a list containing n objects obj###
 ```lisp
 Example: (duplicate three obj) is ((x y) (x y) (x y)),
          (duplicate zero obj) is (),
@@ -72,4 +72,21 @@ we have (index a lat1) is 3,
 ;;    ((not (member? a lat)) 0)
       ((eq? a (car lat)) 1)
       (t (add1 (index a (cdr lat)))))))
+```
+
+###4.6 Write the function product of vec1 and vec2 that multiplies corresponding numbers in vec1 and vec2 and builds a new vec from the results. The vecs, vec1 and vec2, may differ in length###
+``lisp
+Example: (product vec1 vec2) is (3 4 4),
+         (product vec2 vec3) is (6 2 12),
+         (product vec3 vec4) is (12 2 3)
+```
+```lisp
+(define product
+  (lambda (vec1 vec2)
+    (cond
+      ((null? vec1) vec2)
+      ((null? vec2) vec1)
+      (t (cons (* (car vec1) (car vec2))
+           (product
+	     (cdr vec1) (cdr vec2))))
 ```
