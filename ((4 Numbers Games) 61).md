@@ -24,3 +24,17 @@ Example: (duplicate three obj) is ((x y) (x y) (x y)),
       ((zero? n) (quote ()))
       (t (cons obj (duplicate (sub1 n) obj))))))
 ```
+
+###4.2 Write the function multvec that builds a number by multiplying all the numbers in a vec###
+```lisp
+Example: (multvec vec2) is 24,
+         (multvec vec3) is 6,
+            (multvec l) is 1
+```
+```lisp
+(define multvec
+  (lambda (vec)
+    (cond
+      ((null? vec) 1)
+      (t (* (car vec) (multvec (cdr vec)))))))
+```
