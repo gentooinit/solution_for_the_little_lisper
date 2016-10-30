@@ -43,7 +43,7 @@ Example: (multvec vec2) is 24,
 
 1
 
-###4.4 Argue the correctness for the function ^ as we did for (x n m) Use 3 and 4 as data###
+###4.4 Argue the correctness for the function ^ as we did for (x n m). Use 3 and 4 as data###
 ```
 3 ^ 4 = 3 ^ 3 * 3
 3 ^ 3 = 3 ^ 2 * 3
@@ -54,3 +54,22 @@ Example: (multvec vec2) is 24,
       = 81
 ```
 
+###4.5 Write the function index of a and lat that returns the place of the atom a in lat. You may assume that a is a member of lat. Hint: Can lat be empty?###
+```lisp
+Example: When a is car,
+           lat1 is (cons cdr car null? eq?),
+              b is motor, and
+           lat2 is (car engine auto motor),
+we have (index a lat1) is 3,
+        (index a lat2) is 1,
+        (index b lat2) is 4
+```
+```lisp
+(define index
+  (lambda (a lat)
+    (cond
+      ((null? lat) 0)
+;;    ((not (member? a lat)) 0)
+      ((eq? a (car lat)) 1)
+      (t (add1 (index a (cdr lat)))))))
+```
