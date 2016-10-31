@@ -95,7 +95,7 @@ Example: (product vec1 vec2) is (3 4 4),
 ```lisp
 Example: (dot-product vec2 vec2) is 29,
          (dot-product vec2 vec4) is 26,
-	 (dot-product vec3 vec4) is 17
+         (dot-product vec3 vec4) is 17
 ```
 ```lisp
 (define dot-product
@@ -140,4 +140,19 @@ Example: (remainder n m) is 2, when n is 7 and m is 5,
 When n is 7 and m is 5, (/ n m) is 1, and (* m (/ n m)) is 5, than the (- n (* m (/ n m))) is 2. So the value of (remainder n m) is 2.
 When n is 8 and m is 2, (/ n m) is 4, and (* m (/ n m)) is 8, than the (- n (* m (/ n m))) is 0. So the value of (remainder n m) is 0.
 When n is 2 and m is 3, (/ n m) is 0, and (* m (/ n m)) is 0, than the (- n (* m (/ n m))) is 2. So the value of (remainder n m) is 2.
+```
+
+###4.10 Write the function <= which tests if two numbers are equal or if the first is less than the second###
+```lisp
+Example: (<= zero one) is true,
+         (<= one one) is true,
+         (<= three one) is false
+```
+```lisp
+(define <=
+  (lambda (n m)
+    (cond
+      ((zero? n) t)
+      ((zero? m) nil)
+      (t (<= (sub1 n) (sub1 m))))))
 ```
