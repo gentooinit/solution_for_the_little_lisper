@@ -122,3 +122,22 @@ The number of additions is the result.
       ((< n m) 0)
       (t (add1 (/ (- n m) m))))))
 ```
+
+###4.9 Here is the function remainder###
+```lisp
+(define remainder
+  (lambda (n m)
+    (cond
+      (t (- n (* m (/ n m)))))))
+
+Make up examples for the application (remainder n m) and work through them
+```
+```lisp
+Example: (remainder n m) is 2, when n is 7 and m is 5,
+         (remainder n m) is 0, when n is 8 and m is 2,
+         (remainder n m) is 2, when n is 2 and m is 3
+
+When n is 7 and m is 5, (/ n m) is 1, and (* m (/ n m)) is 5, than the (- n (* m (/ n m))) is 2. So the value of (remainder n m) is 2.
+When n is 8 and m is 2, (/ n m) is 4, and (* m (/ n m)) is 8, than the (- n (* m (/ n m))) is 0. So the value of (remainder n m) is 0.
+When n is 2 and m is 3, (/ n m) is 0, and (* m (/ n m)) is 0, than the (- n (* m (/ n m))) is 2. So the value of (remainder n m) is 2.
+```
