@@ -51,3 +51,22 @@ Example: (multisubst2 x a b lat1) is (bananas comma),
       (t (cons (car lat)
            (multisubst2 new o1 o2 (cdr lat)))))))
 ```
+
+###5.3 Write the function multidown of lat which replaces every atom in lat by list the atom###
+```lisp
+Example: (multidown lat1) is ((bananas) (kiwis)),
+         (multidown lat2) is ((peaches) (apples) (bananas)),
+           (multidown l4) is ()
+```
+```lisp
+(define multidown
+  (lambda (lat)
+    (cond
+      ((null? lat) (quote ()))
+      ((atom? (car lat))
+       (cons
+         (cons (car lat) (quote ()))
+         (multidown (cdr lat))))
+      (t (cons (car lat)
+           (multidown (cdr lat)))))))
+```
