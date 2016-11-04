@@ -70,3 +70,19 @@ Example: (multidown lat1) is ((bananas) (kiwis)),
       (t (cons (car lat)
            (multidown (cdr lat)))))))
 ```
+
+###5.4 Write the function occurN of alat and lat which counts how many times an atom also occurs in lat###
+```lisp
+Example: (occurN lat1 l4) is 0,
+         (occurN lat1 lat2) is 1,
+         (occurN lat1 lat3) is 2
+```
+```lisp
+(define occurN
+  (lambda (alat lat)
+    (cond
+      ((null? lat) 0)
+      ((member? (car lat) alat)
+       (add1 (occurN alat (cdr lat))))
+      (t (occurN alat (cdr lat))))))
+```
