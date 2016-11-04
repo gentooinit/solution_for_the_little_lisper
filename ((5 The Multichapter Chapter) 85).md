@@ -28,8 +28,26 @@ Example: (multisubst-kiwis b lat1) is (bananas plums),
       ((null? lat) (quote ()))
       (t (cond
            ((eq? (car lat) (quote kiwis))
-	    (cons a
-	      (multisubst-kiwis a (cdr lat))))
-	   (t (cons (car lat)
-	        (multisubst-kiwis a (cdr lat)))))))))
+            (cons a
+              (multisubst-kiwis a (cdr lat))))
+           (t (cons (car lat)
+                (multisubst-kiwis a (cdr lat)))))))))
+```
+
+###5.2 Write the function multisubst2. You can find subst2 at the end of Chapter 3###
+```lisp
+Example: (multisubst2 x a b lat1) is (bananas comma),
+         (multisubst2 y a b lat3) is (dot pears dot bananas cherries),
+         (multisubst2 a x y lat1) is (bananas kiwis).
+        *(multisubst2 x a b lat4) is (comma mangoes comma guavas comma)
+```
+```lisp
+(define multisubst2
+  (lambda (new o1 o2 lat)
+    (cond
+      ((null? lat) (quote ()))
+      ((or (eq? (car lat) o1) (eq? (car lat) o2))
+         (cons new (multisubst2 new o1 o2 (cdr lat))))
+      (t (cons (car lat)
+           (multisubst2 new o1 o2 (cdr lat)))))))
 ```
