@@ -27,6 +27,7 @@ and then cons it onto the natural recursion.
 
 ##The Fourth Commandment##
 >(preliminary)
+
 When recurring on a list of atoms, *lat*, or a vec, *vec*, ask
 two questions about them, and use *(cdr lat)* or *(cdr vec)* for the natural recursion.
 
