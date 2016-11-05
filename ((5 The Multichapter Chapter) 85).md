@@ -187,3 +187,14 @@ Example: (multiup l4) is (),
            (t (cons (car l)
                 (multiup (cdr l)))))))))
 ```
+
+###5.10 Review all the Laws and Commandments. Check the functions in Chapter 4 and 5 to see if they obey the Commandments. When did we not obey them literally? Did we act according to their spirit?###
+
+In Chapter 4:
+The function +, -, *, >, =, ^, eqan? are obey The First Commandment.
+
+In Chpater 5:
+The function one? is obey The First Commandment.
+
+When we recurring at lat, we do not obey them literally.
+When we the recurring at number or the length of what we processing at is cetainty, we act according to their spirit.
