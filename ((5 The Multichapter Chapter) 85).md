@@ -136,3 +136,29 @@ The First Commandment
 This definition violates The Six Commandment. Why?
 ```
 Because the argument n is tested in the termination condition, but it doesn't change while recurring.
+
+###5.8 The function count0 of vec counts the number of zero elements in vec. What is wrong with the following definition? Can you fix it?###
+```lisp
+(define count0
+  (lambda (vec)
+    (cond
+      ((null? vec) 1)
+      (t (cond
+           ((zero? (car vec))
+            (cons 0 (count0 (cdr vec))))
+           (t (count0 (cdr vec))))))))
+```
+```lisp
+The function count0 uses cons to build number, that is wrong.
+And when vec is null, there is no zero element in it, so the value of terminating line should be 0.
+
+Fixed:
+(define count0
+  (lambda (vec)
+    (cond
+      ((null? vec) 0)
+      (t (cond
+           ((zero? (car vec))
+            (add1 (count0 (cdr vec))))
+           (t (count0 (cdr vec))))))))
+```
