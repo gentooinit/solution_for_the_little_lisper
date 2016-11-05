@@ -86,3 +86,30 @@ Example: (occurN lat1 l4) is 0,
        (add1 (occurN alat (cdr lat))))
       (t (occurN alat (cdr lat))))))
 ```
+
+###5.5 The function I of lat1 and lat2 returns the first atom in lat2 that is in both lat1 atom. Write the functions I and multiI. multiI returns a list of atoms common to lat1 and lat2###
+```lisp
+Example: (I lat1 l4) is (),
+       (I lat1 lat2) is bananas,
+       (I lat1 lat3) is kiwis;
+    (multiI lat1 l4) is (),
+  (multiI lat1 lat2) is (bananas),
+  (multiI lat1 lat3) is (kiwis bananas)
+```
+```lisp
+(define I
+  (lambda (lat1 lat2)
+    (cond
+      ((null? lat2) (quote ()))
+      ((member? (car lat2) lat1) (car lat2))
+      (t (I lat1 (cdr lat2))))))
+
+(define multiI
+  (lambda (lat1 lat2)
+    (cond
+      ((null? lat2) (quote ()))
+      ((member? (car lat2) lat1)
+       (cons (car lat2)
+         (multiI lat1 (cdr lat2))))
+      (t (multiI lat1 (cdr lat2))))))
+```
