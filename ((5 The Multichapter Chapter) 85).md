@@ -162,3 +162,28 @@ Fixed:
             (add1 (count0 (cdr vec))))
            (t (count0 (cdr vec))))))))
 ```
+
+###5.9 Write the function multiup of l which replaces every lat of length one in l by the atom in that list, and which also removes every empty list###
+```lisp
+Example: (multiup l4) is (),
+         (multiup l1) is (curry chicken),
+         (multiup l2) is (peaches (and cream))
+```
+```lisp
+(define multiup
+  (lambda (l)
+    (cond
+      ((null? l) (quote ()))
+      (t (cond
+           ((eq? (car l) (quote ()))
+            (multiup (cdr l)))
+           ((atom? (car l))
+            (cons (car l)
+              (multiup (cdr l))))
+           ((and (atom? (car (car l)))
+              (null? (cdr (car l))))
+            (cons (car (car l))
+              (multiup (cdr l))))
+           (t (cons (car l)
+                (multiup (cdr l)))))))))
+```
