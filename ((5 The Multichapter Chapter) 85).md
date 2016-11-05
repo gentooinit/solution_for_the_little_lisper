@@ -175,7 +175,7 @@ Example: (multiup l4) is (),
     (cond
       ((null? l) (quote ()))
       (t (cond
-           ((eq? (car l) (quote ()))
+           ((null? (car l))
             (multiup (cdr l)))
            ((atom? (car l))
             (cons (car l)
