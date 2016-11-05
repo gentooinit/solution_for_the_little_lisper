@@ -197,4 +197,4 @@ In Chpater 5:
 The function one? is obey The First Commandment.
 
 When we recurring at lat, we do not obey them literally.
-When we the recurring at number or the length of what we processing at is cetainty, we act according to their spirit.
+When we recurring at number or the length of what we processing at is cetainty, we act according to their spirit.
