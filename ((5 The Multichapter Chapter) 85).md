@@ -113,3 +113,26 @@ Example: (I lat1 l4) is (),
          (multiI lat1 (cdr lat2))))
       (t (multiI lat1 (cdr lat2))))))
 ```
+
+###5.6 Consider the following alternative definition of one?###
+```lisp
+(define one?
+  (lambda (n)
+    (cond
+      ((zero? (sub1 n)) t)
+      (t nil))))
+Which Laws and/or Commandments does it violate?
+```
+
+The First Commandment
+
+###5.7 Consider the following definition of =###
+```lisp
+(define =
+  (lambda (n m)
+    (cond
+      ((zero? n) (zero? m))
+      (t (= n (sub1 m))))))
+This definition violates The Six Commandment. Why?
+```
+Because the argument n is tested in the termination condition, but it doesn't change while recurring.
