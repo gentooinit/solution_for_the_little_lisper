@@ -1,3 +1,4 @@
+```lisp
 For these exercise,
                 l1 is ((fried potatoes) (baked (fried)) tomatoes)
                 l2 is (((chili) chili (chili)))
@@ -5,6 +6,7 @@ For these exercise,
               lat1 is (chili and hot)
               lat2 is (baked fried)
                  a is fried
+```
 
 ###6.1 Write the function down* of l which puts every atom in l in a list by itself###
 ```lisp
