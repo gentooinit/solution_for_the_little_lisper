@@ -45,3 +45,26 @@ Example: (occurN* lat1 l2) is 3,
       (t (+ (occurN* lat (car l))
            (occurN* lat (cdr l)))))))
 ```
+
+###6.3 Write the function double* of a and l which doubles each occurrence of a in l###
+```lisp
+Example: (double* a l1) is ((fried fried potatoes) (baked (fried fried)) tomatoes),
+         (double* a l2) is (((chili) chili (chili))),
+       (double* a lat2) is (baked fried fried)
+```
+```lisp
+(define double*
+  (lambda (a l)
+    (cond
+      ((null? l) (quote ()))
+      ((atom? (car l))
+       (cond
+         ((eq? (car l) a)
+          (cons a
+            (cons (car l)
+              (double* a (cdr l)))))
+         (t (cons (car l)
+              (double* a (cdr l))))))
+      (t (cons (double* a (car l))
+           (double* a (cdr l)))))))
+```
