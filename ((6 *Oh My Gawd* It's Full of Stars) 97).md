@@ -25,3 +25,23 @@ Example: (down* l2) is ((((chili)) (chili) ((chili)))),
       (t (cons (down* (car l))
            (down* (cdr l)))))))
 ```
+
+###6.2 Write the function occurN* of lat and l which counts all the atoms that are common to lat and l###
+```lisp
+Example: (occurN* lat1 l2) is 3,
+         (occurN* lat2 l1) is 3,
+         (occurN* lat1 l3) is 0
+```
+```lisp
+(define occurN*
+  (lambda (lat l)
+    (cond
+      ((null? l) 0)
+      ((atom? (car l))
+       (cond
+         ((member? (car l) lat)
+          (add1 (occurN* lat (cdr l))))
+         (t (occurN* (cdr l) lat))))
+      (t (+ (occurN* lat (car l))
+           (occurN* lat (cdr l)))))))
+```
