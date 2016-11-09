@@ -84,6 +84,7 @@ Because the argument of function lat? are either
 * empty,
 * an atom consed onto a list, or
 * a list consed onto a list
+
 And lat? asks if each S-expression in l is an atom,
 if it is, the value is t, if not, the value is nil. It has to ask the three questions in turn until it runs out of S-expressions.
 The function lat? does not have to recur on the car, because knowing one S-expression is not an atom is enough to determine the value.
