@@ -68,3 +68,22 @@ Example: (double* a l1) is ((fried fried potatoes) (baked (fried fried)) tomatoe
       (t (cons (double* a (car l))
            (double* a (cdr l)))))))
 ```
+
+###6.4 Consider the function lat? from Chapter 2. Argue why lat? has to ask three questions (and not two like the other functions in Chapter 2). Why does lat? not have to recur on the car?###
+```lisp
+This is the function lat?
+(define lat?
+  (lambda (l)
+    (cond
+      ((null? l) t)
+      ((atom? (car l)) (lat? (cdr l)))
+      (t nil))))
+```
+The function lat? has to ask three questions.
+Because the argument of function lat? are either
+* empty,
+* an atom consed onto a list, or
+* a list consed onto a list
+And lat? asks if each S-expression in l is an atom,
+if it is, the value is t, if not, the value is nil. It has to ask the three questions in turn until it runs out of S-expressions.
+The function lat? does not have to recur on the car, because knowing one S-expression is not an atom is enough to determine the value.
