@@ -88,3 +88,23 @@ Because the argument of function lat? are either
 And lat? asks if each S-expression in l is an atom,
 if it is, the value is t, if not, the value is nil. It has to ask the three questions in turn until it runs out of S-expressions.
 The function lat? does not have to recur on the car, because knowing one S-expression is not an atom is enough to determine the value.
+
+###6.5 Make sure that (member* a l), where###
+```lisp
+    a is chips and
+    l is ((potato) (chips ((with) fish) (chips))),
+really discovers the first chips. Can you change member* so that it finds the last chips first?
+```
+```lisp
+(define member*
+  (lambda (a l)
+    (cond
+      ((null? l) nil)
+      ((atom? (car l))
+       (or
+         (member* a (cdr l))
+         (eq? (car l) a)))
+      (t (or
+           (member* a (cdr l))
+           (member* a (car l)))))))
+```
