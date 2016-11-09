@@ -108,3 +108,24 @@ really discovers the first chips. Can you change member* so that it finds the la
            (member* a (cdr l))
            (member* a (car l)))))))
 ```
+
+###6.6 Write the function list+ which adds up all the numbers in a general list of numbers###
+```lisp
+Example: When l1 is ((1 (6 6 ()))),
+          and l2 is ((1 2 (3 6)) 1), then
+      (list+ l1) is 13
+      (list+ l2) is 13
+      (list+ l3) is 0
+```
+```lisp
+(define list+
+  (lambda (l)
+    (cond
+      ((null? l) 0)
+      ((number? (car l))
+       (+ (car l) (list+ (cdr l))))
+      ((atom? (car l))
+       (list+ (cdr l)))
+      (t (+ (list+ (car l))
+           (list+ (cdr l)))))))
+```
