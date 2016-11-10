@@ -129,3 +129,24 @@ Example: When l1 is ((1 (6 6 ()))),
       (t (+ (list+ (car l))
            (list+ (cdr l)))))))
 ```
+
+###6.7 Consider the following function g* of lvec and acc###
+```lisp
+(define g*
+  (lambda (lvec acc)
+    (cond
+      ((null? lvec) acc)
+      ((atom? (car lvec))
+       (g* (cdr lvec) (+ (car lvec) acc)))
+      (t (g* (car lvec) (g* (cdr lvec) acc))))))
+The function is always applied to a (general) list of numbers and 0. Make up examples and find
+out what the function does.
+```
+```lisp
+Example: When l1 is ((1 2) 3 (((4)))),
+          and l2 is ((4) (3 2 1 0)), then
+       (g* l1 0) is 10
+       (g* l2 0) is 10
+
+The function g* adds up acc and all the numbers in a general list(assume all the atoms are numbers).
+```
