@@ -150,3 +150,206 @@ Example: When l1 is ((1 2) 3 (((4)))),
 
 The function g* adds up acc and all the numbers in a general list(assume all the atoms are numbers).
 ```
+
+###6.8 Consider the following function f* of l and acc###
+```lisp
+(define f*
+  (lambda (l acc)
+    (cond
+      ((null? l) acc)
+      ((atom? (car l))
+       (cond
+         ((member? (car l) acc) (f* (cdr l) acc))
+         (t (f* (cdr l) (cons (car l) acc)))))
+      (t (f* (car l) (f* (cdr l) acc))))))
+The function is always applied to a list and the empty list. Make up examples for l and step
+through the applications. Generalize in one sentence what f* does
+```
+```lisp
+Example: When l1 is (lisp scheme lisp erlang erlang),
+          and l2 is ((lisp scheme) lisp ((lisp))), then
+     (f* l1 '()) is (erlang scheme lisp)
+     (f* l2 '()) is (scheme lisp)
+
+Q1: (f* l1 '())
+A1: We will go through it.
+
+Q2: (null? l1)
+A2: nil
+
+Q3: (atom? (car l1))
+A3: t
+
+Q4: (member? (car l1) acc)
+A4: nil, acc is ()
+
+Q5: (f* (cdr l1) (cons (car l1) acc))
+A5: Recur with l1 replaced by (cdr l1), which is (scheme lisp erlang erlang),
+    acc replaced by (cons (car l1) acc), which is (lisp)
+
+Q6: (null? l1)
+A6: nil
+
+Q7: (atom? (car l1))
+A7: t
+
+Q8: (member? (car l1) acc)
+A8: nil, acc is (lisp), (car l1) is scheme
+
+Q9: (f* (cdr l1) (cons (car l1) acc))
+A9: Recur with l1 replaced by (cdr l1), which is (lisp erlang erlang),
+    acc replaced by (cons (car l1) acc), which is (scheme lisp)
+
+Q10: (null? l1)
+A10: nil
+
+Q11: (atom? (car l1))
+A11: t
+
+Q12: (member? (car l1) acc)
+A12: t, acc is (scheme lisp), (car l1) is lisp, lisp is a member of (scheme lisp).
+
+Q13: (f* (cdr l1) acc)
+A13: Recur with l1 replaced by (cdr l1), which is (erlang erlang).
+
+Q14: (null? l1)
+A14: nil
+
+Q15: (atom? (car l1))
+A15: t
+
+Q16: (member? (car l1) acc)
+A16: nil, acc is (scheme lisp), (car l1) is erlang, erlang is not in (scheme lisp).
+
+Q17: (f* (cdr l1) (cons (car l1) acc))
+A17: Recur with l1 replaced by (cdr l1), which is (erlang),
+     acc replaced by (cons (car l1) acc), which is (erlang scheme lisp)
+
+Q18: (null? l1)
+A18: nil
+
+Q19: (atom? (car l1))
+A19: t
+
+Q20: (member? (car l1) acc)
+A20: t, acc is (erlang scheme lisp), (car l1) is erlang, erlang is a member of (erlang scheme lisp).
+
+Q21: (f* (cdr l1) acc)
+A21: Recur with l1 replaced by (cdr l1), which is ()
+
+Q22: (null? l1)
+A22: t, so the value is (erlang scheme lisp)
+
+Q23: Are we finished?
+A23: Yes, of course.
+
+
+
+Q1: (f* l2 '())
+A1: We will go through it.
+
+Q2: (null? l2)
+A2: nil
+
+Q3: (atom? (car l2))
+A3: nil, (car l2) is (lisp scheme)
+
+Q4: (f* (car l2) (f* (cdr l2) acc))
+A4: We recur with l2 replaced by (car l2), which is (lisp scheme),
+    and acc is (f* (cdr l2) acc). Seems we have to recur the second function first.
+
+Q5: Recur (f* (cdr l2) acc), (cdr l2) is (lisp ((lisp))), acc is ()
+A5: Let's do it.
+
+Q6: (null? l2)
+A6: nil
+
+Q7: (atom? (car l2))
+A7: t
+
+Q8: (member? (car l2) acc)
+A8: nil, (car l2) is lisp, acc is ()
+
+Q9: (f* (cdr l2) (cons (car l2) acc))
+A9: Recur with l2 replaced by (cdr l2), which is (((lisp))), and acc is (lisp).
+
+Q10: (null? l2)
+A10: nil
+
+Q11: (atom? (car l2))
+A11: nil
+
+Q12: (f* (car l2) (f* (cdr l2) acc))
+A12: We recur with l2 replaced by (car l2), which is ((lisp))
+     and acc is (f* (cdr l2) acc). Seems we have to recur the second function first.
+
+Q13: (f* (cdr l2) acc)
+A13: (cdr l2) is (), so the value is acc, which is (lisp). Go back to the previous question.
+
+Q14: (f* (car l2) (f* (cdr l2) acc))
+A14: We recur with l2 replaced by (car l2), which is ((lisp))
+     and acc is (f* (cdr l2) acc), which is (lisp).
+
+Q15: (null? l2)
+A15: nil
+
+Q16: (atom? (car l2))
+A16: nil
+
+Q17: (f* (car l2) (f* (cdr l2) acc))
+A17: We recur with l2 replaced by (car l2), which is (lisp)
+     and acc is (f* (cdr l2) acc), and the (cdr l2) is (), so the acc is (lisp).
+
+Q18: (null? l2)
+A18: nil
+
+Q19: (atom? (car l2))
+A19: t
+
+Q20: (member? (car l2) acc)
+A20: t, (car l2) is lisp, acc is (lisp).
+
+Q21: (f* (cdr l2) acc)
+A21: Recur with l2 replaced by (cdr l2), which is ().
+
+Q22: (null? l2)
+A22: t, so the value is (lisp). Go back to the Q4 question.
+
+Q23: (f* (car l2) (f* (cdr l2) acc))
+A23: We recur with l2 replaced by (car l2), which is (lisp scheme),
+    and acc is (f* (cdr l2) acc), which is (lisp).
+
+Q24: (null? l2)
+A24: nil
+
+Q25: (atom? (car l2))
+A25: t
+
+Q26: (member? (car l2) acc)
+A26: t, (car l2) is lisp, acc is (lisp).
+
+Q27: (f* (cdr l2) acc)
+A27: Recur with l2 replaced by (cdr l2), which is (scheme).
+
+Q28: (null? l2)
+A28: nil
+
+Q29: (atom? (car l2))
+A29: t
+
+Q30: (member? (car l2) acc)
+A30: nil, (car l2) is scheme, acc is (lisp). scheme is not in (lisp).
+
+Q31: (f* (cdr l2) (cons (car l2) acc))
+A31: Recur with l2 replaced by (cdr l2), which is (),
+     and acc is (cons (car l2) acc), which is (scheme lisp)
+
+Q32: (null? l2)
+A32: t, so the value is (scheme lisp).
+
+Q33: Are we finished?
+A33: Yes, of course.
+
+The function f* takes individual atoms from a list to build a lat in reverse order.
+
+```
