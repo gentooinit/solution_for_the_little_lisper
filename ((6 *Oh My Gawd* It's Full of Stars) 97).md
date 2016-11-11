@@ -366,3 +366,112 @@ The function f* takes individual atoms from a list to build a lat in reverse ord
 
 The original value of acc is 0.
 ```
+
+###6.10 Step through an application of the original occur and the occur from Exercise 6.9 and compare the arguments in the recursive applications. Can you write occur* using the accumulator technique?###
+```lisp
+The original occur:
+(define occur
+  (lambda (a lat)
+    (cond
+      ((null? lat) 0)
+      (t (cond
+           ((eq? (car lat) a)
+            (add1 (occur a (cdr lat))))
+           (t (occur a (cdr lat))))))))
+
+lat is (scheme PLT scheme)
+  a is scheme
+
+Q1: (occur a lat1)
+A1: We will step through it.
+
+Q2: (null? lat)
+A2: nil
+
+Q3: (eq? (car lat) a)
+A3: t, then we add one to the (occur a (cdr lat)), where (cdr lat) is (PLT scheme).
+
+(occur 'scheme '(PLT scheme))
+
+Q4: (null? lat)
+A4: nil
+
+Q5: (eq? (car lat) a)
+A5: nil, then we recur (occur a (cdr lat)), where (cdr lat) is (scheme).
+
+(occur 'scheme '(scheme))
+
+Q6: (null? lat)
+A6: nil
+
+Q7: (eq? (car lat) a)
+A7: t, then we add one to the (occur a (cdr lat)), where (cdr lat) is ().
+
+(occur 'scheme '())
+
+Q8: (null? lat)
+A8: t, so the value is 0.
+
+Q9: add one to 0
+A9: 1
+
+Q10: add one to 1
+A10: 2
+
+Q11: Are we finished?
+A11: Yes.
+
+The exercise 6.9 version:
+(define occur
+  (lambda (a lat acc)
+    (cond
+      ((null? lat) acc)
+      ((eq? (car lat) a)
+       (occur a (cdr lat) (add1 acc)))
+      (t (occur a (cdr lat) acc)))))
+
+Q1: (occur a lat 0)
+A1: We will step through it.
+
+Q2: (null? lat)
+A2: nil
+
+Q3: (eq? (car lat) a)
+A3: t, then we recur (occur a (cdr lat) (add1 acc)), where (cdr lat) is (PLT scheme) and (add1 acc) is 1.
+
+(occur 'scheme '(PLT scheme) 1)
+
+Q4: (null? lat)
+A4: nil
+
+Q5: (eq? (car lat) a)
+A5: nil, (car lat) is PLT, a is scheme. So we recur (occur a (cdr lat) acc), where (cdr lat) is (scheme) and acc is 1.
+
+(occur 'scheme '(scheme) 1)
+
+Q6: (null? lat)
+A6: nil
+
+Q7: (eq? (car lat) a)
+A7: t, then we recur (occur a (cdr lat) (add1 acc)), where (cdr lat) is () and (add1 acc) is 2.
+
+(occur 'scheme '() 2)
+
+Q8: (null? lat)
+A8: t, so the value is 2.
+
+Q9: Are we finished?
+A9: Yes.
+
+(define occur*
+  (lambda (a l acc)
+    (cond
+      ((null? l) acc)
+      ((atom? (car l))
+       (cond
+         ((eq? (car l) a)
+          (occur* a (cdr l) (add1 acc)))
+         (t (occur* a (cdr l) acc))))
+      (t (occur* a (car l)
+           (occur* a (cdr l) acc))))))
+```
