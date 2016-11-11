@@ -353,3 +353,16 @@ A33: Yes, of course.
 The function f* takes individual atoms from a list to build a lat in reverse order.
 
 ```
+
+###6.9 The functions in Exercise 6.7 and 6.8 employ the *accumulator technique*. This means that they pass along an argument that represents the result that has been computed so far. When these functions reach the bottom (null?, zero?), they just return the result contained in the accumulator. The original argument for the accumulator is the element that used to be the answer for the null?-case. Write the function occur (see Chapter 5) of a and lat using the accumulator technique. What is the original value for acc?###
+```lisp
+(define occur
+  (lambda (a lat acc)
+    (cond
+      ((null? lat) acc)
+      ((eq? (car lat) a)
+       (occur a (cdr lat) (add1 acc)))
+      (t (occur a (cdr lat) acc)))))
+
+The original value of acc is 0.
+```
