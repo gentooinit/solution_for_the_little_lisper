@@ -45,3 +45,14 @@ Always change at least one argument while recurring.
 The Changing argument(s) should be tested in the termination condition(s) and it should be changed to be closer to termination. For example:
     When using cdr, test termination with null?
     When using sub1, test termination with zero?
+
+##The Seventh Commandment##
+Simplify only after the function is correct.
+
+##The Eighth Commandment##
+Recur on all the *subparts* that are of the same nature:
+* On all the sublists of a list.
+* On all the subexpressions of a representation of an arithmetic expression.
+
+##The Ninth Commandment##
+Use help functions to abstract from representations.
