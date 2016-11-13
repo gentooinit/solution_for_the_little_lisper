@@ -62,12 +62,15 @@ Example: (aexp? aexp1) is true,
   (lambda (aexp)
     (cond
       ((null? aexp) (quote ()))
+      ((null? (cdr aexp)) (quote ()))
+      ((null? (cdr (cdr aexp))) (quote ()))
       (t (car (cdr (cdr aexp)))))))
 
 (define operator
   (lambda (aexp)
     (cond
       ((null? aexp) (quote ()))
+      ((null? (cdr aexp)) (quote ()))
       (t (car (cdr aexp))))))
 
 (define aexp?
@@ -82,4 +85,12 @@ Example: (aexp? aexp1) is true,
        (and (aexp? (1st-sub-exp aexp))
             (aexp? (2nd-sub-exp aexp))))
       (t nil))))
+
+(aexp? 1) is t,
+(aexp? 3) is t,
+(aexp? '(1 + 3 * 4)) is t,
+(aexp? 'cookie) is t,
+(aexp? '(3 ^ y + 5)) is t,
+(aexp? '(3 +)) is nil,
+(aexp? '(3)) is nil
 ```
