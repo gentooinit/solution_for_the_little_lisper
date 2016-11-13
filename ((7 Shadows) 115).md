@@ -94,3 +94,45 @@ Example: (aexp? aexp1) is true,
 (aexp? '(3 +)) is nil,
 (aexp? '(3)) is nil
 ```
+
+###7.3 Write the function count-op that counts the operators in an arithmetic expression###
+```lisp
+Example: (count-op aexp1) is 2,
+         (count-op aexp3) is 3,
+         (count-op aexp4) is 0.
+Also write the functions cont+, count*, and count^ that count the respective operators
+Example: (count+ aexp1) is 1,
+         (count* aexp1) is 1,
+         (count^ aexp1) is 0.
+```
+```lisp
+(define count-op
+  (lambda (aexp)
+    (cond
+      ((atom? aexp) 0)
+      (t (add1
+           (+ (count-op (1st-sub-exp aexp))
+             (count-op (2nd-sub-exp aexp))))))))
+
+(define count-op-x
+  (lambda (aexp op)
+    (cond
+      ((atom? aexp) 0)
+      ((eq? (operator aexp) op)
+       (add1 (+ (count-op-x (1st-sub-exp aexp) op)
+               (count-op-x (2nd-sub-exp aexp) op))))
+      (t (+ (count-op-x (1st-sub-exp aexp) op)
+           (count-op-x (2nd-sub-exp aexp) op))))))
+
+(define count+
+  (lambda (aexp)
+    (count-op-x aexp (quote +))))
+
+(define count*
+  (lambda (aexp)
+    (count-op-x aexp (quote *))))
+
+(define count^
+  (lambda (aexp)
+    (count-op-x aexp (quote ^))))
+```
