@@ -43,3 +43,43 @@ aexp1 can be built by (mk+exp 1 (mk*exp 3 4)),
 aexp2 can be built by (mk+exp (mk^exp 3 4) 5),
 aexp3 can be built by (mk*exp 3 (mk*exp 4 (mk*exp 5 6)))
 ```
+
+###7.2 A useful function is aexp? that checks whether an S-expression is the representation of an arithmetic expression. Write the function aexp? and test it with some of the arithmetic expressions from the chapter. Also test it with S-expression that are not arithmetic expressions.
+```lisp
+Example: (aexp? aexp1) is true,
+         (aexp? aexp2) is true,
+            (aexp? l1) is false,
+            (aexp? l2) is false
+```
+```lisp
+(define 1st-sub-exp
+  (lambda (aexp)
+    (cond
+      ((null? aexp) (quote ()))
+      (t (car aexp)))))
+
+(define 2nd-sub-exp
+  (lambda (aexp)
+    (cond
+      ((null? aexp) (quote ()))
+      (t (car (cdr (cdr aexp)))))))
+
+(define operator
+  (lambda (aexp)
+    (cond
+      ((null? aexp) (quote ()))
+      (t (car (cdr aexp))))))
+
+(define aexp?
+  (lambda (aexp)
+    (cond
+      ((null? aexp) nil)
+      ((atom? aexp) t)
+      ((or
+         (eq? (operator aexp) (quote +))
+         (eq? (operator aexp) (quote *))
+         (eq? (operator aexp) (quote ^)))
+       (and (aexp? (1st-sub-exp aexp))
+            (aexp? (2nd-sub-exp aexp))))
+      (t nil))))
+```
