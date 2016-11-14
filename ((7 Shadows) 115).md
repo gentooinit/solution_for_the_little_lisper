@@ -136,3 +136,20 @@ Example: (count+ aexp1) is 1,
   (lambda (aexp)
     (count-op-x aexp (quote ^))))
 ```
+
+###7.4 Write the function count-numbers that counts the numbers in an arithmetic expression###
+```lisp
+Example: (count-numbers aexp1) is 3,
+         (count-numbers aexp3) is 4,
+         (count-numbers aexp4) is 1
+```
+```lisp
+(define count-numbers
+  (lambda (aexp)
+    (cond
+      ((null? aexp) 0)
+      ((number? aexp) 1)
+      ((atom? aexp) 0)
+      (t (+ (count-numbers (1st-sub-exp aexp))
+           (count-numbers (2nd-sub-exp aexp)))))))
+```
