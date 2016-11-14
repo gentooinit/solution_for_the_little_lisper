@@ -153,3 +153,106 @@ Example: (count-numbers aexp1) is 3,
       (t (+ (count-numbers (1st-sub-exp aexp))
            (count-numbers (2nd-sub-exp aexp)))))))
 ```
+
+###7.5 Since it is inconvenient to write (3 * (4 * (5 * 6))) for multiplying 4 numbers, we now introduce prefix notation and allow + and * expressions to contain 2, 3, or 4 subexpressions. For example, (+ 3 2 (* 7 8)), (* 3 4 5 6) etc. are now legal representations. ^-expressions are also in prefix form but are still binary. Rewrite the functions numbered? and value for the new definition of aexp.###
+Hint: You will need functions for extracting the third and the fourth subexpression of an arithmetic expression. You will also need a function cnt-aexp that counts the number of arithmetic subexpressions in the *list* following an operator.
+```lisp
+Example: When aexp1 is (+ 3 2 (* 7 8)),
+              aexp2 is (* 3 4 5 6), and
+              aexp3 is (^ aexp1 aexp2), then
+   (cnt-aexp aexp1) is 3,
+   (cnt-aexp aexp2) is 4,
+   (cnt-aexp aexp3) is 2.
+```
+```lisp
+(define operator
+  (lambda (aexp)
+    (car aexp)))
+
+(define 1st-sub-exp
+  (lambda (aexp)
+    (car (cdr aexp))))
+
+(define 2nd-sub-exp
+  (lambda (aexp)
+    (car (cdr (cdr aexp)))))
+
+(define 3rd-sub-exp
+  (lambda (aexp)
+    (car (cdr (cdr (cdr aexp))))))
+
+(define 4th-sub-exp
+  (lambda (aexp)
+    (car (cdr (cdr (cdr (cdr aexp)))))))
+
+(define cnt-aexp*
+  (lambda (aexp)
+    (cond
+      ((null? aexp) 0)
+      (t (add1 (cnt-aexp* (cdr aexp)))))))
+
+(define cnt-aexp
+  (lambda (aexp)
+    (cond
+      ((or
+         (eq? (operator aexp) (quote +))
+         (eq? (operator aexp) (quote *))
+         (eq? (operator aexp) (quote ^)))
+       (cnt-aexp* (cdr aexp)))
+      (t 0))))
+
+(define numbered?
+  (lambda (aexp)
+    (cond
+      ((atom? aexp) (number? aexp))
+      ((eq? (cnt-aexp aexp) 1) (numbered? (1st-sub-exp aexp)))
+      ((eq? (cnt-aexp aexp) 2)
+       (and (numbered? (1st-sub-exp aexp))
+         (numbered? (2nd-sub-exp aexp))))
+      ((eq? (cnt-aexp aexp) 3)
+       (and (numbered? (1st-sub-exp aexp))
+         (numbered? (2nd-sub-exp aexp))
+         (numbered? (3rd-sub-exp aexp))))
+      ((eq? (cnt-aexp aexp) 4)
+       (and (numbered? (1st-sub-exp aexp))
+         (numbered? (2nd-sub-exp aexp))
+         (numbered? (3rd-sub-exp aexp))
+         (numbered? (4th-sub-exp aexp))))
+      (t nil))))
+
+(define value
+  (lambda (nexp)
+    (cond
+      ((number? nexp) nexp)
+      ((eq? (cnt-aexp nexp) 2)
+       (cond
+         ((eq? (operator nexp) (quote +))
+          (+ (value (1st-sub-exp nexp))
+            (value (2nd-sub-exp nexp))))
+         ((eq? (operator nexp) (quote *))
+          (* (value (1st-sub-exp nexp))
+            (value (2nd-sub-exp nexp))))
+         (t (expt (value (1st-sub-exp nexp))
+              (value (2nd-sub-exp nexp))))))
+      ((eq? (cnt-aexp nexp) 3)
+       (cond
+         ((eq? (operator nexp) (quote +))
+          (+ (value (1st-sub-exp nexp))
+            (value (2nd-sub-exp nexp))
+            (value (3rd-sub-exp nexp))))
+         (t (* (value (1st-sub-exp nexp))
+              (value (2nd-sub-exp nexp))
+              (value (3rd-sub-exp nexp))))))
+      ((eq? (cnt-aexp nexp) 4)
+       (cond
+         ((eq? (operator nexp) (quote +))
+          (+ (value (1st-sub-exp nexp))
+            (value (2nd-sub-exp nexp))
+            (value (3rd-sub-exp nexp))
+            (value (4th-sub-exp nexp))))
+         (t (* (value (1st-sub-exp nexp))
+              (value (2nd-sub-exp nexp))
+              (value (3rd-sub-exp nexp))
+              (value (4th-sub-exp nexp))))))
+       (t 0))))
+```
