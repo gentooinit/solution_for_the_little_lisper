@@ -256,3 +256,120 @@ Example: When aexp1 is (+ 3 2 (* 7 8)),
               (value (4th-sub-exp nexp))))))
        (t 0))))
 ```
+
+For exercise 7.6 through 7.10 we define a representation for L-expressions. An L-expression is defined in the following way: It is either:
+ * (AND l1 l2), or
+ * (OR l1 l2), or
+ * (NOT l), or
+ * an arbitrary symbol. We call such a symbol a variable.
+
+In this definition, **AND**, **OR**, and **NOT** are literal symbols; *l*, *l1*, *l2* stand for arbitrary L-expressions.
+
+###7.6 Write the function lexp? that tests whether an S-expression is a representation of an L-expression.###
+```lisp
+Example: (lexp? lexp1) is true,
+         (lexp? lexp2) is true,
+         (lexp? lexp3) is true,
+         (lexp? aexp1) is false,
+            (lexp? l2) is false.
+
+Also write the functions and-exp? or-exp? and not-exp? which test whether or not an S-expression is a representation of an L-expression of the respective shape.
+Write the functions and-exp-left and and-exp-right, which extract the left and the right part of an (recognized) L-expression.
+Exampe: (and-exp-left lexp1) is (OR x y),
+       (and-exp-right lexp1) is y,
+        (and-exp-left lexp2) is (NOT y),
+       (and-exp-right lexp2) is (OR u v).
+Finally, write the functions or-exp-left, or-exp-right, and not-exp-subexp, which extract the respective piecs of OR and NOT L-expressions.
+```
+```lisp
+(define operator-lexp
+  (lambda (lexp)
+    (cond
+      ((null? lexp) (quote ()))
+      (t (car lexp)))))
+
+(define 1st-sub-lexp
+  (lambda (lexp)
+    (cond
+      ((null? lexp) (quote ()))
+      ((null? (cdr lexp)) (quote ()))
+      (t (car (cdr lexp))))))
+
+(define 2nd-sub-lexp
+  (lambda (lexp)
+    (cond
+      ((null? lexp) (quote ()))
+      ((null? (cdr lexp)) (quote ()))
+      ((null? (cdr (cdr lexp))) (quote ()))
+      (t (car (cdr (cdr lexp)))))))
+
+(define 3rd-sub-lexp
+  (lambda (lexp)
+    (cond
+      ((null? lexp) (quote ()))
+      ((null? (cdr lexp)) (quote ()))
+      ((null? (cdr (cdr lexp))) (quote ()))
+      ((null? (cdr (cdr (cdr lexp)))) (quote ()))
+      (t (car (cdr (cdr (cdr lexp))))))))
+
+(define lexp?
+  (lambda (lexp)
+    (cond
+      ((null? lexp) nil)
+      ((atom? lexp) t)
+      (t (or (and-exp? lexp)
+           (or-exp? lexp)
+           (not-exp? lexp))))))
+
+(define and-exp?
+  (lambda (lexp)
+    (cond
+      ((null? lexp) nil)
+      ((and
+         (eq? (operator-lexp lexp) (quote AND))
+         (null? (3rd-sub-lexp lexp)))
+       (and (lexp? (1st-sub-lexp lexp))
+         (lexp? (2nd-sub-lexp lexp))))
+      (t nil))))
+
+(define or-exp?
+  (lambda (lexp)
+    (cond
+      ((null? lexp) nil)
+      ((and
+         (eq? (operator-lexp lexp) (quote OR))
+         (null? (3rd-sub-lexp lexp)))
+       (and (lexp? (1st-sub-lexp lexp))
+         (lexp? (2nd-sub-lexp lexp))))
+      (t nil))))
+
+(define not-exp?
+  (lambda (lexp)
+    (cond
+      ((null? lexp) nil)
+      ((and
+         (eq? (operator-lexp lexp) (quote NOT))
+         (null? (2nd-sub-lexp lexp)))
+       (lexp? (1st-sub-lexp lexp)))
+      (t nil))))
+
+(define and-exp-left
+  (lambda (lexp)
+    (1st-sub-lexp lexp)))
+
+(define and-exp-right
+  (lambda (lexp)
+    (2nd-sub-lexp lexp)))
+
+(define or-exp-left
+  (lambda (lexp)
+    (1st-sub-lexp lexp)))
+
+(define or-exp-left
+  (lambda (lexp)
+    (2nd-sub-lexp lexp)))
+
+(define not-exp-subexp
+  (lambda (lexp)
+    (1st-sub-lexp lexp)))
+```
