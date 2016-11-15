@@ -394,3 +394,23 @@ Exampe: When l1 is (x y z u), then
       ((not-exp? lexp) (covered? (not-exp-subexp lexp) los))
       (t nil))))
 ```
+
+###7.8 For the evaluation of L-expressions we need *association lists (alists)*. An alist for L-expressions is a list of pairs. The first component of a pair is always a symbol, the second one is either the number 0 (signifiying false) or 1 (signifying true). The second component is referred to as the value of the variable. Write the function lookup of the symbol *var* and the association list *al*, which returns the value of the first pair in *al* whose car is eq? to *var*.###
+```lisp
+Exampe: When l1 is ((x 1) (y 0)),
+             l2 is ((u 1) (v 1)),
+             l3 is (),
+              a is y,
+              b is u, then
+  (lookup a l1) is 0,
+  (lookup b l2) is 1,
+ (lookup a l3) has an unspecified answer.
+```
+```lisp
+(define lookup
+  (lambda (var al)
+    (cond
+      ((null? al) (quote ()))
+      ((eq? (car (car al)) var) (car (cdr (car al))))
+      (t (lookup var (cdr al))))))
+```
