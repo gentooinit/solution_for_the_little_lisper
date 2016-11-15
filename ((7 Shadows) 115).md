@@ -365,11 +365,32 @@ Finally, write the functions or-exp-left, or-exp-right, and not-exp-subexp, whic
   (lambda (lexp)
     (1st-sub-lexp lexp)))
 
-(define or-exp-left
+(define or-exp-right
   (lambda (lexp)
     (2nd-sub-lexp lexp)))
 
 (define not-exp-subexp
   (lambda (lexp)
     (1st-sub-lexp lexp)))
+```
+
+###7.7 Write the functions covered? of an L-expression *lexp* and a list of symbols *los* that tests whether all the variables in *lexp* are in *los*.###
+```lisp
+Exampe: When l1 is (x y z u), then
+  (covered? lexp1 l1) is true,
+  (covered? lexp2 l1) is false,
+  (covered? lexp4 l1) is true.
+```
+```lisp
+(define covered?
+  (lambda (lexp los)
+    (cond
+      ((null? lexp) nil)
+      ((atom? lexp) (member? lexp los))
+      ((and-exp? lexp) (and (covered? (and-exp-left lexp) los)
+                         (covered? (and-exp-right lexp) los)))
+      ((or-exp? lexp) (and (covered? (or-exp-left lexp) los)
+                         (covered? (or-exp-right lexp) los)))
+      ((not-exp? lexp) (covered? (not-exp-subexp lexp) los))
+      (t nil))))
 ```
