@@ -386,7 +386,7 @@ Exampe: When l1 is (x y z u), then
   (lambda (lexp los)
     (cond
       ((null? lexp) nil)
-      ((atom? lexp) (member? lexp los))
+      ((atom? lexp) (member* lexp los))
       ((and-exp? lexp) (and (covered? (and-exp-left lexp) los)
                          (covered? (and-exp-right lexp) los)))
       ((or-exp? lexp) (and (covered? (or-exp-left lexp) los)
@@ -413,4 +413,38 @@ Exampe: When l1 is ((x 1) (y 0)),
       ((null? al) (quote ()))
       ((eq? (car (car al)) var) (car (cdr (car al))))
       (t (lookup var (cdr al))))))
+```
+
+###7.9 If the list of symbols in an alist for L-expressions contains all the variables of an L-expression *lexp*, then *lexp* is called closed and can be evaluated with respect to this alist. Write the function Mlexp of an L-expression *lexp* and an alist *al*, which, after verifying that *lexp* is closed, determines whether *lexp* means true or false.###
+Given *al* such that *lexp* is covered *lexp*, *exp* means true
+ * if *lexp* is a variable and its value means true, or
+ * if *lexp* is an AND-expression and both subexpressions mean true, or
+ * if *lexp* is an OR-expression and one of the subexpressions means true, or
+ * if *lexp* is a NOT-expression and the subexpression means false.
+
+Otherwise *lexp* means false.
+
+If *lexp* is not closed in *al*, then (Mlexp lexp al) returns the symbol **not-covered**.
+```lisp
+Exampe: When l1 is ((x 1) (y 0) (z 0)),
+             l2 is ((y 0) (u 0) (v 1)), then
+(Mlexp lexp1 l1) is false,
+(Mlexp lexp2 l2) is true,
+(Mlexp lexp4 l1) is false.
+Hint: You will need the function lookup from Exercise 7.8 and covered? from Exercise 7.7.
+```
+(define Mlexp
+  (lambda (lexp al)
+    (cond
+      ((not (covered? lexp al)) (quote not-covered))
+      ((atom? lexp) (eq? (lookup lexp al) 1))
+      ((eq? (operator-lexp lexp) (quote AND))
+       (and (Mlexp (and-exp-left lexp) al)
+         (Mlexp (and-exp-right lexp) al)))
+      ((eq? (operator-lexp lexp) (quote OR))
+       (or (Mlexp (or-exp-left lexp) al)
+         (Mlexp (or-exp-right lexp) al)))
+      ((eq? (operator-lexp lexp) (quote NOT))
+       (not (Mlexp (not-exp-subexp lexp) al)))
+      (t nil))))
 ```
