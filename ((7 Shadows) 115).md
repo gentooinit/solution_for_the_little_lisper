@@ -454,21 +454,12 @@ Hint: You will need the function lookup from Exercise 7.8 and covered? from Exer
 
 Hint: Exercise 7.5 is a similar extension of arithmetic expressions.
 ```lisp
-(define 1st-sub-lexp
-  (lambda (lexp)
-    (car (cdr lexp))))
-
-(define 2nd-sub-lexp
-  (lambda (lexp)
-    (car (cdr (cdr lexp)))))
-
-(define 3rd-sub-lexp
-  (lambda (lexp)
-    (car (cdr (cdr (cdr lexp))))))
-
-(define 4th-sub-lexp
-  (lambda (lexp)
-    (car (cdr (cdr (cdr (cdr lexp)))))))
+(define nth-sub-lexp
+  (lambda (lexp n)
+    (cond
+      ((null? lexp) (quote ()))
+      ((zero? n) (car lexp))
+      (t (nth-sub-lexp (cdr lexp) (sub1 n))))))
 
 (define cnt-lexp*
   (lambda (lexp)
@@ -486,68 +477,44 @@ Hint: Exercise 7.5 is a similar extension of arithmetic expressions.
        (cnt-lexp* (cdr lexp)))
       (t 0))))
 
+(define covered*
+  (lambda (lexp los n)
+    (cond
+      ((zero? n) t)
+      (t (and (covered? (nth-sub-lexp lexp n) los)
+           (covered* lexp los (sub1 n)))))))
+
 (define covered?
   (lambda (lexp los)
     (cond
       ((null? lexp) nil)
       ((atom? lexp) (member* lexp los))
-      ((eq? (cnt-lexp lexp) 1) (covered? (1st-sub-lexp lexp) los))
-      ((eq? (cnt-lexp lexp) 2)
-       (and (covered? (1st-sub-lexp lexp) los)
-	    (covered? (2nd-sub-lexp lexp) los)))
-      ((eq? (cnt-lexp lexp) 3)
-       (and (covered? (1st-sub-lexp lexp) los)
-	    (covered? (2nd-sub-lexp lexp) los)
-	    (covered? (3rd-sub-lexp lexp) los)))
-      ((eq? (cnt-lexp lexp) 4)
-       (and (covered? (1st-sub-lexp lexp) los)
-	    (covered? (2nd-sub-lexp lexp) los)
-	    (covered? (3rd-sub-lexp lexp) los)
-	    (covered? (4th-sub-lexp lexp) los)))
-      (t nil))))
+      (t (covered* lexp los (cnt-lexp lexp))))))
+
+(define and-Mlexp
+  (lambda (lexp al n)
+    (cond
+       ((zero? n) t)
+       (t (and (Mlexp (nth-sub-lexp lexp n) al)
+            (and-Mlexp lexp al (sub1 n)))))))
+
+(define or-Mlexp
+  (lambda (lexp al n)
+    (cond
+       ((zero? n) nil)
+       (t (or (Mlexp (nth-sub-lexp lexp n) al)
+            (or-Mlexp lexp al (sub1 n)))))))
 
 (define Mlexp
   (lambda (lexp al)
     (cond
       ((not (covered? lexp al)) (quote not-covered))
       ((atom? lexp) (eq? (lookup lexp al) 1))
-      ((eq? (cnt-lexp lexp) 1)
-       (cond
-         ((eq? (operator-lexp lexp) (quote NOT))
-          (not (Mlexp (1st-sub-lexp lexp) al)))
-         (t nil)))
-      ((eq? (cnt-lexp lexp) 2)
-       (cond
-         ((eq? (operator-lexp lexp) (quote AND))
-          (and (Mlexp (1st-sub-lexp lexp) al)
-            (Mlexp (2nd-sub-lexp lexp) al)))
-         ((eq? (operator-lexp lexp) (quote OR))
-          (or (Mlexp (1st-sub-lexp lexp) al)
-            (Mlexp (2nd-sub-lexp lexp) al)))
-         (t nil)))
-      ((eq? (cnt-lexp lexp) 3)
-       (cond
-         ((eq? (operator-lexp lexp) (quote AND))
-          (and (Mlexp (1st-sub-lexp lexp) al)
-            (Mlexp (2nd-sub-lexp lexp) al)
-            (Mlexp (3rd-sub-lexp lexp) al)))
-         ((eq? (operator-lexp lexp) (quote OR))
-          (or (Mlexp (1st-sub-lexp lexp) al)
-            (Mlexp (2nd-sub-lexp lexp) al)
-            (Mlexp (3rd-sub-lexp lexp) al)))
-         (t nil)))
-      ((eq? (cnt-lexp lexp) 4)
-       (cond
-         ((eq? (operator-lexp lexp) (quote AND))
-          (and (Mlexp (1st-sub-lexp lexp) al)
-            (Mlexp (2nd-sub-lexp lexp) al)
-            (Mlexp (3rd-sub-lexp lexp) al)
-            (Mlexp (4th-sub-lexp lexp) al)))
-         ((eq? (operator-lexp lexp) (quote OR))
-          (or (Mlexp (1st-sub-lexp lexp) al)
-            (Mlexp (2nd-sub-lexp lexp) al)
-            (Mlexp (3rd-sub-lexp lexp) al)
-            (Mlexp (4th-sub-lexp lexp) al)))
-         (t nil)))
-       (t nil))))
+      ((eq? (operator-lexp lexp) (quote NOT))
+       (not (Mlexp (nst-sub-lexp lexp 1) al)))
+      ((eq? (operator-lexp lexp) (quote AND))
+       (and-Mlexp lexp al (cnt-lexp lexp)))
+      ((eq? (operator-lexp lexp) (quote OR))
+       (or-Mlexp lexp al (cnt-lexp lexp)))
+      (t nil))))
 ```
