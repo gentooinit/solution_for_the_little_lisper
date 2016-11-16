@@ -433,6 +433,7 @@ Exampe: When l1 is ((x 1) (y 0) (z 0)),
 (Mlexp lexp4 l1) is false.
 Hint: You will need the function lookup from Exercise 7.8 and covered? from Exercise 7.7.
 ```
+```lisp
 (define Mlexp
   (lambda (lexp al)
     (cond
@@ -449,9 +450,7 @@ Hint: You will need the function lookup from Exercise 7.8 and covered? from Exer
       (t nil))))
 ```
 
-###7.10 Extend the representation of L-expressions to AND and OR expressions that contain several subexpressions, i.e,
-(AND x (OR u v w) y).###
-Rewrite the function Mlexp from Exercise 7.9 for this representation.
+###7.10 Extend the representation of L-expressions to AND and OR expressions that contain several subexpressions, i.e,(AND x (OR u v w) y). Rewrite the function Mlexp from Exercise 7.9 for this representation.###
 
 Hint: Exercise 7.5 is a similar extension of arithmetic expressions.
 ```lisp
