@@ -205,15 +205,15 @@ Example: When aexp1 is (+ 3 2 (* 7 8)),
   (lambda (aexp)
     (cond
       ((atom? aexp) (number? aexp))
-      ((eq? (cnt-aexp aexp) 1) (numbered? (1st-sub-exp aexp)))
-      ((eq? (cnt-aexp aexp) 2)
+      ((= (cnt-aexp aexp) 1) (numbered? (1st-sub-exp aexp)))
+      ((= (cnt-aexp aexp) 2)
        (and (numbered? (1st-sub-exp aexp))
          (numbered? (2nd-sub-exp aexp))))
-      ((eq? (cnt-aexp aexp) 3)
+      ((= (cnt-aexp aexp) 3)
        (and (numbered? (1st-sub-exp aexp))
          (numbered? (2nd-sub-exp aexp))
          (numbered? (3rd-sub-exp aexp))))
-      ((eq? (cnt-aexp aexp) 4)
+      ((= (cnt-aexp aexp) 4)
        (and (numbered? (1st-sub-exp aexp))
          (numbered? (2nd-sub-exp aexp))
          (numbered? (3rd-sub-exp aexp))
@@ -224,7 +224,7 @@ Example: When aexp1 is (+ 3 2 (* 7 8)),
   (lambda (nexp)
     (cond
       ((number? nexp) nexp)
-      ((eq? (cnt-aexp nexp) 2)
+      ((= (cnt-aexp nexp) 2)
        (cond
          ((eq? (operator nexp) (quote +))
           (+ (value (1st-sub-exp nexp))
@@ -234,7 +234,7 @@ Example: When aexp1 is (+ 3 2 (* 7 8)),
             (value (2nd-sub-exp nexp))))
          (t (expt (value (1st-sub-exp nexp))
               (value (2nd-sub-exp nexp))))))
-      ((eq? (cnt-aexp nexp) 3)
+      ((= (cnt-aexp nexp) 3)
        (cond
          ((eq? (operator nexp) (quote +))
           (+ (value (1st-sub-exp nexp))
@@ -243,7 +243,7 @@ Example: When aexp1 is (+ 3 2 (* 7 8)),
          (t (* (value (1st-sub-exp nexp))
               (value (2nd-sub-exp nexp))
               (value (3rd-sub-exp nexp))))))
-      ((eq? (cnt-aexp nexp) 4)
+      ((= (cnt-aexp nexp) 4)
        (cond
          ((eq? (operator nexp) (quote +))
           (+ (value (1st-sub-exp nexp))
@@ -438,7 +438,7 @@ Hint: You will need the function lookup from Exercise 7.8 and covered? from Exer
   (lambda (lexp al)
     (cond
       ((not (covered? lexp al)) (quote not-covered))
-      ((atom? lexp) (eq? (lookup lexp al) 1))
+      ((atom? lexp) (= (lookup lexp al) 1))
       ((and-exp? lexp)
        (and (Mlexp (and-exp-left lexp) al)
          (Mlexp (and-exp-right lexp) al)))
@@ -509,7 +509,7 @@ Hint: Exercise 7.5 is a similar extension of arithmetic expressions.
   (lambda (lexp al)
     (cond
       ((not (covered? lexp al)) (quote not-covered))
-      ((atom? lexp) (eq? (lookup lexp al) 1))
+      ((atom? lexp) (= (lookup lexp al) 1))
       ((eq? (operator-lexp lexp) (quote NOT))
        (not (Mlexp (nst-sub-lexp lexp 1) al)))
       ((eq? (operator-lexp lexp) (quote AND))
