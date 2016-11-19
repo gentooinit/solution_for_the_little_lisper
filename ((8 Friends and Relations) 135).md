@@ -72,3 +72,43 @@ Example: (reflexive? r1) is true,
   (lambda (rel)
     (reflexive-help rel (idrel (domset rel)))))
 ```
+
+###8.3 Write the function symmetric? which tests whether a relation is *symmetric*. A relation is symmetric if it is eqset? to its revrel.###
+```lisp
+Example: (symmetric? r1) is false,
+         (symmetric? r2) is true,
+         (symmetric? f2) is true.
+```
+Also write the function antisymmetric? which tests whether a relation is *antisymmetric*. A relation is antisymmetric if the intersection of the relation
+with its revrel is a subset of the identity relation on its domain of discourse (see Exercise 8.1)
+```lisp
+Example: (antisymmetric? r1) is true,
+         (antisymmetric? r2) is true,
+         (antisymmetric? r4) is false.
+```
+And finally, this is the function asymmetric? which tests whether a relation is asymmetric.
+```lisp
+(define asymmetric?
+  (lambda (rel)
+    (null? (intersect rel (revrel rel)))))
+```
+Find out which of the sample relations is asymmetric. Characterize asymmetry in one sentence.
+
+```lisp
+(define symmetric?
+  (lambda (rel)
+    (eqset? rel (revrel rel))))
+
+(define antisymmetric?
+  (lambda (rel)
+    (subset? (intersect rel (revrel rel))
+      (idrel (domset rel)))))
+
+(asymmetric? r3) is true,
+(asymmetric? f1) is true,
+(asymmetric? f2) is true,
+(asymmetric? f3) is true,
+(asymmetric? f4) is true.
+
+A relation is asymmetric if the the intersect of the relation with its revrel is null.
+```
