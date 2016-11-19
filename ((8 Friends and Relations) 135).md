@@ -46,3 +46,29 @@ Example: (idrel d1) is ((a a) (b b)),
       (t (cons (build (car dom) (car dom))
            (idrel (cdr dom)))))))
 ```
+
+###8.2 Write the function reflexive? which tests whether a relation is *reflexive*. A relation is reflexive if it contains all pairs of the form (d d) where d is an element of its domain of discourse (see Exercise 8.1).###
+```lisp
+Example: (reflexive? r1) is true,
+         (reflexive? r2) is true,
+         (reflexive? r3) is false.
+```
+```lisp
+(define subrel?
+  (lambda (p rel)
+    (cond
+      ((null? rel) nil)
+      ((equal? (car rel) p) t)
+      (t (subrel? p (cdr rel))))))
+
+(define reflexive-help
+  (lambda (rel idr)
+    (cond
+      ((null? idr) t)
+      (t (and (subrel? (car idr) rel)
+           (reflexive-help rel (cdr idr)))))))
+
+(define reflexive?
+  (lambda (rel)
+    (reflexive-help rel (idrel (domset rel)))))
+```
