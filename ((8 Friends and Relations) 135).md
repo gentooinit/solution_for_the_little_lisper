@@ -158,3 +158,20 @@ Hint: The function Fapply from Exercise 8.4 may be useful.
              (Fapply f (second (car g))))
            (Fcomp f (cdr g)))))))
 ```
+
+###8.6 Write the function Rapply of *rel* and *x*, which returns the *value set* of *rel* at place *x*. The value set is the set of second components of all the pairs whose first component is eq? to *x*.###
+```lisp
+Example: (Rapply f1 x) is (1),
+         (Rapply r1 x) is (b a),
+         (Rapply f2 x) is ().
+```
+```lisp
+(define Rapply
+  (lambda (rel x)
+    (cond
+      ((null? rel) (quote ()))
+      ((equal? (first (car rel)) x)
+       (cons (second (car rel))
+         (Rapply (cdr rel) x)))
+      (t (Rapply (cdr rel) x)))))
+```
