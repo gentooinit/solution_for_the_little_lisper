@@ -191,3 +191,25 @@ Example: (Rin x d1) is ((a b) (a b)),
            (build x (car set))
            (Rin x (cdr set)))))))
 ```
+
+###8.8 Relations can be composed with the following function:###
+```lisp
+(define Rcomp
+  (lambda (rel1 rel2)
+    (cond
+      ((null? rel1) (quote ()))
+      (t (union
+           (Rin
+             (first (car rel1))
+             (Rapply rel2 (second (car rel1))))
+           (Rcomp (cdr rel1) rel2))))))
+```
+See Exercises 8.6 and 8.7.
+
+Find the values of (Rcomp r1 r3), (Rcomp r1 f1), and (Rcomp r1 r1).
+
+```lisp
+(Rcomp r1 r3) is ((a c) (b c)),
+(Rcomp r1 f1) is ((a 2) (a 1) (b 2)),
+(Rcomp r1 r1) is ((a b) (a a) (b b)).
+```
