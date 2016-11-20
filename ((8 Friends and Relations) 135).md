@@ -132,7 +132,29 @@ Example: (Fapply f1 x) is 1,
   (lambda (f x)
     (cond
       ((null? f) (quote ()))
-      ((eq? (first (car f)) x)
+      ((equal? (first (car f)) x)
        (second (car f)))
       (t (Fapply (cdr f) x)))))
+```
+
+###8.5 Write the function Fcomp of *f* and *g*, which composes two functions. If *g* contains an element (x y) and f contains an element (y z), then the composed function (Fcomp f g) will contain (x z).###
+```lisp
+Example: (Fcomp f1 f4) is (),
+         (Fcomp f1 f3) is (),
+         (Fcomp f4 f1) is ((a $) (d $)),
+         (Fcomp f4 f3) is ((b $)).
+```
+Hint: The function Fapply from Exercise 8.4 may be useful.
+
+```lisp
+(define Fcomp
+  (lambda (f g)
+    (cond
+      ((null? g) (quote ()))
+      ((equal? (Fapply f (second (car g))) (quote ()))
+       (Fcomp f (cdr g)))
+      (t (cons
+           (build (first (car g))
+             (Fapply f (second (car g))))
+           (Fcomp f (cdr g)))))))
 ```
