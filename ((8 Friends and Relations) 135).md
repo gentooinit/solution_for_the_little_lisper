@@ -112,3 +112,27 @@ Find out which of the sample relations is asymmetric. Characterize asymmetry in 
 
 A relation is asymmetric if the the intersect of the relation with its revrel is null.
 ```
+
+###8.4 Write the function Fapply of *f* and *x*, which returns the value of *f* at place *x*. That is, it returns the second of the pair whose first is eq? to *x*.###
+```lisp
+Example: (Fapply f1 x) is 1,
+        (Fapply f2 x) has no answer,
+         (Fapply f3 x) is 2.
+```
+```lisp
+(define first
+  (lambda (p)
+    (car p)))
+
+(define second
+  (lambda (p)
+    (car (cdr p))))
+
+(define Fapply
+  (lambda (f x)
+    (cond
+      ((null? f) (quote ()))
+      ((eq? (first (car f)) x)
+       (second (car f)))
+      (t (Fapply (cdr f) x)))))
+```
