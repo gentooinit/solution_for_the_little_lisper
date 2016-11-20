@@ -28,9 +28,9 @@ Example: (idrel d1) is ((a a) (b b)),
 ```
 ```lisp
 (define build
-  (lambda (a1 a2)
-    (cons a1
-      (cons a2 (quote ())))))
+  (lambda (s1 s2)
+    (cons s1
+      (cons s2 (quote ())))))
 
 (define domset
   (lambda (rel)
@@ -174,4 +174,20 @@ Example: (Rapply f1 x) is (1),
        (cons (second (car rel))
          (Rapply (cdr rel) x)))
       (t (Rapply (cdr rel) x)))))
+```
+
+###8.7 Write the function Rin of *x* and *set*, which produces a relation of pairs (x d) where d is an element of *set*.###
+```lisp
+Example: (Rin x d1) is ((a b) (a b)),
+         (Rin x d2) is ((a c) (a d)),
+         (Rin x f2) is ().
+```
+```lisp
+(define Rin
+  (lambda (x set)
+    (cond
+      ((null? set) (quote ()))
+      (t (cons
+           (build x (car set))
+           (Rin x (cdr set)))))))
 ```
