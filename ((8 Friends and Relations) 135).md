@@ -228,3 +228,24 @@ Find a relation for which transitive? yields false.
 
 (transitive? '((a b) (b c))) is false.
 ```
+
+###8.10 Write the functions quasi-order?, partial-order?, and equivalence?, which test whether a relation is a *quasi-order*, a *partial-order*, or an *equivalence relation*, respectively.###
+A relation is a
+ * quasi-order if it is reflexive and transitive,
+ * partial-order if it is a quasi-order and antisymmetric,
+ * equivalence relation if it is a quasi-order and symmetric.
+
+See Exercise 8.2, 8.3, and 8.9
+```lisp
+(define quasi-order?
+  (lambda (rel)
+    (and (reflexive? rel) (transitive? rel))))
+
+(define partial-order?
+  (lambda (rel)
+    (and (quasi-order? rel) (antisymmetric? rel))))
+
+(define equivalence?
+  (lambda (rel)
+    (and (quasi-order? rel) (symmetric? rel))))
+```
