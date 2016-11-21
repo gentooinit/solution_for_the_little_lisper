@@ -213,3 +213,18 @@ Find the values of (Rcomp r1 r3), (Rcomp r1 f1), and (Rcomp r1 r1).
 (Rcomp r1 f1) is ((a 2) (a 1) (b 2)),
 (Rcomp r1 r1) is ((a b) (a a) (b b)).
 ```
+
+###8.9 Write the function transitive?, which tests whether a relation is transitive. A relation *rel* is *transitive* if the composition of *rel* with *rel* is a subset of *rel* (see Exercise 8.8).###
+```lisp
+Example: (transitive? r1) is true,
+         (transitive? r3) is true,
+         (transitive? f1) is true.
+```
+Find a relation for which transitive? yields false.
+```lisp
+(define transitive?
+  (lambda (rel)
+    (subset? (Rcomp rel rel) rel)))
+
+(transitive? '((a b) (b c))) is false.
+```
