@@ -56,3 +56,6 @@ Recur on all the *subparts* that are of the same nature:
 
 ##The Ninth Commandment##
 Use help functions to abstract from representations.
+
+##The Tenth Commandment##
+Abstract functions with common structures into a single function.
