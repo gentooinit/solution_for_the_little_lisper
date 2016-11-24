@@ -36,7 +36,8 @@ Example: When a is apple,
 (assq-sf a b1 sk fk) is (apple not-in-list),
 (assq-sf a b2 sk fk) is (apple 2),
 (assq-sf a b3 sk fk) is (apple not-in-list).
-
+```
+```lisp
 (define assq-sf
   (lambda (a l sk fk)
     (cond
