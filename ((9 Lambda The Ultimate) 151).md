@@ -46,3 +46,46 @@ Example: When a is apple,
        (sk (car l)))
       (t (assq-sf a (cdr l) sk fk)))))
 ```
+
+###9.3 In the chapter we have derived a Y-combinator that allows us to write recursive functions of one argument without using define. Here is the Y-combinator for functions of two arguments.###
+```lisp
+(define Y2
+  (lambda (M)
+    ((lambda (future)
+       (M (lambda (arg1 arg2)
+            ((future future) arg1 arg2))))
+     (lambda (future)
+       (M (lambda (arg1 arg2)
+            ((future future) arg1 arg2)))))))
+```
+Write the functions =, rempick, and pick from Chapter 4 using Y2.
+
+Note: There is a version of (lambda ...) for defining a function of an arbitrary number of arguments, and an apply function for applying such a function to a list of arguments. With this you can write a single Y-combinator for all functions.
+
+```lisp
+(define =
+  (Y2 (lambda (recfun)
+        (lambda (n m)
+          (cond
+            ((zero? m) (zero? n))
+            ((zero? n) nil)
+            (t (recfun (sub1 n) (sub1 m))))))))
+
+(define rempick
+  (Y2 (lambda (recfun)
+        (lambda (n lat)
+          (cond
+            ((null? lat) (quote ()))
+            ((zero? (sub1 n)) (cdr lat))
+            (t (cons (car lat)
+                 (recfun
+                   (sub1 n) (cdr lat)))))))))
+
+(define pick
+  (Y2 (lambda (recfun)
+        (lambda (n lat)
+          (cond
+            ((null? lat) nil)
+            ((zero? (sub1 n)) (car lat))
+            (t (recfun (sub1 n) (cdr lat))))))))
+```
