@@ -89,3 +89,279 @@ Note: There is a version of (lambda ...) for defining a function of an arbitrary
             ((zero? (sub1 n)) (car lat))
             (t (recfun (sub1 n) (cdr lat))))))))
 ```
+
+###9.4 With the Y-combinator we can reduce the number of arguments on, which a function has to recur. For example member can be rewritten as:###
+```lisp
+(define member-Y
+  (lambda (a l)
+    ((Y (lambda (recfun)
+          (lambda (l)
+            (cond
+              ((null? l) nil)
+              (t (or
+                   (eq? (car l) a)
+                   (recfun (cdr l))))))))
+     l)))
+```
+Step through the application (member-Y a l) where a is x and l is (y x). Rewrite the functions rember, insertR, and subst2 from Chapter 3 in a similar manner.
+
+```lisp
+Q1: Try to expand the Y-combinator.
+
+A1:
+(((lambda (future)
+    ((lambda (recfun)
+       (lambda (l)
+         (cond
+           ((null? l) nil)
+           (t (or
+                (eq? (car l) 'x)
+                (recfun (cdr l)))))))
+     (lambda (x) ((future future) x))))
+  (lambda (future)
+    ((lambda (recfun)
+       (lambda (l)
+         (cond
+           ((null? l) nil)
+           (t (or
+               (eq? (car l) 'x)
+               (recfun (cdr l)))))))
+     (lambda (x) ((future future) x)))))
+ '(y x))
+
+=>
+
+(((lambda (recfun)
+    (lambda (l)
+       (cond
+         ((null? l) nil)
+         (t (or
+              (eq? (car l) 'x)
+              (recfun (cdr l)))))))
+  (lambda (x)
+    (((lambda (future)
+        ((lambda (recfun)
+           (lambda (l)
+             (cond
+               ((null? l) nil)
+               (t (or
+                   (eq? (car l) 'x)
+                   (recfun (cdr l)))))))
+         (lambda (x) ((future future) x))))
+      (lambda (future)
+        ((lambda (recfun)
+           (lambda (l)
+             (cond
+               ((null? l) nil)
+               (t (or
+                   (eq? (car l) 'x)
+                   (recfun (cdr l)))))))
+         (lambda (x) ((future future) x)))))
+    x)))
+ '(y x))
+
+=>
+
+(((lambda (l)
+    (cond
+      ((null? l) nil)
+      (t (or
+           (eq? (car l) 'x)
+           ((lambda (x)
+              (((lambda (future)
+                  ((lambda (recfun)
+                     (lambda (l)
+                       (cond
+                         ((null? l) nil)
+                         (t (or
+                             (eq? (car l) 'x)
+                             (recfun (cdr l)))))))
+                   (lambda (x) ((future future) x))))
+                (lambda (future)
+                  ((lambda (recfun)
+                     (lambda (l)
+                       (cond
+                         ((null? l) nil)
+                         (t (or
+                             (eq? (car l) 'x)
+                             (recfun (cdr l)))))))
+                   (lambda (x) ((future future) x)))))
+              x))
+            (cdr l)))))))
+ '(y x))
+
+Now, we got a function of the l argument. Let's apply it.
+
+Q2: (null? l)
+A2: nil.
+
+Q3: (eq? (car l) 'x)
+A3: nil.
+
+Q4: Here, we need one more function of the l argument, and take (cdr l) where is (x).
+A4:
+
+(((lambda (l)
+    (cond
+      ((null? l) nil)
+      (t (or
+           (eq? (car l) 'x)
+           ((lambda (x)                                  ------------>
+              (((lambda (future)                                     |
+                  ((lambda (recfun)                                  |
+                     (lambda (l)                                     |
+                       (cond                                         |
+                         ((null? l) nil)                             |
+                         (t (or                                      |
+                             (eq? (car l) 'x)                        |
+                             (recfun (cdr l)))))))                   |
+                   (lambda (x) ((future future) x))))                >Expand this part
+                (lambda (future)                                     |
+                  ((lambda (recfun)                                  |
+                     (lambda (l)                                     |
+                       (cond                                         |
+                         ((null? l) nil)                             |
+                         (t (or                                      |
+                             (eq? (car l) 'x)                        |
+                             (recfun (cdr l)))))))                   |
+                   (lambda (x) ((future future) x)))))               |
+              x))                                       ------------->
+            (cdr l)))))))
+ '(y x))      |
+              |--------> the argument, where is '(x)
+
+=>
+
+...
+            (((lambda (future)
+                ((lambda (recfun)
+                   (lambda (l)
+                     (cond
+                       ((null? l) nil)
+                       (t (or
+                           (eq? (car l) 'x)
+                           (recfun (cdr l)))))))
+                 (lambda (x) ((future future) x))))
+              (lambda (future)
+                ((lambda (recfun)
+                   (lambda (l)
+                     (cond
+                       ((null? l) nil)
+                       (t (or
+                           (eq? (car l) 'x)
+                           (recfun (cdr l)))))))
+                 (lambda (x) ((future future) x)))))
+            '(x))
+...
+
+=>
+
+...
+            (((lambda (recfun)
+                (lambda (l)
+                  (cond
+                    ((null? l) nil)
+                    (t (or
+                        (eq? (car l) 'x)
+                        (recfun (cdr l)))))))
+              (lambda (x) (((lambda (future)
+                              ((lambda (recfun)
+                                 (lambda (l)
+                                   (cond
+                                     ((null? l) nil)
+                                     (t (or
+                                         (eq? (car l) 'x)
+                                         (recfun (cdr l)))))))
+                               (lambda (x) ((future future) x))))
+                            (lambda (future)
+                              ((lambda (recfun)
+                                 (lambda (l)
+                                   (cond
+                                     ((null? l) nil)
+                                     (t (or
+                                         (eq? (car l) 'x)
+                                         (recfun (cdr l)))))))
+                               (lambda (x) ((future future) x)))))
+                           x)))
+             '(x))
+...
+
+=>
+
+...
+            ((lambda (l)
+               (cond
+                 ((null? l) nil)
+                 (t (or
+                     (eq? (car l) 'x)
+                     ((lambda (x)
+                        (((lambda (future)
+                            ((lambda (recfun)
+                               (lambda (l)
+                                 (cond
+                                   ((null? l) nil)
+                                   (t (or
+                                       (eq? (car l) 'x)
+                                       (recfun (cdr l)))))))
+                             (lambda (x) ((future future) x))))
+                          (lambda (future)
+                            ((lambda (recfun)
+                               (lambda (l)
+                                 (cond
+                                   ((null? l) nil)
+                                   (t (or
+                                       (eq? (car l) 'x)
+                                       (recfun (cdr l)))))))
+                          (lambda (x) ((future future) x)))))
+                         x))
+                      (cdr l))))))
+             '(x))
+...
+
+Q5: (null? l)
+A5: nil.
+
+Q6: (eq? (car l) 'x), where l is (x).
+A6: t, so the value of recursive function is t.
+
+Q7: Are we finish?
+A7: Yes, the value of (member-Y a l) is t.
+
+
+(define rember
+  (lambda (a lat)
+    ((Y (lambda (recfun)
+          (lambda (lat)
+            (cond
+              ((null? lat) (quote ()))
+              ((eq? (car lat) a) (cdr lat))
+              (t (cons (car lat)
+                   (recfun (cdr lat))))))))
+     lat)))
+
+(define insertR
+  (lambda (new old lat)
+    ((Y (lambda (recfun)
+          (lambda (lat)
+            (cond
+              ((null? lat) (quote ()))
+              ((eq? (car lat) old)
+               (cons old
+                 (cons new (cdr lat))))
+              (t (cons (car lat)
+                   (recfun (cdr lat))))))))
+     lat)))
+
+(define subst2
+  (lambda (new o1 o2 lat)
+    ((Y (lambda (recfun)
+          (lambda (lat)
+            (cond
+              ((null? lat) (quote ()))
+              ((or (eq? (car lat) o1) (eq? (car lat) o2))
+               (cons new (cdr lat)))
+              (t (cons (car lat)
+                   (recfun (cdr lat))))))))
+     lat)))
+
+```
