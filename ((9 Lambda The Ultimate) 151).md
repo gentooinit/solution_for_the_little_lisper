@@ -365,3 +365,332 @@ A7: Yes, the value of (member-Y a l) is t.
      lat)))
 
 ```
+
+###9.5 In Exercise 6.7 through 6.10 we saw how to use the accumulator technique. Instead of accumulators, continuation functions are sometimes used. These functions abstract what needs to be done to complete an application. For example, multisubst can be defined as:###
+```lisp
+(define multisubst-k
+  (lambda (new old lat k)
+    (cond
+      ((null? lat) (k (quote ())))
+      ((eq? (car lat) old)
+       (multisubst-k new old (cdr lat)
+         (lambda (d)
+           (k (cons new d)))))
+      (t (multisubst-k new old (cdr lat)
+           (lambda (d)
+             (k (cons (car lat) d))))))))
+```
+The initial continuation function k is always the function (lambda (x) x). Step through the application of
+
+	(multisubst-k new old lat k),
+where
+	new is y,
+	old is x, and
+	lat is (u v x x y z x).
+
+Compare the steps to the application of multisubst to the same arguments. Write down the things you have to do when you return from a recursive application, and, next to it, write down the corresponding continuation function.
+
+```lisp
+Q1: What is the value of (multisubst new old lat),
+    where
+       new is y,
+       old is x, and
+       lat is (u v x x y z x).
+A1: Write the function multisubst again:
+    (define multisubst
+      (lambda (new old lat)
+        (cond
+          ((null? lat) (quote ()))
+          ((eq? (car lat) old)
+           (cons new
+             (multisubst new old (cdr lat))))
+          (t (cons (car lat)
+               (multisubst new old (cdr lat)))))))
+
+Q1: (null? lat)
+A1: nil.
+
+Q2: (eq? (car lat) old)
+A2: nil.
+
+Q3: (cons (car lat) (multisubst new old (cdr lat)))
+A3: Cons 'u on the value of recursive function.
+    We need to know what is the value of
+    (multisubst new old (cdr lat)), where (cdr lat) is (v x x y z x).
+
+Q4: (null? lat)
+A4: nil.
+
+Q5: (eq? (car lat) old)
+A5: nil.
+
+Q6: (cons (car lat) (multisubst new old (cdr lat)))
+A6: Cons 'v on the value of recursive function.
+    We need to know what is the value of
+    (multisubst new old (cdr lat)), where (cdr lat) is (x x y z x).
+
+Q7: (null? lat)
+A7: nil.
+
+Q8: (eq? (car lat) old)
+A8: t, (car lat) is x, old is x.
+
+Q6: (cons new (multisubst new old (cdr lat)))
+A6: Cons 'y on the value of recursive function.
+    We need to know what is the value of
+    (multisubst new old (cdr lat)), where (cdr lat) is (x y z x).
+
+Q7: (null? lat)
+A7: nil.
+
+Q8: (eq? (car lat) old)
+A8: t, (car lat) is x, old is x.
+
+Q9: (cons new (multisubst new old (cdr lat)))
+A9: Cons 'y on the value of recursive function.
+    We need to know what is the value of
+    (multisubst new old (cdr lat)), where (cdr lat) is (y z x).
+
+Q10: (null? lat)
+A10: nil.
+
+Q11: (eq? (car lat) old)
+A11: nil.
+
+Q12: (cons (car lat) (multisubst new old (cdr lat)))
+A12: Cons 'y on the value of recursive function.
+    We need to know what is the value of
+    (multisubst new old (cdr lat)), where (cdr lat) is (z x).
+
+Q13: (null? lat)
+A13: nil.
+
+Q14: (eq? (car lat) old)
+A14: nil.
+
+Q15: (cons (car lat) (multisubst new old (cdr lat)))
+A15: Cons 'z on the value of recursive function.
+    We need to know what is the value of
+    (multisubst new old (cdr lat)), where (cdr lat) is (x).
+
+Q16: (null? lat)
+A16: nil.
+
+Q17: (eq? (car lat) old)
+A17: t, (car lat) is x, old is x.
+
+Q19: (cons new (multisubst new old (cdr lat)))
+A19: Cons 'y on the value of recursive function.
+    We need to know what is the value of
+    (multisubst new old (cdr lat)), where (cdr lat) is ().
+
+Q20: (null? lat)
+A20: t, so the value is ()
+
+Q21: return ()
+A21: (cons 'y '()), which is (y).
+
+Q22: return (y)
+A22: (cons 'z '(y)), which is (z y).
+
+Q23: return (z y)
+A23: (cons 'y '(z y)), which is (y z y).
+
+Q24: return (y z y)
+A24: (cons 'y '(y z y)), which is (y y z y).
+
+Q25: return (y y z y)
+A25: (cons 'y '(y y z y)), which is (y y y z y).
+
+Q26: return (y y y z y)
+A26: (cons 'v '(y y y z y)), which is (v y y y z y).
+
+Q27: return (v y y y z y)
+A27: (cons 'u '(v y y y z y)), which is (u v y y y z y).
+
+Q28: Are we finish?
+A28: Yes, we are escaped from the recursive application.
+
+
+Q1: What is the value of (multisubst-k new old lat k),
+    where
+       new is y,
+       old is x, and
+       lat is (u v x x y z x).
+
+A1: Let's step through it.
+
+Q2: (null? lat)
+A2: nil.
+
+Q3: (eq? (car lat) old)
+A3: nil.
+
+Q4: (multisubst-k new old (cdr lat)
+      (lambda (d)
+        (k (cons (car lat) d))))
+
+A4: Recur with the new k, which is
+      (lambda (d)
+        ((lambda (x) (x))
+         (cons 'u d)))
+
+Q5: (null? lat)
+A5: nil.
+
+Q6: (eq? (car lat) old)
+A6: nil.
+
+Q7: (multisubst-k new old (cdr lat)
+      (lambda (d)
+        (k (cons (car lat) d))))
+
+A7: Recur with the new k, which is
+      (lambda (d)
+        ((lambda (d)
+           ((lambda (x) (x))
+            (cons 'u d)))
+         (cons 'v d)))
+
+Q8: (null? lat)
+A8: nil.
+
+Q9: (eq? (car lat) old)
+A9: t, (car lat) is x, old is x.
+
+Q10: (multisubst-k new old (cdr lat)
+       (lambda (d)
+         (k (cons new d))))
+
+A10: Recur with the new k, which is
+       (lambda (d)
+         ((lambda (d)
+            ((lambda (d)
+               ((lambda (x) (x))
+                (cons 'u d)))
+             (cons 'v d)))
+          (cons 'y d)))
+
+
+Q11: (null? lat)
+A11: nil.
+
+Q12: (eq? (car lat) old)
+A12: t, (car lat) is x, old is x.
+
+Q13: (multisubst-k new old (cdr lat)
+       (lambda (d)
+         (k (cons new d))))
+
+A13: Recur with the new k, which is
+       (lambda (d)
+         ((lambda (d)
+            ((lambda (d)
+               ((lambda (d)
+                  ((lambda (x) (x))
+                   (cons 'u d)))
+                (cons 'v d)))
+             (cons 'y d)))
+          (cons 'y d)))
+
+Q14: (null? lat)
+A14: nil.
+
+Q15: (eq? (car lat) old)
+A15: nil.
+
+Q16: (multisubst-k new old (cdr lat)
+       (lambda (d)
+         (k (cons (car lat) d))))
+
+A16: Recur with the new k, which is
+       (lambda (d)
+         ((lambda (d)
+            ((lambda (d)
+               ((lambda (d)
+                  ((lambda (d)
+                     ((lambda (x) (x))
+                      (cons 'u d)))
+                   (cons 'v d)))
+                (cons 'y d)))
+             (cons 'y d)))
+          (cons 'y d)))
+
+Q17: (null? lat)
+A17: nil.
+
+Q18: (eq? (car lat) old)
+A18: nil.
+
+Q19: (multisubst-k new old (cdr lat)
+       (lambda (d)
+         (k (cons (car lat) d))))
+
+A19: Recur with the new k, which is
+       (lambda (d)
+         ((lambda (d)
+            ((lambda (d)
+               ((lambda (d)
+                  ((lambda (d)
+                     ((lambda (d)
+                        ((lambda (x) (x))
+                         (cons 'u d)))
+                       (cons 'v d)))
+                   (cons 'y d)))
+                (cons 'y d)))
+             (cons 'y d)))
+          (cons 'z d)))
+
+Q20: (null? lat)
+A20: nil.
+
+Q21: (eq? (car lat) old)
+A21: t, (car lat) is x, old is x.
+
+Q22: (multisubst-k new old (cdr lat)
+       (lambda (d)
+         (k (cons new d))))
+
+A22: Recur with the new k, which is
+       (lambda (d)
+         ((lambda (d)
+            ((lambda (d)
+               ((lambda (d)
+                  ((lambda (d)
+                     ((lambda (d)
+                        ((lambda (d)
+                           ((lambda (x) (x))
+                            (cons 'u d)))
+                         (cons 'v d)))
+                      (cons 'y d)))
+                   (cons 'y d)))
+                (cons 'y d)))
+             (cons 'z d)))
+          (cons 'y d)))
+
+Q23: (null? lat)
+A23: t
+
+Q24: (k (quote ()))
+Q24: ((lambda (d)
+         ((lambda (d)
+            ((lambda (d)
+               ((lambda (d)
+                  ((lambda (d)
+                     ((lambda (d)
+                        ((lambda (d)
+                           ((lambda (x) (x))
+                            (cons 'u d)))
+                         (cons 'v d)))
+                      (cons 'y d)))
+                   (cons 'y d)))
+                (cons 'y d)))
+             (cons 'z d)))
+          (cons 'y d)))
+      (quote ()))
+
+
+Q25: Apply it?
+A25: (cons 'u (cons 'v (cons 'y (cons 'y (cons 'y (cons 'z (cons 'y '()))))))), which is (u v y y y z y).
+
+```
