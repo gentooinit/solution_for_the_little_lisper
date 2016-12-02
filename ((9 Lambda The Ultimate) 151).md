@@ -384,6 +384,7 @@ The initial continuation function k is always the function (lambda (x) x). Step 
 
 	(multisubst-k new old lat k),
 where
+
 	new is y,
 	old is x, and
 	lat is (u v x x y z x).
