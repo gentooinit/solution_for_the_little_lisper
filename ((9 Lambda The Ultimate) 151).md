@@ -721,3 +721,38 @@ A25: (cons 'u (cons 'v (cons 'y (cons 'y (cons 'y (cons 'z (cons 'y '()))))))), 
            (t y)))
        0) lat)))
 ```
+
+###9.7 In Exercise 7.3 you wrote the four functions count-op, count-+, count-*, and count-^. Abstract them into a single function count-op-f, which generates the corresponding functions if passed an appropriate help function.###
+```lisp
+(define count-op-f
+  (lambda (logical?)
+    (lambda (aexp)
+      (cond
+        ((atom? aexp) 0)
+        ((logical? (operator aexp))
+         (add1
+           (+ ((count-op-f logical?)
+               (1st-sub-exp aexp))
+              ((count-op-f logical?)
+               (2nd-sub-exp aexp)))))
+        (t (+ ((count-op-f logical?)
+               (1st-sub-exp aexp))
+              ((count-op-f logical?)
+               (2nd-sub-exp aexp))))))))
+
+(define count-op
+  (count-op-f
+    (lambda (op) t)))
+
+(define count-+
+  (count-op-f
+    (lambda (op) (eq? (quote +) op))))
+
+(define count-*
+  (count-op-f
+    (lambda (op) (eq? (quote *) op))))
+
+(define count-^
+  (count-op-f
+    (lambda (op) (eq? (quote ^) op))))
+```
