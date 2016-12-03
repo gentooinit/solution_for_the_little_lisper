@@ -695,3 +695,29 @@ Q25: Apply it?
 A25: (cons 'u (cons 'v (cons 'y (cons 'y (cons 'y (cons 'z (cons 'y '()))))))), which is (u v y y y z y).
 
 ```
+
+###9.6 In Chapter 4 and Exercise 4.2 you wrote addvec and multvec. Abstract the two functions into a single function accum. Write the functions length and occur using accum.###
+```lisp
+(define accum
+  (lambda (op const)
+    (lambda (vec)
+      (cond
+        ((null? vec) const)
+        (t (op (car vec)
+             ((accum op const)
+              (cdr vec))))))))
+
+(define length
+  (accum
+    (lambda (x y) (add1 y))
+    0))
+
+(define occur
+  (lambda (a lat)
+    ((accum
+       (lambda (x y)
+         (cond
+           ((eq? x a) (add1 y))
+           (t y)))
+       0) lat)))
+```
