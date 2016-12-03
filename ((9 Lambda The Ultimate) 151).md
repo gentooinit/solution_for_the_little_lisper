@@ -382,12 +382,12 @@ A7: Yes, the value of (member-Y a l) is t.
 ```
 The initial continuation function k is always the function (lambda (x) x). Step through the application of
 
-	(multisubst-k new old lat k),
+        (multisubst-k new old lat k),
 where
 
-	new is y,
-	old is x, and
-	lat is (u v x x y z x).
+        new is y,
+        old is x, and
+        lat is (u v x x y z x).
 
 Compare the steps to the application of multisubst to the same arguments. Write down the things you have to do when you return from a recursive application, and, next to it, write down the corresponding continuation function.
 
@@ -755,4 +755,41 @@ A25: (cons 'u (cons 'v (cons 'y (cons 'y (cons 'y (cons 'z (cons 'y '()))))))), 
 (define count-^
   (count-op-f
     (lambda (op) (eq? (quote ^) op))))
+```
+
+###9.8 Functions of no arguments are called *thunks*. If *f* is a thunk, it can be evaluated with (f), Consider the following version of or as a function.###
+```lisp
+(define or-func
+  (lambda (or1 or2)
+    (or (or1) (or2))))
+```
+Assuming that *or1* and *or2* are always thunks, convince yourself that (or ...) and or-func are equivalent. Consider as an example
+
+    (or (null? l) (atom? (car l)))
+
+ and the corresponding application
+
+    (or-func
+      (lambda () (null? l))
+      (lambda () (atom? (car l)))),
+
+ where
+   l is ().
+
+Write set-f? to take or-func and and-func. Write the functions intersect? and subset? with this set-f? function.
+
+```lisp
+(define set-f?
+  (lambda (logical? const)
+    (lambda (set1 set2)
+      (cond
+        ((null? set1) const)
+        (t (logical?
+             (lambda ()
+               (member? (car set1) set2))
+             (lambda ()
+               ((set-f? logical? const) (cdr set1) set2))))))))
+
+(define intersect? (set-f? or-func nil))
+(define subset? (set-f? and-func t))
 ```
