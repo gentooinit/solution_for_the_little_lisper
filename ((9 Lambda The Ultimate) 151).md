@@ -837,3 +837,28 @@ Define the stream of odd numbers.
 
 (define odd (str-maker (lambda (n) (+ 2 n)) 1))
 ```
+
+###9.10 This exercise builds on the results of Exercise 9.9. Consider the following functions:###
+```lisp
+(define Q
+  (lambda (str n)
+    (cond
+      ((zero? (remainder (first$ str) n))
+       (Q (second$ str) n))
+      (t (build (first$ str)
+           (lambda ()
+             (Q (second$ str) n)))))))
+
+(define P
+  (lambda (str)
+    (build (first$ str) (lambda () (P (Q str (first$ str)))))))
+```
+They can be used to construct streams. What is the result of
+    (frontier (P (second$ (second$ int))) 10)?
+
+What is this stream of numbers? (See Exercise 4.9 for the definition of remainder.)
+
+```lisp
+(frontier (P (second$ (second$ int))) 10) is (2 3 5 7 11 13 17 19 23 29)
+This is the stream of prime numbers.
+```
