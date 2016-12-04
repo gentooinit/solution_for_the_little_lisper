@@ -793,3 +793,47 @@ Write set-f? to take or-func and and-func. Write the functions intersect? and su
 (define intersect? (set-f? or-func nil))
 (define subset? (set-f? and-func t))
 ```
+
+###9.9 When you build a pair with an S-expression and a thunk (see Exercise 9.8) you get a *stream*. There are two functions defined on streams: first$ and second$.###
+Note: In practice, you can actually cons an S-expression directly onto a function. We prefer to stay with the less general cons function.
+```lisp
+(define first$ first)
+(define second$
+  (lambda (str)
+    ((second str))))
+```
+An example of a stream is (build 1 (lambda () 2)). Let's call this stream *s*. (first$ s) is then 1, and (second$ s) is 2. Streams are interesting because they can be used to represet *unbounded* collections such as the integers. Consider the following definitions.
+
+Str-maker is a function that takes a number *n* and a function *next* and produces a stream:
+```lisp
+(define str-maker
+  (lambda (next n)
+    (build n (lambda () (str-maker next (next n))))))
+```
+With str-maker we can now define the stream of *all* integers like this:
+
+    (define int (str-maker add1 0))
+
+Or we can define the stream of *all* even numbers:
+
+    (define even (str-maker (lambda (n) (+ 2 n)) 0))
+
+With the function frontier we can obtain a finite piece of a stream in a list:
+```lisp
+(define frontier
+  (lambda (str n)
+    (cond
+      ((zero? n) (quote ()))
+      (t (cons (first$ str) (frontier (second$ str) (sub1 n)))))))
+```
+What is (frontier int 10)? (frontier int 100)? (frontier even 23)?
+
+Define the stream of odd numbers.
+
+```lisp
+(frontier int 10) is (0 1 2 3 4 5 6 7 8 9)
+(frontier int 100) is (0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99)
+(frontier even 23) is (0 2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 42 44)
+
+(define odd (str-maker (lambda (n) (+ 2 n)) 1))
+```
