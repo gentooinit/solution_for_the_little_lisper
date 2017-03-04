@@ -1472,26 +1472,26 @@ A25: t, so the value is (atom-to-action e).
 Q26: (atom? (car e))
 A26: nil, so the value of (expression-to-action e) is *identifier.
 
-Q28: (*identifier e table)
-A28: (lookup-in-table e table initial-table), where e is (), table is ().
+Q27: (*identifier e table)
+A27: (lookup-in-table e table initial-table), where e is (), table is ().
 
-Q29: (null? table)
-A29: t, go (table-f name), where table-f is initial-table, that is (initial-table name), 
+Q28: (null? table)
+A28: t, go (table-f name), where table-f is initial-table, that is (initial-table name), 
 
-Q30: (eq? name (quote t))
-A30: nil.
+Q29: (eq? name (quote t))
+A29: nil.
 
-Q31: (eq? name (quote nil))
-A31: nil, so the value of (meaning e table) is (primitive ()).
+Q30: (eq? name (quote nil))
+A30: nil, so the value of (meaning e table) is (primitive ()).
 
-Q30: What next?
-A30: We cons the (primitive ()) onto the (evlis (cdr args) table), where args is (()).
+Q31: What next?
+A31: We cons the (primitive ()) onto the (evlis (cdr args) table), where args is (()).
 
-Q31: (evlis args table), where args is ().
-A31: (null? args), t, so the value of (evlis '() table) is (),
+Q32: (evlis args table), where args is ().
+A32: (null? args), t, so the value of (evlis '() table) is (),
 then the value of (evlis (arguments-of e) table) is (1 (primitive ())).
 
-Q32: (apply
+Q33: (apply
        '(non-primitive
         (()
          (x y)
@@ -1500,22 +1500,22 @@ Q32: (apply
              (u x)
              (t y)))))
        '(1 (primitive ())))
-A32: Let's step through it.
+A33: Let's step through it.
 
-Q33: (primitive? fun)
-A33: The first of the fun is non-primitive, so it is not a primitive function.
+Q34: (primitive? fun)
+A34: The first of the fun is non-primitive, so it is not a primitive function.
 
-Q34: (non-primitive? fun)
-A34: t, then we (apple-closure (second fun) vals), where the fun is (non-primitive ...), and the vals is (1 (primitive ())).
+Q35: (non-primitive? fun)
+A35: t, then we (apple-closure (second fun) vals), where the fun is (non-primitive ...), and the vals is (1 (primitive ())).
 
-Q35: (meaning (body-of closure)
+Q36: (meaning (body-of closure)
        (extend-table
          (new-entry
            (formals-of closure) vals)
          (table-of closure))),
      where closure is (() (x y) (lambda ...)), and the vals is (1 (primitive ())).
 
-A35: Let's clarify this:
+A36: Let's clarify this:
 
      The (body-of closure) is the third part of closure,
      which is (lambda (u)
@@ -1532,65 +1532,65 @@ A35: Let's clarify this:
      So, it equals to (meaning (lambda ...) new-table),
      where new-table is (((x y) (1 (primitive ()))))
 
-Q36: ((expression-to-action e) e table), where e is (lambda ...), and the table is (((x y) (1 (primitive ()))))
-A36: (atom? e), of course not, then (list-to-action e).
+Q37: ((expression-to-action e) e table), where e is (lambda ...), and the table is (((x y) (1 (primitive ()))))
+A37: (atom? e), of course not, then (list-to-action e).
 
-Q37: (atom? (car e)), where e is (lambda ...)
-A37: t.
+Q38: (atom? (car e)), where e is (lambda ...)
+A38: t.
 
-Q38: (eq? (car e) (quote quote))
-A38: nil.
+Q39: (eq? (car e) (quote quote))
+A39: nil.
 
-Q39: (eq? (car e) (quote lambda))
-A39: t, so the value of (expression-to-action e) is *lambda.
+Q40: (eq? (car e) (quote lambda))
+A40: t, so the value of (expression-to-action e) is *lambda.
 
-Q40: (*lambda e table), where e is
+Q41: (*lambda e table), where e is
      (lambda (u)
        (cond
          (u x)
          (t y))),
      table is (((x y) (1 (primitive ()))))
-A40: (non-primitive
+A41: (non-primitive
       ((((x y) (1 (primitive ()))))              <--------- the second closure
        (u)
        (cond
          (u x)
          (t y))))
 
-Q41: Let's go get the value of arguments.
-A41: (evlis (arguments-of e) table), where (arguments-of e) is (nil).
+Q42: Let's go get the value of arguments.
+A42: (evlis (arguments-of e) table), where (arguments-of e) is (nil).
 
-Q42: (null? args)
-A42: nil, so (cons (meaning (car args) table) (evlis (cdr args) table)).
+Q43: (null? args)
+A43: nil, so (cons (meaning (car args) table) (evlis (cdr args) table)).
 
-Q43: (meaning e table), where e is nil
-A43: ((expression-to-action e) e table), where e is nil.
+Q44: (meaning e table), where e is nil
+A44: ((expression-to-action e) e table), where e is nil.
 
-Q44: (atom? e)
-A44: t, so the value is (atom-to-action e).
+Q45: (atom? e)
+A45: t, so the value is (atom-to-action e).
 
-Q45: (number? e), where e is nil
-A45: nil, so the value of (expression-to-action e) is *identifier.
+Q46: (number? e), where e is nil
+A46: nil, so the value of (expression-to-action e) is *identifier.
 
-Q46: (*identifier e table), where e is nil, table is ()
-A46: (lookup-in-table e table initial-table)
+Q47: (*identifier e table), where e is nil, table is ()
+A47: (lookup-in-table e table initial-table)
 
-Q47: (null? table)
-A47: t, (table-f name), that is (initial-table name), where name is nil.
+Q48: (null? table)
+A48: t, (table-f name), that is (initial-table name), where name is nil.
 
-Q48: (eq? name (quote t))
-A48: nil.
+Q49: (eq? name (quote t))
+A49: nil.
 
-Q49: (eq? name (quote nil))
-A49: t, so the value of (meaning (car args) table), where args is (nil), is nil.
+Q50: (eq? name (quote nil))
+A50: t, so the value of (meaning (car args) table), where args is (nil), is nil.
 
-Q50: (evlis (cdr args) table), where (cdr args) is ()
-A50: (null? args) is t, so the value of (evlis (cdr args) table) is ().
+Q51: (evlis (cdr args) table), where (cdr args) is ()
+A51: (null? args) is t, so the value of (evlis (cdr args) table) is ().
 
-Q51: (cons (meaning (car args) table) (evlis (cdr args) table))
-A51: (nil).
+Q52: (cons (meaning (car args) table) (evlis (cdr args) table))
+A52: (nil).
 
-Q52: (apply
+Q53: (apply
         '(non-primitive
          ((((x y) (1 (primitive ()))))
           (u)
@@ -1599,22 +1599,22 @@ Q52: (apply
             (t y))))
         '(nil))
 
-A52: Let's step through it.
+A53: Let's step through it.
 
-Q53: (primitive? fun)
-A53: nil.
+Q54: (primitive? fun)
+A54: nil.
 
-Q54: (non-primitive? fun)
-A54: t, then we (apple-closure (second fun) vals), where the fun is (non-primitive ...), and the vals is (nil).
+Q55: (non-primitive? fun)
+A55: t, then we (apple-closure (second fun) vals), where the fun is (non-primitive ...), and the vals is (nil).
 
-Q55: (meaning (body-of closure)
+Q56: (meaning (body-of closure)
        (extend-table
          (new-entry
            (formals-of closure) vals)
          (table-of closure))),
      where closure is ((((x y) (1 (primitive ())))) (u) (cond (u x) (t y))), and the vals is (nil).
 
-A55: Let's clarify this:
+A56: Let's clarify this:
 
      The (body-of closure) is the third part of closure,
      which is (cond
@@ -1630,186 +1630,186 @@ A55: Let's clarify this:
      So, it equals to (meaning (cond ...) new-table),
      where new-table is (((u) (nil)) ((x y) (1 (primitive ()))))
 
-Q56: ((expression-to-action e) e table), where e is (cond ...), and the table is (((u) (nil)) ((x y) (1 (primitive ()))))
-A56: (atom? e), of course not, then (list-to-action e).
+Q57: ((expression-to-action e) e table), where e is (cond ...), and the table is (((u) (nil)) ((x y) (1 (primitive ()))))
+A57: (atom? e), of course not, then (list-to-action e).
 
-Q57: (atom? (car e))
-A57: t.
+Q58: (atom? (car e))
+A58: t.
 
-Q58: (eq? (car e) (quote quote))
-A58: nil.
-
-Q59: (eq? (car e) (quote lambda))
+Q59: (eq? (car e) (quote quote))
 A59: nil.
 
-Q60: (eq? (car e) (quote cond))
-A60: t, so the value of (expression-to-action e) is *cond.
+Q60: (eq? (car e) (quote lambda))
+A60: nil.
 
-Q61: (*cond e table), where e is (cond ...)
-A61: (evcon (cond-lines e) table), where (cond-lines e) is ((u x) (t y)).
+Q61: (eq? (car e) (quote cond))
+A61: t, so the value of (expression-to-action e) is *cond.
 
-Q62: (meaning (question-of (car lines)) table)
-A62: (meaning e table), where e is u, table is (((u) (nil)) ((x y) (1 (primitive ())))).
+Q62: (*cond e table), where e is (cond ...)
+A62: (evcon (cond-lines e) table), where (cond-lines e) is ((u x) (t y)).
 
-Q63: (atom? e)
-A63: t, so the value is (atom-to-action e).
+Q63: (meaning (question-of (car lines)) table)
+A63: (meaning e table), where e is u, table is (((u) (nil)) ((x y) (1 (primitive ())))).
 
-Q64: (number? e)
-A64: nil, so the value of (expression-to-action e) is *identifier.
+Q64: (atom? e)
+A64: t, so the value is (atom-to-action e).
 
-Q65: (*identifier e table)
-A65: (lookup-in-table e table initial-table).
+Q65: (number? e)
+A65: nil, so the value of (expression-to-action e) is *identifier.
 
-Q66: (null? table)
-A66: nil, go (lookup-in-entry name (car table) (lambda ...)), where name is u.
+Q66: (*identifier e table)
+A66: (lookup-in-table e table initial-table).
 
-Q67: (lookup-in-entry-help name (first entry) (second entry) entry-f)
-A67: name is u, (first entry) is (u), (second entry) is (nil), entry-f is (lambda ...).
+Q67: (null? table)
+A67: nil, go (lookup-in-entry name (car table) (lambda ...)), where name is u.
 
-Q68: (null? names)
-A68: nil.
+Q68: (lookup-in-entry-help name (first entry) (second entry) entry-f)
+A68: name is u, (first entry) is (u), (second entry) is (nil), entry-f is (lambda ...).
 
-Q69: (eq? (car names) name)
-A69: t, so the value of (*identifier e table) is (car values), that is nil.
+Q69: (null? names)
+A69: nil.
 
-Q70: (evcon (cdr lines) table), where (cdr lines) is ((t y))
-A70: (meaning (question-of (car lines) table)).
+Q70: (eq? (car names) name)
+A70: t, so the value of (*identifier e table) is (car values), that is nil.
 
-Q71: (meaning e table), where e is t, table is (((u) (nil)) ((x y) (1 (primitive ()))))
-A71: ((expression-to-action e) e table).
+Q71: (evcon (cdr lines) table), where (cdr lines) is ((t y))
+A71: (meaning (question-of (car lines) table)).
 
-Q72: (atom? e)
-A72: t, so the values is (atom-to-action e).
+Q72: (meaning e table), where e is t, table is (((u) (nil)) ((x y) (1 (primitive ()))))
+A72: ((expression-to-action e) e table).
 
-Q73: (number? e)
-A73: nil, so the values of (expression-to-action e) is *identifier.
+Q73: (atom? e)
+A73: t, so the values is (atom-to-action e).
 
-Q74: (*identifier e table)
-A74: (lookup-in-table e table initial-table).
+Q74: (number? e)
+A74: nil, so the values of (expression-to-action e) is *identifier.
 
-Q75: (null? table)
-A75: nil, go (lookup-in-entry name (car table) (lambda ...)), where name is t.
+Q75: (*identifier e table)
+A75: (lookup-in-table e table initial-table).
 
-Q76: (lookup-in-entry-help name (first entry) (second entry) entry-f)
-A76: name is t, (first entry) is (u), (second entry) is (nil), entry-f is (lambda ...).
+Q76: (null? table)
+A76: nil, go (lookup-in-entry name (car table) (lambda ...)), where name is t.
 
-Q77: (null? names)
-A77: nil.
+Q77: (lookup-in-entry-help name (first entry) (second entry) entry-f)
+A77: name is t, (first entry) is (u), (second entry) is (nil), entry-f is (lambda ...).
 
-Q78: (eq? (car names) name)
-A78: ni.
+Q78: (null? names)
+A78: nil.
 
-Q79: (lookup-in-entry-help name (cdr names) (cdr values) entry-f)
-A79: name is t, (cdr names) is (), (cdr values) is (), entry-f is (lambda ...).
+Q79: (eq? (car names) name)
+A79: ni.
 
-Q80: (null? names)
-A80: t, go ((lambda (name)
+Q80: (lookup-in-entry-help name (cdr names) (cdr values) entry-f)
+A80: name is t, (cdr names) is (), (cdr values) is (), entry-f is (lambda ...).
+
+Q81: (null? names)
+A81: t, go ((lambda (name)
              (lookup-in-table
                name
                (cdr table)
                table-f)) name)
 
-Q81: (lookup-in-table name (cdr table) table-f)
-A81: name is t, (cdr table) is (((x y) (1 (primitive ())))).
+Q82: (lookup-in-table name (cdr table) table-f)
+A82: name is t, (cdr table) is (((x y) (1 (primitive ())))).
 
-Q82: (null? table)
-A82: nil, go (lookup-in-entry name (car table) (lambda ...)), where name is t.
+Q83: (null? table)
+A83: nil, go (lookup-in-entry name (car table) (lambda ...)), where name is t.
 
-Q83: (lookup-in-entry-help name (first entry) (second entry) entry-f)
-A83: name is t, (first entry) is (x y), (second entry) is (1 (primitive ())), entry-f is (lambda ...).
+Q84: (lookup-in-entry-help name (first entry) (second entry) entry-f)
+A84: name is t, (first entry) is (x y), (second entry) is (1 (primitive ())), entry-f is (lambda ...).
 
-Q84: (null? names)
-A84: nil.
+Q85: (null? names)
+A85: nil.
 
-Q85: (eq? (car names) name)
-A85: ni.
+Q86: (eq? (car names) name)
+A86: ni.
 
-Q86: (lookup-in-entry-help name (cdr names) (cdr values) entry-f)
-A86: name is t, (cdr names) is (y), (cdr values) is ((primitive ())), entry-f is (lambda ...).
+Q87: (lookup-in-entry-help name (cdr names) (cdr values) entry-f)
+A87: name is t, (cdr names) is (y), (cdr values) is ((primitive ())), entry-f is (lambda ...).
 
-Q87: (null? names)
-A87: nil.
+Q88: (null? names)
+A88: nil.
 
-Q88: (eq? (car names) name)
-A88: ni.
+Q89: (eq? (car names) name)
+A89: ni.
 
-Q89: (lookup-in-entry-help name (cdr names) (cdr values) entry-f)
-A89: name is t, (cdr names) is (), (cdr values) is (), entry-f is (lambda ...).
+Q90: (lookup-in-entry-help name (cdr names) (cdr values) entry-f)
+A90: name is t, (cdr names) is (), (cdr values) is (), entry-f is (lambda ...).
 
-Q90: (null? names)
-A90: t, go ((lambda (name)
+Q91: (null? names)
+A91: t, go ((lambda (name)
              (lookup-in-table
                name
                (cdr table)
                table-f)) name)
 
-Q91: (lookup-in-table name (cdr table) table-f)
-A91: name is t, (cdr table) is ().
+Q92: (lookup-in-table name (cdr table) table-f)
+A92: name is t, (cdr table) is ().
 
-Q92: (null? table)
-A92: t, go (table-f name), that is (initial-table name), name is t.
+Q93: (null? table)
+A93: t, go (table-f name), that is (initial-table name), name is t.
 
-Q93: (eq? name (quote t))
-A93: t, so the value of (*identifier e table) is t.
+Q94: (eq? name (quote t))
+A94: t, so the value of (*identifier e table) is t.
 
-Q94: Let's go back to (evcon ...)
-A94: Because the (meaning (question-of (car lines)) table) is t, so the value of
+Q95: Let's go back to (evcon ...)
+A95: Because the (meaning (question-of (car lines)) table) is t, so the value of
 the whole expression is (meaning (answer-of (car lines)) table).
 
-Q95: ((expression-to-action e) e table), where e is y, table is (((u) (nil)) ((x y) (1 (primitive ()))))
-A95: (atom? e), t, go (atom-ato-action e).
+Q96: ((expression-to-action e) e table), where e is y, table is (((u) (nil)) ((x y) (1 (primitive ()))))
+A96: (atom? e), t, go (atom-ato-action e).
 
-Q96: (number? e)
-A96: nil, so the value is (*identifier).
+Q97: (number? e)
+A97: nil, so the value is (*identifier).
 
-Q97: (*identifier e table)
-A97: (lookup-in-table e table initial-table).
+Q98: (*identifier e table)
+A98: (lookup-in-table e table initial-table).
 
-Q98: (null? table)
-A98: nil, go (lookup-in-entry name (car table) (lambda ...)), where name is y.
+Q99: (null? table)
+A99: nil, go (lookup-in-entry name (car table) (lambda ...)), where name is y.
 
-Q99: (lookup-in-entry-help name (first entry) (second entry) entry-f)
-A99: name is y, (first entry) is (u), (second entry) is (nil), entry-f is (lambda ...).
+Q100: (lookup-in-entry-help name (first entry) (second entry) entry-f)
+A100: name is y, (first entry) is (u), (second entry) is (nil), entry-f is (lambda ...).
 
-Q100: (null? names)
-A100: nil.
+Q101: (null? names)
+A101: nil.
 
-Q101: (eq? (car names) name)
-A101: ni.
+Q102: (eq? (car names) name)
+A102: ni.
 
-Q102: (lookup-in-entry-help name (cdr names) (cdr values) entry-f)
-A102: name is y, (cdr names) is (), (cdr values) is (), entry-f is (lambda ...).
+Q103: (lookup-in-entry-help name (cdr names) (cdr values) entry-f)
+A103: name is y, (cdr names) is (), (cdr values) is (), entry-f is (lambda ...).
 
-Q103: (null? names)
-A103: t, go ((lambda (name)
+Q104: (null? names)
+A104: t, go ((lambda (name)
              (lookup-in-table
                name
                (cdr table)
                table-f)) name)
 
-Q104: (lookup-in-table name (cdr table) table-f)
-A104: name is y, (cdr table) is (((x y) (1 (primitive ())))).
+Q105: (lookup-in-table name (cdr table) table-f)
+A105: name is y, (cdr table) is (((x y) (1 (primitive ())))).
 
-Q105: (null? table)
-A105: nil, go (lookup-in-entry name (car table) (lambda ...)), where name is y.
+Q106: (null? table)
+A106: nil, go (lookup-in-entry name (car table) (lambda ...)), where name is y.
 
-Q106: (lookup-in-entry-help name (first entry) (second entry) entry-f)
-A106: name is y, (first entry) is (x y), (second entry) is (1 (primitive ())), entry-f is (lambda ...).
+Q107: (lookup-in-entry-help name (first entry) (second entry) entry-f)
+A107: name is y, (first entry) is (x y), (second entry) is (1 (primitive ())), entry-f is (lambda ...).
 
-Q107: (null? names)
-A107: nil.
+Q108: (null? names)
+A108: nil.
 
-Q108: (eq? (car names) name)
-A108: ni.
+Q109: (eq? (car names) name)
+A109: ni.
 
-Q109: (lookup-in-entry-help name (cdr names) (cdr values) entry-f)
-A109: name is y, (cdr names) is (y), (cdr values) is ((primitive ())), entry-f is (lambda ...).
+Q110: (lookup-in-entry-help name (cdr names) (cdr values) entry-f)
+A110: name is y, (cdr names) is (y), (cdr values) is ((primitive ())), entry-f is (lambda ...).
 
-Q110: (null? names)
-A110: nil.
+Q111: (null? names)
+A111: nil.
 
-Q111: (eq? (car names) name)
-A111: t, so the value of the whole expression is (car values), that is (primitive ()).
+Q112: (eq? (car names) name)
+A112: t, so the value of the whole expression is (car values), that is (primitive ()).
 
 Two closures are produced during the application.
 
