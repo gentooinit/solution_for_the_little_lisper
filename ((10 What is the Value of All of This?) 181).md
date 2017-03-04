@@ -40,7 +40,7 @@ A3: t, so the value is (atom-to-action e).
 Q4: (number? e)
 A4: nil, so the value is *identifier.
 
-Q5: (*identifier e table), where e is t and table is (quote ()).
+Q5: (*identifier e table), where e is t and table is ()
 A5: (lookup-in-table e table initial-table)
 
 Q6: (null? table)
@@ -67,7 +67,7 @@ A3: t, so the value is (atom-to-action e).
 Q4: (number? e)
 A4: t, so the value is *self-evaluating
 
-Q5: (*self-evaluating e table), where e is 42 and table is (quote ()).
+Q5: (*self-evaluating e table), where e is 42 and table is ()
 A5: The value is 42.
 
 Example3: (value e), where e is (quote (a b c)).
@@ -88,7 +88,7 @@ A4: t, because (car e) is quote.
 Q5: (eq? (car e) (quote quote))
 A5: t, (car e) is quote. So the value is *quote.
 
-Q6: (*quote e table), where e is (quote (a b c)) and table is (quote ()).
+Q6: (*quote e table), where e is (quote (a b c)) and table is ()
 A6: (text-of-quotation e), or (second e).
 
 Q7: (car (cdr s)), s is e that is (quote (a b c))
@@ -142,8 +142,8 @@ Q10: (eq? (car e) (quote lambda))
 A10: t, so the value of (expression-to-action) is *lambda.
 
 Q11: (*lambda e table), where e is the (lambda ...) part of e1.
-A11: ((quote non-primitive)
-      ((quote ())
+A11: (non-primitive
+      (()
        (x)
        (cond
          ((atom? x) (quote done))
@@ -177,18 +177,18 @@ A19: cookie.
 Q20: What next?
 A20: We cons the cookie onto the (evlis (cdr args) table), where args is ((quote cookie)).
 
-Q21: (evlis () table)
-A21: (null? ()), t. So, the value of (evlis () table) is ().
+Q21: (evlis '() table)
+A21: (null? '()), t. So, the value of (evlis '() table) is ().
      So we got (evlis (arguments-of e) table) is (cookie).
 
-Q22: (apply ((quote non-primitive)
-             ((quote ())
+Q22: (apply '(non-primitive
+             (()
               (x)
               (cond
                 ((atom? x) (quote done))
                 ((null? x) (quote almost))
                 (t (quote never)))))
-            (cookie))
+            '(cookie))
 
 A22: Let's step through it.
 
@@ -196,14 +196,14 @@ Q23: (primitive? fun)
 A23: The first of fun is non-primitive, so it is not primitive function.
 
 Q24: (non-primitive? fun)
-A24: t, then we (apple-closure (second fun) vals), where the fun is ((quote non-primitive) ...), and the vals is (cookie).
+A24: t, then we (apple-closure (second fun) vals), where the fun is (non-primitive ...), and the vals is (cookie).
 
 Q25: (meaning (body-of closure)
        (extend-table
          (new-entry
            (formals-of closure) vals)
          (table-of closure))),
-     where closure is ((quote ()) (x) (cond ...)), and the vals is (cookie).
+     where closure is (() (x) (cond ...)), and the vals is (cookie).
 
 A25: Let's clarify this:
 
@@ -217,7 +217,7 @@ A25: Let's clarify this:
      which is (x).
 
      The (table-of closure) is the first part of closure,
-     which is (quote ()).
+     which is ().
 
      So, it equals to (meaning (cond ...) new-table),
      where new-table is (((x) (cookie)))
@@ -383,12 +383,12 @@ A59: t, because (car names) is x, and name is x. So the value of (*identifier e 
 Q60: What next?
 A60: We cons the cookie onto the (evlis (cdr args) table), where args is (x).
 
-Q61: (evlis () table)
-A61: (null? ()), t. So, the value of (evlis () table) is ().
+Q61: (evlis '() table)
+A61: (null? '()), t. So, the value of (evlis '() table) is ().
      So we got (evlis (arguments-of e) table) is (cookie).
 
-Q62: (apply ((quote primitive) atom?)
-            (cookie))
+Q62: (apply '(primitive atom?)
+            '(cookie))
 
 A62: Let's step through it.
 
@@ -474,8 +474,8 @@ Q10: (eq? (car e) (quote lambda))
 A10: t, so the value of (expression-to-action) is *lambda.
 
 Q11: (*lambda e table), where e is the (lambda ...) part of e1.
-A11: ((quote non-primitive)
-      ((quote ())
+A11: (non-primitive
+      (()
        (x)
        (cond
          ((atom? x) (quote done))
@@ -509,18 +509,18 @@ A19: ().
 Q20: What next?
 A20: We cons the abc onto the (evlis (cdr args) table), where args is ((quote ())).
 
-Q21: (evlis () table)
-A21: (null? ()), t. So, the value of (evlis () table) is ().
+Q21: (evlis '() table)
+A21: (null? '()), t. So, the value of (evlis '() table) is ().
      So we got (evlis (arguments-of e) table) is (()).
 
-Q22: (apply ((quote non-primitive)
-             ((quote ())
+Q22: (apply '(non-primitive
+             (()
               (x)
               (cond
                 ((atom? x) (quote done))
                 ((null? x) (quote almost))
                 (t (quote never)))))
-            (()))
+            '(()))
 
 A22: Let's step through it.
 
@@ -528,14 +528,14 @@ Q23: (primitive? fun)
 A23: The first of fun is non-primitive, so it is not primitive function.
 
 Q24: (non-primitive? fun)
-A24: t, then we (apple-closure (second fun) vals), where the fun is ((quote non-primitive) ...), and the vals is (()).
+A24: t, then we (apple-closure (second fun) vals), where the fun is (non-primitive ...), and the vals is (()).
 
 Q25: (meaning (body-of closure)
        (extend-table
          (new-entry
            (formals-of closure) vals)
          (table-of closure))),
-     where closure is ((quote ()) (x) (cond ...)), and the vals is (()).
+     where closure is (() (x) (cond ...)), and the vals is (()).
 
 A25: Let's clarify this:
 
@@ -549,7 +549,7 @@ A25: Let's clarify this:
      which is (x).
 
      The (table-of closure) is the first part of closure,
-     which is (quote ()).
+     which is ().
 
      So, it equals to (meaning (cond ...) new-table),
      where new-table is (((x) (())))
@@ -715,12 +715,12 @@ A59: t, because (car names) is x, and name is x. So the value of (*identifier e 
 Q60: What next?
 A60: We cons the abc onto the (evlis (cdr args) table), where args is (x).
 
-Q61: (evlis () table)
-A61: (null? ()), t. So, the value of (evlis () table) is ().
+Q61: (evlis '() table)
+A61: (null? ()), t. So, the value of (evlis '() table) is ().
      So we got (evlis (arguments-of e) table) is (()).
 
-Q62: (apply ((quote primitive) atom?)
-            (()))
+Q62: (apply '(primitive atom?)
+            '(()))
 
 A62: Let's step through it.
 
@@ -805,8 +805,8 @@ Q10: (eq? (car e) (quote lambda))
 A10: t, so the value of (expression-to-action) is *lambda.
 
 Q11: (*lambda e table), where e is the (lambda ...) part of e1.
-A11: ((quote non-primitive)
-      ((quote ())
+A11: (non-primitive
+      (()
        (x)
        (cond
          ((atom? x) (quote done))
@@ -840,18 +840,18 @@ A19: (banana).
 Q20: What next?
 A20: We cons the (banana) onto the (evlis (cdr args) table), where args is ((quote (banana))).
 
-Q21: (evlis () table)
-A21: (null? ()), t. So, the value of (evlis () table) is ().
+Q21: (evlis '() table)
+A21: (null? '()), t. So, the value of (evlis '() table) is ().
      So we got (evlis (arguments-of e) table) is ((banana)).
 
-Q22: (apply ((quote non-primitive)
-             ((quote ())
+Q22: (apply '(non-primitive
+             (()
               (x)
               (cond
                 ((atom? x) (quote done))
                 ((null? x) (quote almost))
                 (t (quote never)))))
-            ((banana)))
+            '((banana)))
 
 A22: Let's step through it.
 
@@ -859,14 +859,14 @@ Q23: (primitive? fun)
 A23: The first of fun is non-primitive, so it is not primitive function.
 
 Q24: (non-primitive? fun)
-A24: t, then we (apple-closure (second fun) vals), where the fun is ((quote non-primitive) ...), and the vals is ((banana)).
+A24: t, then we (apple-closure (second fun) vals), where the fun is (non-primitive ...), and the vals is ((banana)).
 
 Q25: (meaning (body-of closure)
        (extend-table
          (new-entry
            (formals-of closure) vals)
          (table-of closure))),
-     where closure is ((quote ()) (x) (cond ...)), and the vals is ((banana)).
+     where closure is (() (x) (cond ...)), and the vals is ((banana)).
 
 A25: Let's clarify this:
 
@@ -880,7 +880,7 @@ A25: Let's clarify this:
      which is (x).
 
      The (table-of closure) is the first part of closure,
-     which is (quote ()).
+     which is ().
 
      So, it equals to (meaning (cond ...) new-table),
      where new-table is (((x) ((banana))))
@@ -1046,12 +1046,12 @@ A59: t, because (car names) is x, and name is x. So the value of (*identifier e 
 Q60: What next?
 A60: We cons the (banana) onto the (evlis (cdr args) table), where args is (x).
 
-Q61: (evlis () table)
-A61: (null? ()), t. So, the value of (evlis () table) is ().
+Q61: (evlis '() table)
+A61: (null? '()), t. So, the value of (evlis '() table) is ().
      So we got (evlis (arguments-of e) table) is ((banana)).
 
-Q62: (apply ((quote primitive) atom?)
-            ((banana)))
+Q62: (apply '(primitive atom?)
+            '((banana)))
 
 A62: Let's step through it.
 
@@ -1215,12 +1215,12 @@ A97: t, because (car names) is x, and name is x. So the value of (*identifier e 
 Q98: What next?
 A98: We cons the (banana) onto the (evlis (cdr args) table), where args is (x).
 
-Q99: (evlis () table)
-A99: (null? ()), t. So, the value of (evlis () table) is ().
+Q99: (evlis '() table)
+A99: (null? '()), t. So, the value of (evlis '() table) is ().
      So we got (evlis (arguments-of e) table) is ((banana)).
 
-Q100: (apply ((quote primitive) null?)
-            ((banana)))
+Q100: (apply '(primitive null?)
+             '((banana)))
 
 A100: Let's step through it.
 
@@ -1431,8 +1431,8 @@ Q15: (*lambda e table), where e is
          (cond
            (u x)
            (t y)))), and table is ()
-A15: ((quote non-primitive)                      <--------- the first closure
-      ((quote ())
+A15: (non-primitive
+      (()                                        <--------- the first closure
        (x y)
        (lambda (u)
          (cond
@@ -1460,57 +1460,60 @@ A21: 1.
 Q22: What next?
 A22: We cons the 1 onto the (evlis (cdr args) table), where args is (1 ()).
 
-Q23: (evlis args table), where args is ((quote ()))
+Q23: (evlis args table), where args is (())
 A23: (null? args), nil, so (cons (meaning (car args) table) (evlis (cdr args) table)).
 
-Q24: (meaning e table), where e is (qoute ())
-A24: ((expression-to-action e) e table), where e is (quote ()).
+Q24: (meaning e table), where e is ()
+A24: ((expression-to-action e) e table), where e is ().
 
 Q25: (atom? e)
-A25: nil, so the value is (list-to-action e).
+A25: t, so the value is (atom-to-action e).
 
 Q26: (atom? (car e))
-A26: t.
+A26: nil, so the value of (expression-to-action e) is *identifier.
 
-Q27: (eq? (car e) (quote quote))
-A27: t, so the value of (expression-to-action e) is *quote.
+Q28: (*identifier e table)
+A28: (lookup-in-table e table initial-table), where e is (), table is ().
 
-Q28: (*quote e table)
-A28: (text-of-quotation e)
+Q29: (null? table)
+A29: t, go (table-f name), where table-f is initial-table, that is (initial-table name), 
 
-Q29: (second (quote ()))
-A29: ().
+Q30: (eq? name (quote t))
+A30: nil.
+
+Q31: (eq? name (quote nil))
+A31: nil, so the value of (meaning e table) is (primitive ()).
 
 Q30: What next?
-A30: We cons the () onto the (evlis (cdr args) table), where args is ((quote ())).
+A30: We cons the (primitive ()) onto the (evlis (cdr args) table), where args is (()).
 
 Q31: (evlis args table), where args is ().
-A31: (null? args), t, so the value of (evlis () table) is (),
-then the value of (evlis (arguments-of e) table) is (1 ()).
+A31: (null? args), t, so the value of (evlis '() table) is (),
+then the value of (evlis (arguments-of e) table) is (1 (primitive ())).
 
 Q32: (apply
-       ((quote non-primitive)
-        ((quote ())
+       '(non-primitive
+        (()
          (x y)
          (lambda (u)
            (cond
              (u x)
              (t y)))))
-       (1 ()))
+       '(1 (primitive ())))
 A32: Let's step through it.
 
 Q33: (primitive? fun)
 A33: The first of the fun is non-primitive, so it is not a primitive function.
 
 Q34: (non-primitive? fun)
-A34: t, then we (apple-closure (second fun) vals), where the fun is ((quote non-primitive) ...), and the vals is (1 ()).
+A34: t, then we (apple-closure (second fun) vals), where the fun is (non-primitive ...), and the vals is (1 (primitive ())).
 
 Q35: (meaning (body-of closure)
        (extend-table
          (new-entry
            (formals-of closure) vals)
          (table-of closure))),
-     where closure is ((quote ()) (x y) (lambda ...)), and the vals is (1 ()).
+     where closure is (() (x y) (lambda ...)), and the vals is (1 (primitive ())).
 
 A35: Let's clarify this:
 
@@ -1524,12 +1527,12 @@ A35: Let's clarify this:
      which is (x y).
 
      The (table-of closure) is the first part of closure,
-     which is (quote ()).
+     which is ().
 
      So, it equals to (meaning (lambda ...) new-table),
-     where new-table is (((x y) (1 ())))
+     where new-table is (((x y) (1 (primitive ()))))
 
-Q36: ((expression-to-action e) e table), where e is (lambda ...), and the table is (((x y) (1 ())))
+Q36: ((expression-to-action e) e table), where e is (lambda ...), and the table is (((x y) (1 (primitive ()))))
 A36: (atom? e), of course not, then (list-to-action e).
 
 Q37: (atom? (car e)), where e is (lambda ...)
@@ -1546,9 +1549,9 @@ Q40: (*lambda e table), where e is
        (cond
          (u x)
          (t y))),
-     table is (((x y) (1 ())))
-A40: ((quote non-primitive)                      <--------- the second closure
-      ((((x y) (1 ())))
+     table is (((x y) (1 (primitive ()))))
+A40: (non-primitive
+      ((((x y) (1 (primitive ()))))              <--------- the second closure
        (u)
        (cond
          (u x)
@@ -1588,13 +1591,13 @@ Q51: (cons (meaning (car args) table) (evlis (cdr args) table))
 A51: (nil).
 
 Q52: (apply
-        ((quote non-primitive)
-         ((((x y) (1 ())))
+        '(non-primitive
+         ((((x y) (1 (primitive ()))))
           (u)
           (cond
             (u x)
             (t y))))
-          (nil))
+        '(nil))
 
 A52: Let's step through it.
 
@@ -1602,14 +1605,14 @@ Q53: (primitive? fun)
 A53: nil.
 
 Q54: (non-primitive? fun)
-A54: t, then we (apple-closure (second fun) vals), where the fun is ((quote non-primitive) ...), and the vals is (nil).
+A54: t, then we (apple-closure (second fun) vals), where the fun is (non-primitive ...), and the vals is (nil).
 
 Q55: (meaning (body-of closure)
        (extend-table
          (new-entry
            (formals-of closure) vals)
          (table-of closure))),
-     where closure is ((((x y) (1 ()))) (u) (cond (u x) (t y))), and the vals is (nil).
+     where closure is ((((x y) (1 (primitive ())))) (u) (cond (u x) (t y))), and the vals is (nil).
 
 A55: Let's clarify this:
 
@@ -1622,12 +1625,12 @@ A55: Let's clarify this:
      which is (u).
 
      The (table-of closure) is the first part of closure,
-     which is (((x y) (1 ())))
+     which is (((x y) (1 (primitive ()))))
 
      So, it equals to (meaning (cond ...) new-table),
-     where new-table is (((u) (nil)) ((x y) (1 ())))
+     where new-table is (((u) (nil)) ((x y) (1 (primitive ()))))
 
-Q56: ((expression-to-action e) e table), where e is (cond ...), and the table is (((u) (nil)) ((x y) (1 ())))
+Q56: ((expression-to-action e) e table), where e is (cond ...), and the table is (((u) (nil)) ((x y) (1 (primitive ()))))
 A56: (atom? e), of course not, then (list-to-action e).
 
 Q57: (atom? (car e))
@@ -1646,7 +1649,7 @@ Q61: (*cond e table), where e is (cond ...)
 A61: (evcon (cond-lines e) table), where (cond-lines e) is ((u x) (t y)).
 
 Q62: (meaning (question-of (car lines)) table)
-A62: (meaning e table), where e is u, table is (((u) (nil)) ((x y) (1 ()))).
+A62: (meaning e table), where e is u, table is (((u) (nil)) ((x y) (1 (primitive ())))).
 
 Q63: (atom? e)
 A63: t, so the value is (atom-to-action e).
@@ -1672,7 +1675,7 @@ A69: t, so the value of (*identifier e table) is (car values), that is nil.
 Q70: (evcon (cdr lines) table), where (cdr lines) is ((t y))
 A70: (meaning (question-of (car lines) table)).
 
-Q71: (meaning e table), where e is t, table is (((u) (nil)) ((x y) (1 ())))
+Q71: (meaning e table), where e is t, table is (((u) (nil)) ((x y) (1 (primitive ()))))
 A71: ((expression-to-action e) e table).
 
 Q72: (atom? e)
@@ -1707,13 +1710,13 @@ A80: t, go ((lambda (name)
                table-f)) name)
 
 Q81: (lookup-in-table name (cdr table) table-f)
-A81: name is t, (cdr table) is (((x y) (1 ()))).
+A81: name is t, (cdr table) is (((x y) (1 (primitive ())))).
 
 Q82: (null? table)
 A82: nil, go (lookup-in-entry name (car table) (lambda ...)), where name is t.
 
 Q83: (lookup-in-entry-help name (first entry) (second entry) entry-f)
-A83: name is t, (first entry) is (x y), (second entry) is (1 ()), entry-f is (lambda ...).
+A83: name is t, (first entry) is (x y), (second entry) is (1 (primitive ())), entry-f is (lambda ...).
 
 Q84: (null? names)
 A84: nil.
@@ -1722,7 +1725,7 @@ Q85: (eq? (car names) name)
 A85: ni.
 
 Q86: (lookup-in-entry-help name (cdr names) (cdr values) entry-f)
-A86: name is t, (cdr names) is (y), (cdr values) is (()), entry-f is (lambda ...).
+A86: name is t, (cdr names) is (y), (cdr values) is ((primitive ())), entry-f is (lambda ...).
 
 Q87: (null? names)
 A87: nil.
@@ -1753,7 +1756,7 @@ Q94: Let's go back to (evcon ...)
 A94: Because the (meaning (question-of (car lines)) table) is t, so the value of
 the whole expression is (meaning (answer-of (car lines)) table).
 
-Q95: ((expression-to-action e) e table), where e is y, table is (((u) (nil)) ((x y) (1 ())))
+Q95: ((expression-to-action e) e table), where e is y, table is (((u) (nil)) ((x y) (1 (primitive ()))))
 A95: (atom? e), t, go (atom-ato-action e).
 
 Q96: (number? e)
@@ -1785,13 +1788,13 @@ A103: t, go ((lambda (name)
                table-f)) name)
 
 Q104: (lookup-in-table name (cdr table) table-f)
-A104: name is y, (cdr table) is (((x y) (1 ()))).
+A104: name is y, (cdr table) is (((x y) (1 (primitive ())))).
 
 Q105: (null? table)
 A105: nil, go (lookup-in-entry name (car table) (lambda ...)), where name is y.
 
 Q106: (lookup-in-entry-help name (first entry) (second entry) entry-f)
-A106: name is y, (first entry) is (x y), (second entry) is (1 ()), entry-f is (lambda ...).
+A106: name is y, (first entry) is (x y), (second entry) is (1 (primitive ())), entry-f is (lambda ...).
 
 Q107: (null? names)
 A107: nil.
@@ -1800,13 +1803,13 @@ Q108: (eq? (car names) name)
 A108: ni.
 
 Q109: (lookup-in-entry-help name (cdr names) (cdr values) entry-f)
-A109: name is y, (cdr names) is (y), (cdr values) is (()), entry-f is (lambda ...).
+A109: name is y, (cdr names) is (y), (cdr values) is ((primitive ())), entry-f is (lambda ...).
 
 Q110: (null? names)
 A110: nil.
 
 Q111: (eq? (car names) name)
-A111: t, so the value of the whole expression is (car values), that is ().
+A111: t, so the value of the whole expression is (car values), that is (primitive ()).
 
 Two closures are produced during the application.
 
