@@ -219,7 +219,7 @@ A25: Let's clarify this:
      The (table-of closure) is the first part of closure,
      which is ().
 
-     So, it equals to (meaning (cond ...) new-table),
+     So, it equals to (meaning '(cond ...) new-table),
      where new-table is (((x) (cookie)))
 
 Q25: ((expression-to-action e) e table), where e is (cond ...), and the table is (((x) (cookie))).
@@ -551,7 +551,7 @@ A25: Let's clarify this:
      The (table-of closure) is the first part of closure,
      which is ().
 
-     So, it equals to (meaning (cond ...) new-table),
+     So, it equals to (meaning '(cond ...) new-table),
      where new-table is (((x) (())))
 
 Q25: ((expression-to-action e) e table), where e is (cond ...), and the table is (((x) (()))).
@@ -882,7 +882,7 @@ A25: Let's clarify this:
      The (table-of closure) is the first part of closure,
      which is ().
 
-     So, it equals to (meaning (cond ...) new-table),
+     So, it equals to (meaning '(cond ...) new-table),
      where new-table is (((x) ((banana))))
 
 Q25: ((expression-to-action e) e table), where e is (cond ...), and the table is (((x) ((banana)))).
@@ -1529,7 +1529,7 @@ A36: Let's clarify this:
      The (table-of closure) is the first part of closure,
      which is ().
 
-     So, it equals to (meaning (lambda ...) new-table),
+     So, it equals to (meaning '(lambda ...) new-table),
      where new-table is (((x y) (1 (primitive ()))))
 
 Q37: ((expression-to-action e) e table), where e is (lambda ...), and the table is (((x y) (1 (primitive ()))))
@@ -1627,7 +1627,7 @@ A56: Let's clarify this:
      The (table-of closure) is the first part of closure,
      which is (((x y) (1 (primitive ()))))
 
-     So, it equals to (meaning (cond ...) new-table),
+     So, it equals to (meaning '(cond ...) new-table),
      where new-table is (((u) (nil)) ((x y) (1 (primitive ()))))
 
 Q57: ((expression-to-action e) e table), where e is (cond ...), and the table is (((u) (nil)) ((x y) (1 (primitive ()))))
@@ -1812,5 +1812,153 @@ Q112: (eq? (car names) name)
 A112: t, so the value of the whole expression is (car values), that is (primitive ()).
 
 Two closures are produced during the application.
+
+```
+
+###10.4 Consider the expression *e3*. What do you expect to be the value of *e3*? Which of the three x's are "related"? Verify your answers by stepping through (value e3). Observe to which x we add one.###
+
+I expect the value of *e3* is 6. The inner two X's are "related".
+```lisp
+Q1: What is the value of e3?
+A1: Let's step through it.
+
+Q2: (meaning e (quote ()))
+A2: ((expression-to-action e) e table).
+
+Q3: (expression-to-action e)
+A3: *application.
+
+Q4: (*application e table), where e is e3, table is ()
+A4: We have to get the value of (meaning (function-of e) table), which means to get the value of the (lambda ...) part.
+And the value of (evlis (arguments-of e) table), which means to get the list of values of every argument. Then pass them to the apply function.
+
+Q5: (meaning (function-of e) table)
+A5: ((expression-to-action e) e table), where e is (lambda ...), table is ().
+
+Q6: (expression-to-action e)
+A6: *lambda.
+
+Q7: (*lambda e table), where e is
+    (lambda (x)
+      ((lambda (x)
+         (add1 x))
+       (add1 4)))
+A7: (non-primitive
+     (()
+      (x)
+      ((lambda (x)
+         (add1 x)
+       (add1 4)))))
+
+Q8: (evlis (arguments-of e) table)
+A8: (6).
+
+Q9: (apply '(non-primitive
+             (()
+              (x)
+              ((lambda (x)
+                 (add1 x))
+               (add1 4))))
+           '(6))
+A9: Non-primitive function, go (apply-closures (second fun) vals)
+
+Q10: (meaning (body-of closure)
+       (extend-table
+         (new-entry
+           (formals-of closure) vals)
+         (table-of closure))),
+     where closure is (() (x) (cond ...)), and the vals is (6).
+
+A10: Let's clarify this:
+
+     The (body-of closure) is the third part of closure,
+     which is ((lambda (x)
+                 (add1 x))
+               (add1 4))
+
+     The (formals-of closure) is the second part of closure,
+     which is (x).
+
+     The (table-of closure) is the first part of closure,
+     which is ().
+
+     So, it equals to (meaning '((lambda ...)) new-table),
+     where new-table is (((x) (6)))
+
+Q11: (expression-to-action e), where e is ((lambda ...))
+A11: *application.
+
+Q12: (*application e table), where e is ((lambda ...), table is (((x) (6)))
+A12: We have to get the value of (meaning (function-of e) table), which means to get the value of the (lambda ...) part.
+And the value of (evlis (arguments-of e) table), which means to get the list of values of every argument. Then pass them to the apply function.
+
+Q13: (meaning (function-of e) table)
+A13: ((expression-to-action e) e table), where e is (lambda ...), table is (((x) (6))).
+
+Q14: (expression-to-action e)
+A14: *lambda.
+
+Q15: (*lambda e table), where e is
+     (lambda (x)
+       (add1 x))
+A15: (non-primitive
+     ((((x) (6)))
+      (x)
+      (add1 x)))
+
+Q16: (evlis (arguments-of e) table)
+A16: (5).
+
+Q17: (apply '(non-primitive
+             ((((x) (6)))
+              (x)
+              (add1 x)))
+           '(5))
+A17: Non-primitive function, go (apply-closures (second fun) vals)
+
+Q18: (meaning (body-of closure)
+       (extend-table
+         (new-entry
+           (formals-of closure) vals)
+         (table-of closure))),
+     where closure is ((((x) (6))) (x) (add1 x)), and the vals is (5).
+
+A18: Let's clarify this:
+
+     The (body-of closure) is the third part of closure,
+     which is (add1 x)
+
+     The (formals-of closure) is the second part of closure,
+     which is (x).
+
+     The (table-of closure) is the first part of closure,
+     which is (((x) (6))).
+
+     So, it equals to (meaning '(add1 x)) new-table),
+     where new-table is (((x) (5)) ((x) (6))).
+
+Q19: (expression-to-action e), where e is (add1 x)
+A19: *application.
+
+Q20: (*application e table), where e is (add1 x), table is (((x) (5)) ((x) (6)))
+A20: We have to get the value of (meaning (function-of e) table), which means to get the value of the add1 part.
+And the value of (evlis (arguments-of e) table), which means to get the list of values of every argument. Then pass them to the apply function.
+
+Q21: (meaning e table), where e is add1
+A21: ((expression-to-action e) e table).
+
+Q22: (*identifier e table)
+A22: (primitive add1).
+
+Q23: (evlis (arguments-of e) table)
+A23: (5).
+
+Q24: (apply '(primitive add1) '(5))
+A24: (apply-primitive '(primitive add1) '(5)).
+
+Q25: (add1 5)
+A25: 6.
+
+(add1 4) is the x we add one.
 
 ```
