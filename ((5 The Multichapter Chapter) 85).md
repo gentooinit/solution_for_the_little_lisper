@@ -14,7 +14,7 @@ For these exercises,
                   l4 is ()
 ```
 
-###5.1 For Exercise 3.4 you wrote the function subst cake. Write the function multis###
+### 5.1 For Exercise 3.4 you wrote the function subst cake. Write the function multis
 ```lisp
 Example: (multisubst-kiwis b lat1) is (bananas plums),
          (multisubst-kiwis y lat2) is (peaches apples bananas),
@@ -34,7 +34,7 @@ Example: (multisubst-kiwis b lat1) is (bananas plums),
                 (multisubst-kiwis a (cdr lat)))))))))
 ```
 
-###5.2 Write the function multisubst2. You can find subst2 at the end of Chapter 3###
+### 5.2 Write the function multisubst2. You can find subst2 at the end of Chapter 3
 ```lisp
 Example: (multisubst2 x a b lat1) is (bananas comma),
          (multisubst2 y a b lat3) is (dot pears dot bananas cherries),
@@ -52,7 +52,7 @@ Example: (multisubst2 x a b lat1) is (bananas comma),
            (multisubst2 new o1 o2 (cdr lat)))))))
 ```
 
-###5.3 Write the function multidown of lat which replaces every atom in lat by list the atom###
+### 5.3 Write the function multidown of lat which replaces every atom in lat by list the atom
 ```lisp
 Example: (multidown lat1) is ((bananas) (kiwis)),
          (multidown lat2) is ((peaches) (apples) (bananas)),
@@ -71,7 +71,7 @@ Example: (multidown lat1) is ((bananas) (kiwis)),
            (multidown (cdr lat)))))))
 ```
 
-###5.4 Write the function occurN of alat and lat which counts how many times an atom also occurs in lat###
+### 5.4 Write the function occurN of alat and lat which counts how many times an atom also occurs in lat
 ```lisp
 Example: (occurN lat1 l4) is 0,
          (occurN lat1 lat2) is 1,
@@ -87,7 +87,7 @@ Example: (occurN lat1 l4) is 0,
       (t (occurN alat (cdr lat))))))
 ```
 
-###5.5 The function I of lat1 and lat2 returns the first atom in lat2 that is in both lat1 atom. Write the functions I and multiI. multiI returns a list of atoms common to lat1 and lat2###
+### 5.5 The function I of lat1 and lat2 returns the first atom in lat2 that is in both lat1 atom. Write the functions I and multiI. multiI returns a list of atoms common to lat1 and lat2
 ```lisp
 Example: (I lat1 l4) is (),
        (I lat1 lat2) is bananas,
@@ -114,7 +114,7 @@ Example: (I lat1 l4) is (),
       (t (multiI lat1 (cdr lat2))))))
 ```
 
-###5.6 Consider the following alternative definition of one?###
+### 5.6 Consider the following alternative definition of one?
 ```lisp
 (define one?
   (lambda (n)
@@ -126,7 +126,7 @@ Which Laws and/or Commandments does it violate?
 
 The First Commandment
 
-###5.7 Consider the following definition of =###
+### 5.7 Consider the following definition of =
 ```lisp
 (define =
   (lambda (n m)
@@ -137,7 +137,7 @@ This definition violates The Six Commandment. Why?
 ```
 Because the argument n is tested in the termination condition, but it doesn't change while recurring.
 
-###5.8 The function count0 of vec counts the number of zero elements in vec. What is wrong with the following definition? Can you fix it?###
+### 5.8 The function count0 of vec counts the number of zero elements in vec. What is wrong with the following definition? Can you fix it?
 ```lisp
 (define count0
   (lambda (vec)
@@ -163,7 +163,7 @@ Fixed:
            (t (count0 (cdr vec))))))))
 ```
 
-###5.9 Write the function multiup of l which replaces every lat of length one in l by the atom in that list, and which also removes every empty list###
+### 5.9 Write the function multiup of l which replaces every lat of length one in l by the atom in that list, and which also removes every empty list
 ```lisp
 Example: (multiup l4) is (),
          (multiup l1) is (curry chicken),
@@ -188,7 +188,7 @@ Example: (multiup l4) is (),
                 (multiup (cdr l)))))))))
 ```
 
-###5.10 Review all the Laws and Commandments. Check the functions in Chapter 4 and 5 to see if they obey the Commandments. When did we not obey them literally? Did we act according to their spirit?###
+### 5.10 Review all the Laws and Commandments. Check the functions in Chapter 4 and 5 to see if they obey the Commandments. When did we not obey them literally? Did we act according to their spirit?
 
 In Chapter 4:
 The function +, -, *, >, =, ^, eqan? are obey The First Commandment.

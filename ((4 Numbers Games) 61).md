@@ -11,7 +11,7 @@ For these exercises,
                    obj is (x y)
 ```
 
-###4.1 Write the function duplicate of n and obj which builds a list containing n objects obj###
+### 4.1 Write the function duplicate of n and obj which builds a list containing n objects obj
 ```lisp
 Example: (duplicate three obj) is ((x y) (x y) (x y)),
          (duplicate zero obj) is (),
@@ -25,7 +25,7 @@ Example: (duplicate three obj) is ((x y) (x y) (x y)),
       (t (cons obj (duplicate (sub1 n) obj))))))
 ```
 
-###4.2 Write the function multvec that builds a number by multiplying all the numbers in a vec###
+### 4.2 Write the function multvec that builds a number by multiplying all the numbers in a vec
 ```lisp
 Example: (multvec vec2) is 24,
          (multvec vec3) is 6,
@@ -39,11 +39,11 @@ Example: (multvec vec2) is 24,
       (t (* (car vec) (multvec (cdr vec)))))))
 ```
 
-###4.3 When building a value with ^, which value should you use for the terminal line?###
+### 4.3 When building a value with ^, which value should you use for the terminal line?
 
 1
 
-###4.4 Argue the correctness for the function ^ as we did for (x n m). Use 3 and 4 as data###
+### 4.4 Argue the correctness for the function ^ as we did for (x n m). Use 3 and 4 as data
 ```
 3 ^ 4 = 3 ^ 3 * 3
 3 ^ 3 = 3 ^ 2 * 3
@@ -54,7 +54,7 @@ Example: (multvec vec2) is 24,
       = 81
 ```
 
-###4.5 Write the function index of a and lat that returns the place of the atom a in lat. You may assume that a is a member of lat. Hint: Can lat be empty?###
+### 4.5 Write the function index of a and lat that returns the place of the atom a in lat. You may assume that a is a member of lat. Hint: Can lat be empty?
 ```lisp
 Example: When a is car,
            lat1 is (cons cdr car null? eq?),
@@ -74,7 +74,7 @@ we have (index a lat1) is 3,
       (t (add1 (index a (cdr lat)))))))
 ```
 
-###4.6 Write the function product of vec1 and vec2 that multiplies corresponding numbers in vec1 and vec2 and builds a new vec from the results. The vecs, vec1 and vec2, may differ in length###
+### 4.6 Write the function product of vec1 and vec2 that multiplies corresponding numbers in vec1 and vec2 and builds a new vec from the results. The vecs, vec1 and vec2, may differ in length
 ``lisp
 Example: (product vec1 vec2) is (3 4 4),
          (product vec2 vec3) is (6 2 12),
@@ -91,7 +91,7 @@ Example: (product vec1 vec2) is (3 4 4),
 	     (cdr vec1) (cdr vec2))))
 ```
 
-###4.7 Write the function dot product of vec1 and vec2 that multiplies corresponding numbers in vec1 and vec2 and builds a new number by summing the results. The vecs, vec1 and vec2, are the same length###
+### 4.7 Write the function dot product of vec1 and vec2 that multiplies corresponding numbers in vec1 and vec2 and builds a new number by summing the results. The vecs, vec1 and vec2, are the same length
 ```lisp
 Example: (dot-product vec2 vec2) is 29,
          (dot-product vec2 vec4) is 26,
@@ -107,7 +107,7 @@ Example: (dot-product vec2 vec2) is 29,
             (dot-product (cdr vec1) (cdr vec2)))))))
 ```
 
-###4.8 Write the function / that divides nonnegative integers###
+### 4.8 Write the function / that divides nonnegative integers
 ```lisp
 Example: (/ n m) is 1, when n is 7 and m is 5,
          (/ n m) is 4, when n is 8 and m is 2,
@@ -123,7 +123,7 @@ The number of additions is the result.
       (t (add1 (/ (- n m) m))))))
 ```
 
-###4.9 Here is the function remainder###
+### 4.9 Here is the function remainder
 ```lisp
 (define remainder
   (lambda (n m)
@@ -142,7 +142,7 @@ When n is 8 and m is 2, (/ n m) is 4, and (* m (/ n m)) is 8, than the (- n (* m
 When n is 2 and m is 3, (/ n m) is 0, and (* m (/ n m)) is 0, than the (- n (* m (/ n m))) is 2. So the value of (remainder n m) is 2.
 ```
 
-###4.10 Write the function <= which tests if two numbers are equal or if the first is less than the second###
+### 4.10 Write the function <= which tests if two numbers are equal or if the first is less than the second
 ```lisp
 Example: (<= zero one) is true,
          (<= one one) is true,

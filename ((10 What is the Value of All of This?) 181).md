@@ -23,7 +23,7 @@ For these exercises,
                    e6 is (lambda (lat (lyst)) a (quote b)).
 ```
 
-###10.1 Make up examples for *e* and step through (value e). The examples should cover truth values, numbers, and quoted S-expressions.###
+### 10.1 Make up examples for *e* and step through (value e). The examples should cover truth values, numbers, and quoted S-expressions.
 ```lisp
 Example1: (value e), where e is t,
 
@@ -95,7 +95,7 @@ Q7: (car (cdr s)), s is e that is (quote (a b c))
 A7: The value is (a b c).
 ```
 
-###10.2 Make up some S-expressions, plug them into the ______ of *e1*, and step through the application of (value e1).###
+### 10.2 Make up some S-expressions, plug them into the ______ of *e1*, and step through the application of (value e1).
 ```lisp
 Q1: Let's try to plug cookie.
 A1: ((lambda (x)
@@ -1327,7 +1327,7 @@ Q124: Is it done?
 A124: done.
 ```
 
-###10.3 Step through the application of (value e2). How many closures are produced during the application?###
+### 10.3 Step through the application of (value e2). How many closures are produced during the application?
 ```lisp
 Q1: What is the value of (value e), where e is
     (((lambda (x y)
@@ -1815,7 +1815,7 @@ Two closures are produced during the application.
 
 ```
 
-###10.4 Consider the expression *e3*. What do you expect to be the value of *e3*? Which of the three x's are "related"? Verify your answers by stepping through (value e3). Observe to which x we add one.###
+### 10.4 Consider the expression *e3*. What do you expect to be the value of *e3*? Which of the three x's are "related"? Verify your answers by stepping through (value e3). Observe to which x we add one.
 
 I expect the value of *e3* is 6. The inner two X's are "related".
 ```lisp
@@ -1963,7 +1963,7 @@ A25: 6.
 
 ```
 
-###10.5 Design a representation for closures and primitives such that the tags (i.e., primitive and non-primitive) at the beginning of the lists become unnecessary. Rewrite the functions that are knowledgeable of the structures. Step through (value e3) with the new interpreter.###
+### 10.5 Design a representation for closures and primitives such that the tags (i.e., primitive and non-primitive) at the beginning of the lists become unnecessary. Rewrite the functions that are knowledgeable of the structures. Step through (value e3) with the new interpreter.
 
 Notice the primitive is always atom, so use atom? to tell primitive or closure.
 ```lisp
@@ -2131,7 +2131,7 @@ Q25: (add1 5)
 A25: 6.
 ```
 
-###10.6 Just as the table for predetermined identifiers, initial-table, all tables in our interpreter can be represented as functions. Then, the function extend-table is changed to:###
+### 10.6 Just as the table for predetermined identifiers, initial-table, all tables in our interpreter can be represented as functions. Then, the function extend-table is changed to:
 ```lisp
 (define extend-table
   (lambda (entry table)

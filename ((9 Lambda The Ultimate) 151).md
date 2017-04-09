@@ -1,4 +1,4 @@
-###9.1 Look up the functions firsts and seconds in Chapter 3. They can be generalized to a function map of *f* and *l* that applies *f* to every element in *l* and builds a new list with the resulting values. Write the function map. Then write the function firsts and seconds using map.###
+### 9.1 Look up the functions firsts and seconds in Chapter 3. They can be generalized to a function map of *f* and *l* that applies *f* to every element in *l* and builds a new list with the resulting values. Write the function map. Then write the function firsts and seconds using map.
 ```lisp
 (define map
   (lambda (f)
@@ -21,7 +21,7 @@
 
 ```
 
-###9.2 Write the function assq-sf of *a*, *l*, *sk*, and *fk*. The function searches through *l*, which is a list of pairs until it finds a pair whose first component is eq? to *a*. Then the function invokes the function *sk* with this pair. If the searche fails, (fk a) is invoked.###
+### 9.2 Write the function assq-sf of *a*, *l*, *sk*, and *fk*. The function searches through *l*, which is a list of pairs until it finds a pair whose first component is eq? to *a*. Then the function invokes the function *sk* with this pair. If the searche fails, (fk a) is invoked.
 ```lisp
 Example: When a is apple,
              b1 is (),
@@ -47,7 +47,7 @@ Example: When a is apple,
       (t (assq-sf a (cdr l) sk fk)))))
 ```
 
-###9.3 In the chapter we have derived a Y-combinator that allows us to write recursive functions of one argument without using define. Here is the Y-combinator for functions of two arguments.###
+### 9.3 In the chapter we have derived a Y-combinator that allows us to write recursive functions of one argument without using define. Here is the Y-combinator for functions of two arguments.
 ```lisp
 (define Y2
   (lambda (M)
@@ -90,7 +90,7 @@ Note: There is a version of (lambda ...) for defining a function of an arbitrary
             (t (recfun (sub1 n) (cdr lat))))))))
 ```
 
-###9.4 With the Y-combinator we can reduce the number of arguments on, which a function has to recur. For example member can be rewritten as:###
+### 9.4 With the Y-combinator we can reduce the number of arguments on, which a function has to recur. For example member can be rewritten as:
 ```lisp
 (define member-Y
   (lambda (a l)
@@ -366,7 +366,7 @@ A7: Yes, the value of (member-Y a l) is t.
 
 ```
 
-###9.5 In Exercise 6.7 through 6.10 we saw how to use the accumulator technique. Instead of accumulators, continuation functions are sometimes used. These functions abstract what needs to be done to complete an application. For example, multisubst can be defined as:###
+### 9.5 In Exercise 6.7 through 6.10 we saw how to use the accumulator technique. Instead of accumulators, continuation functions are sometimes used. These functions abstract what needs to be done to complete an application. For example, multisubst can be defined as:
 ```lisp
 (define multisubst-k
   (lambda (new old lat k)
@@ -696,7 +696,7 @@ A25: (cons 'u (cons 'v (cons 'y (cons 'y (cons 'y (cons 'z (cons 'y '()))))))), 
 
 ```
 
-###9.6 In Chapter 4 and Exercise 4.2 you wrote addvec and multvec. Abstract the two functions into a single function accum. Write the functions length and occur using accum.###
+### 9.6 In Chapter 4 and Exercise 4.2 you wrote addvec and multvec. Abstract the two functions into a single function accum. Write the functions length and occur using accum.
 ```lisp
 (define accum
   (lambda (op const)
@@ -722,7 +722,7 @@ A25: (cons 'u (cons 'v (cons 'y (cons 'y (cons 'y (cons 'z (cons 'y '()))))))), 
        0) lat)))
 ```
 
-###9.7 In Exercise 7.3 you wrote the four functions count-op, count-+, count-*, and count-^. Abstract them into a single function count-op-f, which generates the corresponding functions if passed an appropriate help function.###
+### 9.7 In Exercise 7.3 you wrote the four functions count-op, count-+, count-*, and count-^. Abstract them into a single function count-op-f, which generates the corresponding functions if passed an appropriate help function.
 ```lisp
 (define count-op-f
   (lambda (logical?)
@@ -757,7 +757,7 @@ A25: (cons 'u (cons 'v (cons 'y (cons 'y (cons 'y (cons 'z (cons 'y '()))))))), 
     (lambda (op) (eq? (quote ^) op))))
 ```
 
-###9.8 Functions of no arguments are called *thunks*. If *f* is a thunk, it can be evaluated with (f), Consider the following version of or as a function.###
+### 9.8 Functions of no arguments are called *thunks*. If *f* is a thunk, it can be evaluated with (f), Consider the following version of or as a function.
 ```lisp
 (define or-func
   (lambda (or1 or2)
@@ -794,7 +794,7 @@ Write set-f? to take or-func and and-func. Write the functions intersect? and su
 (define subset? (set-f? and-func t))
 ```
 
-###9.9 When you build a pair with an S-expression and a thunk (see Exercise 9.8) you get a *stream*. There are two functions defined on streams: first$ and second$.###
+### 9.9 When you build a pair with an S-expression and a thunk (see Exercise 9.8) you get a *stream*. There are two functions defined on streams: first$ and second$.
 Note: In practice, you can actually cons an S-expression directly onto a function. We prefer to stay with the less general cons function.
 ```lisp
 (define first$ first)
@@ -838,7 +838,7 @@ Define the stream of odd numbers.
 (define odd (str-maker (lambda (n) (+ 2 n)) 1))
 ```
 
-###9.10 This exercise builds on the results of Exercise 9.9. Consider the following functions:###
+### 9.10 This exercise builds on the results of Exercise 9.9. Consider the following functions:
 ```lisp
 (define Q
   (lambda (str n)

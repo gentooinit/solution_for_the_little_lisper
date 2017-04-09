@@ -10,12 +10,12 @@ For these exercises,
   a3 is poppy
 ```
 
-###2.1 What are the values of (lat? l1), (lat? l2), and (lat? l3)?###
+### 2.1 What are the values of (lat? l1), (lat? l2), and (lat? l3)?
 ```lisp
 (lat? l1) is true, (lat? l2) is true, (lat? l3) is false.
 ```
 
-###2.2 For each case in Exercise 2.1, step through the apphcation as we did in the chapter###
+### 2.2 For each case in Exercise 2.1, step through the apphcation as we did in the chapter
 ```lisp
 This is the function lat? again:
 (define lat?
@@ -267,7 +267,7 @@ A12: There are the closing or matching parentheses of (cond ..., (lambda ...,
 and (define ..., which appear at the beginning of a function definition.
 
 ```
-###2.3 What is the value of (member? a1 l1), and (member? a2 l2)? Step through the application for each case.###
+### 2.3 What is the value of (member? a1 l1), and (member? a2 l2)? Step through the application for each case.
 ```lisp
 
 The value of (member? a1 l1) is false, where a1 is coffee, l1 is (german chocolate cake).
@@ -473,7 +473,7 @@ Q11: What is the value of (member? a lat)
 A11: t - namely true.
    
 ```
-###2.4 Most Lisp dialects have an (if     ) form. In general an (if     ) form looks like this###
+### 2.4 Most Lisp dialects have an (if     ) form. In general an (if     ) form looks like this
               (if aexp bexp cexp)
         when aexp is true, (if aexp bexp cexp) is bexp; when it is false, (if aexp bexp cexp) is cexp
         example,
@@ -508,7 +508,7 @@ Function member?:
           (eq? (car lat) a)
           (member? a (cdr lat))))))
 ```
-###2.5 Write the function nonlat? which determines whether a list is the empty list or does not contain atomic S-expressions###
+### 2.5 Write the function nonlat? which determines whether a list is the empty list or does not contain atomic S-expressions
     Example: (nonlat? l1) is false,
              (nonlat? l2) is false,
              (nonlat? l3) is false,
@@ -522,7 +522,7 @@ Function member?:
       (t (nonlat? (cdr l))))))
 ```
 
-###2.6 Write a function member-cake? which determines whether a lat contains the  atom cake###
+### 2.6 Write a function member-cake? which determines whether a lat contains the  atom cake
     Example: (member-cake? l1) is true,
              (member-cake? l2) is true,
 	     (member-cake? l5) is false.
@@ -536,7 +536,7 @@ Function member?:
 	   (member-cake? (cdr l)))))))
 ```
 
-###2.7 Consider the following new definition of member?###
+### 2.7 Consider the following new definition of member?
 ```lisp
 (define member2?
   (lambda (a lat))
@@ -759,7 +759,7 @@ Q24: Now, we return to the original question, (member2? a3 l2) answers true.
 
 ```
 
-###2.9 What happens when you step throught (member? a2 l3)? Fix this problem by having member? ignore list###
+### 2.9 What happens when you step throught (member? a2 l3)? Fix this problem by having member? ignore list
 
 ```lisp
 (define member?
@@ -817,7 +817,7 @@ Fix:
                          
 ```
 
-###2.10 The function member? tells whether some atom appears at least once in a lat. Write a function member-twice? which tells whether some atom appears at least twice in a list###
+### 2.10 The function member? tells whether some atom appears at least once in a lat. Write a function member-twice? which tells whether some atom appears at least twice in a list
 
 ```lisp
 (define member-twice?

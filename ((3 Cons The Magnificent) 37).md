@@ -14,7 +14,7 @@ For these exercises,
   a5 is soy
 ```
 
-###3.1 Write the function seconds which takes a list of lats and makes a new lat consisting of the second atom from each lat in the list###
+### 3.1 Write the function seconds which takes a list of lats and makes a new lat consisting of the second atom from each lat in the list
 ```lisp
 Example: (seconds l1) is (spanish red beans)
          (seconds l2) is ()
@@ -30,7 +30,7 @@ Example: (seconds l1) is (spanish red beans)
            (seconds (cdr l)))))))
 ```
 
-###3.2 Write the function dupla of a and l which makes a new lat containing as many a's as there are elements in l###
+### 3.2 Write the function dupla of a and l which makes a new lat containing as many a's as there are elements in l
 ```lisp
 Example: (dupla a2 l4) is (hot hot hot)
          (dupla a2 l2) is ()
@@ -44,7 +44,7 @@ Example: (dupla a2 l4) is (hot hot hot)
       (t (cons a (dupla a (cdr l)))))))
 ```
 
-###3.3 Write the function double of a and l which is a converse to rember The function doubles the first a in l instead of removing it###
+### 3.3 Write the function double of a and l which is a converse to rember The function doubles the first a in l instead of removing it
 ```lisp
 Example: (double a2 l2) is ()
          (double a1 l3) is (cincinnati chili chili)
@@ -59,7 +59,7 @@ Example: (double a2 l2) is ()
       (t (cons (car l) (double a (cdr l)))))))
 ```
 
-###3.4 Write the function subst sauce of a and l which substitutes a for the first atom sauce in l###
+### 3.4 Write the function subst sauce of a and l which substitutes a for the first atom sauce in l
 ```lisp
 Example: (subst-sauce a1 l4) is (texas hot chili)
          (subst-sauce a1 l5) is (soy chili and tomato sauce)
@@ -73,7 +73,7 @@ Example: (subst-sauce a1 l4) is (texas hot chili)
       ((eq? (quote sauce) (car l)) (cons a (cdr l)))
       (t (cons (car l) (subst-sauce a (cdr l)))))))
 ```
-###3.5 Write the function subst3 of new, o1, o2, o3 and lat which -like subst2- replaces the first occurrence of either o1, o2, or o3 in lat by new###
+### 3.5 Write the function subst3 of new, o1, o2, o3 and lat which -like subst2- replaces the first occurrence of either o1, o2, or o3 in lat by new
 ```lisp
 Example: (subst3 a5 a1 a2 a4 l5) is (soy soy and tomato sauce)
          (subst3 a4 a1 a2 a3 l4) is (texas sauce chili)
@@ -93,7 +93,7 @@ Example: (subst3 a5 a1 a2 a4 l5) is (soy soy and tomato sauce)
            (subst3 new o1 o2 o3 (cdr lat)))))))
 ```
 
-###3.6 Write the function substN of new, slat and lat which replaces the first atom in lat that also occurs in slat by the atom new###
+### 3.6 Write the function substN of new, slat and lat which replaces the first atom in lat that also occurs in slat by the atom new
 ```lisp
 Example: (substN a2 l3 l4) is (texas hot hot)
          (substN a4 l3 l5) is (soy sauce and tomato sauce)
@@ -109,7 +109,7 @@ Example: (substN a2 l3 l4) is (texas hot hot)
            (substN new slat (cdr lat)))))))
 ```
 
-###3.7 Step through the application (rember a4 l5). Also step through (insertR a5 a2 l5) for the "bad" definitions of insertR###
+### 3.7 Step through the application (rember a4 l5). Also step through (insertR a5 a2 l5) for the "bad" definitions of insertR
 ```lisp
 (define rember
    (lambda (a lat)
@@ -612,7 +612,7 @@ A42: (soy sauce and tomato sauce).
 And the l5 is the original l5, done.
 ```
 
-###3.8 Determine the typical elements and the natural recursions of the functions that you have written so far###
+### 3.8 Determine the typical elements and the natural recursions of the functions that you have written so far
 ```lisp
 for (seconds ...):
 typical element is (cdr (car l)),
@@ -639,7 +639,7 @@ typical element is (car lat),
 natural recursion is (substN new slat (cdr lat))
 ```
 
-###3.9 Write the function rember2 of a and l which removes the second occurrence of a in l###
+### 3.9 Write the function rember2 of a and l which removes the second occurrence of a in l
 ```lisp
 Example: (rember2 a1 l3) is (cincinnati chili)
          (rember2 a4 l5) is (soy sauce and tomato)
@@ -655,7 +655,7 @@ Hint: Use the function rember
       (t (cons (car lat) (rember2 a (cdr lat)))))))
 ```
 
-###3.10 Consider the functions insertR, insertL, and subst. They are all very similar. Write the functions next to each other and draw boxes around the parts that they have in common. Can you see what rember has in common with these functions?###
+### 3.10 Consider the functions insertR, insertL, and subst. They are all very similar. Write the functions next to each other and draw boxes around the parts that they have in common. Can you see what rember has in common with these functions?
 ```lisp
 (define insertR
   (lambda (new old lat)

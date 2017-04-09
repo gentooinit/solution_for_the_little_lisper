@@ -12,7 +12,7 @@ For these exercuse,
                     lexp4 is z
 ```
 
-###7.1 So far we have neglected functions that build representations for arithmetic expressions###
+### 7.1 So far we have neglected functions that build representations for arithmetic expressions
 ```lisp
 For example, mk+exp
 (define mk+exp
@@ -95,7 +95,7 @@ Example: (aexp? aexp1) is true,
 (aexp? '(3)) is nil
 ```
 
-###7.3 Write the function count-op that counts the operators in an arithmetic expression###
+### 7.3 Write the function count-op that counts the operators in an arithmetic expression
 ```lisp
 Example: (count-op aexp1) is 2,
          (count-op aexp3) is 3,
@@ -137,7 +137,7 @@ Example: (count+ aexp1) is 1,
     (count-op-x aexp (quote ^))))
 ```
 
-###7.4 Write the function count-numbers that counts the numbers in an arithmetic expression###
+### 7.4 Write the function count-numbers that counts the numbers in an arithmetic expression
 ```lisp
 Example: (count-numbers aexp1) is 3,
          (count-numbers aexp3) is 4,
@@ -154,7 +154,7 @@ Example: (count-numbers aexp1) is 3,
            (count-numbers (2nd-sub-exp aexp)))))))
 ```
 
-###7.5 Since it is inconvenient to write (3 * (4 * (5 * 6))) for multiplying 4 numbers, we now introduce prefix notation and allow + and * expressions to contain 2, 3, or 4 subexpressions. For example, (+ 3 2 (* 7 8)), (* 3 4 5 6) etc. are now legal representations. ^-expressions are also in prefix form but are still binary. Rewrite the functions numbered? and value for the new definition of aexp.###
+### 7.5 Since it is inconvenient to write (3 * (4 * (5 * 6))) for multiplying 4 numbers, we now introduce prefix notation and allow + and * expressions to contain 2, 3, or 4 subexpressions. For example, (+ 3 2 (* 7 8)), (* 3 4 5 6) etc. are now legal representations. ^-expressions are also in prefix form but are still binary. Rewrite the functions numbered? and value for the new definition of aexp.
 Hint: You will need functions for extracting the third and the fourth subexpression of an arithmetic expression. You will also need a function cnt-aexp that counts the number of arithmetic subexpressions in the *list* following an operator.
 ```lisp
 Example: When aexp1 is (+ 3 2 (* 7 8)),
@@ -265,7 +265,7 @@ For exercise 7.6 through 7.10 we define a representation for L-expressions. An L
 
 In this definition, **AND**, **OR**, and **NOT** are literal symbols; *l*, *l1*, *l2* stand for arbitrary L-expressions.
 
-###7.6 Write the function lexp? that tests whether an S-expression is a representation of an L-expression.###
+### 7.6 Write the function lexp? that tests whether an S-expression is a representation of an L-expression.
 ```lisp
 Example: (lexp? lexp1) is true,
          (lexp? lexp2) is true,
@@ -374,7 +374,7 @@ Finally, write the functions or-exp-left, or-exp-right, and not-exp-subexp, whic
     (1st-sub-lexp lexp)))
 ```
 
-###7.7 Write the functions covered? of an L-expression *lexp* and a list of symbols *los* that tests whether all the variables in *lexp* are in *los*.###
+### 7.7 Write the functions covered? of an L-expression *lexp* and a list of symbols *los* that tests whether all the variables in *lexp* are in *los*.
 ```lisp
 Exampe: When l1 is (x y z u), then
   (covered? lexp1 l1) is true,
@@ -395,7 +395,7 @@ Exampe: When l1 is (x y z u), then
       (t nil))))
 ```
 
-###7.8 For the evaluation of L-expressions we need *association lists (alists)*. An alist for L-expressions is a list of pairs. The first component of a pair is always a symbol, the second one is either the number 0 (signifiying false) or 1 (signifying true). The second component is referred to as the value of the variable. Write the function lookup of the symbol *var* and the association list *al*, which returns the value of the first pair in *al* whose car is eq? to *var*.###
+### 7.8 For the evaluation of L-expressions we need *association lists (alists)*. An alist for L-expressions is a list of pairs. The first component of a pair is always a symbol, the second one is either the number 0 (signifiying false) or 1 (signifying true). The second component is referred to as the value of the variable. Write the function lookup of the symbol *var* and the association list *al*, which returns the value of the first pair in *al* whose car is eq? to *var*.
 ```lisp
 Exampe: When l1 is ((x 1) (y 0)),
              l2 is ((u 1) (v 1)),
@@ -415,7 +415,7 @@ Exampe: When l1 is ((x 1) (y 0)),
       (t (lookup var (cdr al))))))
 ```
 
-###7.9 If the list of symbols in an alist for L-expressions contains all the variables of an L-expression *lexp*, then *lexp* is called closed and can be evaluated with respect to this alist. Write the function Mlexp of an L-expression *lexp* and an alist *al*, which, after verifying that *lexp* is closed, determines whether *lexp* means true or false.###
+### 7.9 If the list of symbols in an alist for L-expressions contains all the variables of an L-expression *lexp*, then *lexp* is called closed and can be evaluated with respect to this alist. Write the function Mlexp of an L-expression *lexp* and an alist *al*, which, after verifying that *lexp* is closed, determines whether *lexp* means true or false.
 Given *al* such that *lexp* is covered *lexp*, *exp* means true
  * if *lexp* is a variable and its value means true, or
  * if *lexp* is an AND-expression and both subexpressions mean true, or
@@ -450,7 +450,7 @@ Hint: You will need the function lookup from Exercise 7.8 and covered? from Exer
       (t nil))))
 ```
 
-###7.10 Extend the representation of L-expressions to AND and OR expressions that contain several subexpressions, i.e,(AND x (OR u v w) y). Rewrite the function Mlexp from Exercise 7.9 for this representation.###
+### 7.10 Extend the representation of L-expressions to AND and OR expressions that contain several subexpressions, i.e,(AND x (OR u v w) y). Rewrite the function Mlexp from Exercise 7.9 for this representation.
 
 Hint: Exercise 7.5 is a similar extension of arithmetic expressions.
 ```lisp
