@@ -1476,7 +1476,7 @@ Q27: (*identifier e table)
 A27: (lookup-in-table e table initial-table), where e is (), table is ().
 
 Q28: (null? table)
-A28: t, go (table-f name), where table-f is initial-table, that is (initial-table name), 
+A28: t, go (table-f name), where table-f is initial-table, that is (initial-table name),
 
 Q29: (eq? name (quote t))
 A29: nil.
@@ -2040,7 +2040,7 @@ Q10: (meaning (body-of closure)
          (new-entry
            (formals-of closure) vals)
          (table-of closure))),
-     where closure is (() (x) (cond ...)), and the vals is (6).
+     where closure is (() (x) ((lambda ...)), and the vals is (6).
 
 A10: Let's clarify this:
 
@@ -2129,4 +2129,433 @@ A24: (apply-primitive 'add1 '(5)).
 
 Q25: (add1 5)
 A25: 6.
+```
+
+###10.6 Just as the table for predetermined identifiers, initial-table, all tables in our interpreter can be represented as functions. Then, the function extend-table is changed to:###
+```lisp
+(define extend-table
+  (lambda (entry table)
+    (cond
+      ((member? name (first entry))
+       (pick (index name (first entry))))
+      (t (table name)))))
+```
+(For pick see Chapter 4; for index see Exercise 4.5.) What else has to be changed to make the interpreter work?
+Make the least number of changes. Make up an application of value to your favorite expression and step through it to make sure
+you understand the new representation.
+Hint: Look at all the places where tables are used to find out where changes have to be made.
+
+```lisp
+The value function changes to
+(define value
+  (lambda (e)
+    (meaning e initial-table)))
+
+The *identifier function changes to
+(define *identifier
+  (lambda (e table)
+    (table e)))
+
+These funtions are unnecessary: lookup-in-entry-help, lookup-in-entry, lookup-in-table.
+
+Step through (value e3) with new representation.
+
+Q1: What is the value of e3?
+A1: Let's step through it.
+
+Q2: (meaning e initial-table)
+A2: ((expression-to-action e) e table).
+
+Q3: (expression-to-action e)
+A3: *application.
+
+Q4: (*application e table), where e is e3, table is
+    (lambda (name)
+      (cond
+        ((eq? name (quote t)) t)
+        ((eq? name (quote nil)) nil)
+        (t (build
+             (quote primitive)
+             name))))
+A4: We have to get the value of (meaning (function-of e) table), which means to get the value of the (lambda ...) part.
+And the value of (evlis (arguments-of e) table), which means to get the list of values of every argument. Then pass them to the apply function.
+
+Q5: (meaning (function-of e) table)
+A5: ((expression-to-action e) e table), where e is (lambda ...), table is
+    (lambda (name)
+      (cond
+        ((eq? name (quote t)) t)
+        ((eq? name (quote nil)) nil)
+        (t (build
+             (quote primitive)
+             name)))).
+
+Q6: (expression-to-action e)
+A6: *lambda.
+
+Q7: (*lambda e table), where e is
+    (lambda (x)
+      ((lambda (x)
+         (add1 x))
+       (add1 4)))
+A7: (non-primitive
+     ((lambda (name)
+        (cond
+          ((eq? name (quote t)) t)
+          ((eq? name (quote nil)) nil)
+          (t (build
+               (quote primitive)
+               name))))
+      (x)
+      ((lambda (x)
+         (add1 x))
+       (add1 4)))).
+
+Q8: (evlis (arguments-of e) table)
+A8: (6).
+
+Q9: (apply '(non-primitive
+             ((lambda (name)
+                (cond
+                  ((eq? name (quote t)) t)
+                  ((eq? name (quote nil)) nil)
+                  (t (build
+                       (quote primitive)
+                       name))))
+              (x)
+              ((lambda (x)
+                 (add1 x))
+               (add1 4))))
+           '(6))
+A9: Non-primitive function, go (apply-closures fun vals).
+
+Q10: (meaning (body-of closure)
+       (extend-table
+         (new-entry
+           (formals-of closure) vals)
+         (table-of closure))),
+     where closure is ((lambda (name) ...) (x) ((lambda ...))), and the vals is (6).
+
+A10: Let's clarify this:
+
+     The (body-of closure) is the third part of closure,
+     which is ((lambda (x)
+                 (add1 x))
+               (add1 4))
+
+     The (formals-of closure) is the second part of closure,
+     which is (x).
+
+     The (table-of closure) is the first part of closure,
+     which is (lambda (name)
+                (cond
+                  ((eq? name (quote t)) t)
+                  ((eq? name (quote nil)) nil)
+                  (t (build
+                       (quote primitive)
+                       name))))
+
+     So, it equals to (meaning '((lambda ...)) new-table),
+     where new-table is (lambda (name)
+                          (cond
+                            ((member? name (first '((x) (6))))
+                             (pick (index name (first '((x) (6))))
+                                   (second '((x) (6)))))
+                            (t ((lambda (name)
+                                  (cond
+                                    ((eq? name (quote t)) t)
+                                    ((eq? name (quote nil)) nil)
+                                    (t (build
+                                         (quote primitive)
+                                         name))))
+                                name)))).
+
+Q11: (expression-to-action e), where e is ((lambda ...))
+A11: *application.
+
+Q12: (*application e table), where e is ((lambda ...), table is
+        (lambda (name)
+          (cond
+            ((member? name (first '((x) (6))))
+             (pick (index name (first '((x) (6))))
+                   (second '((x) (6)))))
+            (t ((lambda (name)
+                  (cond
+                    ((eq? name (quote t)) t)
+                    ((eq? name (quote nil)) nil)
+                    (t (build
+                         (quote primitive)
+                         name))))
+                name))))
+
+A12: We have to get the value of (meaning (function-of e) table), which means to get the value of the (lambda ...) part.
+And the value of (evlis (arguments-of e) table), which means to get the list of values of every argument. Then pass them to the apply function.
+
+Q13: (meaning (function-of e) table)
+A13: ((expression-to-action e) e table), where e is (lambda ...), table is
+        (lambda (name)
+          (cond
+            ((member? name (first '((x) (6))))
+             (pick (index name (first '((x) (6))))
+                   (second '((x) (6)))))
+            (t ((lambda (name)
+                  (cond
+                    ((eq? name (quote t)) t)
+                    ((eq? name (quote nil)) nil)
+                    (t (build
+                         (quote primitive)
+                         name))))
+                name))))
+
+Q14: (expression-to-action e)
+A14: *lambda.
+
+Q15: (*lambda e table), where e is
+     (lambda (x)
+       (add1 x))
+A15: (non-primitive
+      ((lambda (name)
+         (cond
+           ((member? name (first '((x) (6))))
+            (pick (index name (first '((x) (6))))
+                  (second '((x) (6)))))
+           (t ((lambda (name)
+                 (cond
+                   ((eq? name (quote t)) t)
+                   ((eq? name (quote nil)) nil)
+                   (t (build
+                        (quote primitive)
+                        name))))
+               name))))
+     (x)
+     (add1 x)))
+
+Q16: (evlis (arguments-of e) table)
+A16: (evlis '((add1 4)) table).
+
+Q17: (null? args)
+A17: nil.
+
+Q18: (cons (meaning (car args) table)
+       (evlis (cdr args) table))
+A18: Go get (meaning '(add1 4) table) first.
+
+Q19: ((expression-to-action e) e table).
+A19: (*application e table).
+
+Q20: (*application e table), where e is (add1 4)
+A20: We have to get the value of (meaning (function-of e) table), which means to get the value of the add1
+And the value of (evlis (arguments-of e) table), which means to get the list of values of every argument. Then pass them to the apply function.
+
+Q21: (meaning (function-of e) table)
+A21: ((expression-to-action e) e table), where e is add1, table is
+        (lambda (name)
+          (cond
+            ((member? name (first '((x) (6))))
+             (pick (index name (first '((x) (6))))
+                   (second '((x) (6)))))
+            (t ((lambda (name)
+                  (cond
+                    ((eq? name (quote t)) t)
+                    ((eq? name (quote nil)) nil)
+                    (t (build
+                         (quote primitive)
+                         name))))
+                name))))
+
+Q22: (*identifier e table)
+A22: (table e), where e is add1, table is
+        (lambda (name)
+          (cond
+            ((member? name (first '((x) (6))))
+             (pick (index name (first '((x) (6))))
+                   (second '((x) (6)))))
+            (t ((lambda (name)
+                  (cond
+                    ((eq? name (quote t)) t)
+                    ((eq? name (quote nil)) nil)
+                    (t (build
+                         (quote primitive)
+                         name))))
+                name))))
+
+Q23: (member? name '(x)), where name is add1
+A23: nil.
+
+Q24: ((lambda (name)
+        (cond
+          ((eq? name (quote t)) t)
+          ((eq? name (quote nil)) nil)
+          (t (build
+               (quote primitive)
+               name)))) 'add1)
+A24: (primitive add1).
+
+Q25: (evlis (arguments-of e) table), where e is (add1 4)
+A25: (4).
+
+Q26: (apply '(primitive add1) '(4))
+A26: 5, so the (evlis (arguments-of e) table), where e is ((lambda (x) (add1 x)) (add1 4)) is (5).
+
+Q27: (apply '(non-primitive
+              ((lambda (name)
+                 (cond
+                   ((member? name (first '((x) (6))))
+                    (pick (index name (first '((x) (6))))
+                          (second '((x) (6)))))
+                   (t ((lambda (name)
+                         (cond
+                           ((eq? name (quote t)) t)
+                           ((eq? name (quote nil)) nil)
+                           (t (build
+                                (quote primitive)
+                                name))))
+                       name))))
+               (x)
+               (add1 x)))
+            '(5))
+
+A27: Non-primitive function, go (apply-closures fun vals).
+
+Q28: (meaning (body-of closure)
+       (extend-table
+         (new-entry
+           (formals-of closure) vals)
+         (table-of closure))),
+     where closure is ((lambda (name) ...) (x) (add1 x)), and the vals is (6).
+
+A28: Let's clarify this:
+
+     The (body-of closure) is the third part of closure,
+     which is (add1 x)
+
+     The (formals-of closure) is the second part of closure,
+     which is (x).
+
+     The (table-of closure) is the first part of closure,
+     which is (lambda (name)
+                 (cond
+                   ((member? name (first '((x) (6))))
+                    (pick (index name (first '((x) (6))))
+                          (second '((x) (6)))))
+                   (t ((lambda (name)
+                         (cond
+                           ((eq? name (quote t)) t)
+                           ((eq? name (quote nil)) nil)
+                           (t (build
+                                (quote primitive)
+                                name))))
+                       name))))
+
+     So, it equals to (meaning '((lambda ...)) new-table),
+     where new-table is (lambda (name)
+                          (cond
+                            ((member? name (first '((x) (5))))
+                             (pick (index name (first '((x) (5))))
+                                   (second '((x) (5)))))
+                            (t ((lambda (name)
+                                  (cond
+                                    ((member? name (first '((x) (6))))
+                                     (pick (index name (first '((x) (6))))
+                                           (second '((x) (6)))))
+                                    (t ((lambda (name)
+                                          (cond
+                                            ((eq? name (quote t)) t)
+                                            ((eq? name (quote nil)) nil)
+                                            (t (build
+                                                 (quote primitive)
+                                                 name))))
+                                        name))))
+                                name)))).
+
+Q29: (expression-to-action e), where e is (add1 x)
+A29: *application.
+
+Q30: (*application e table), where e is (add1 x), table is
+      (lambda (name)
+        (cond
+          ((member? name (first '((x) (5))))
+           (pick (index name (first '((x) (5))))
+                 (second '((x) (5)))))
+          (t ((lambda (name)
+                (cond
+                  ((member? name (first '((x) (6))))
+                   (pick (index name (first '((x) (6))))
+                         (second '((x) (6)))))
+                  (t ((lambda (name)
+                        (cond
+                          ((eq? name (quote t)) t)
+                          ((eq? name (quote nil)) nil)
+                          (t (build
+                               (quote primitive)
+                               name))))
+                      name))))
+              name)))).
+
+A30: We have to get the value of (meaning (function-of e) table), which means to get the value of the add1
+And the value of (evlis (arguments-of e) table), which means to get the list of values of every argument. Then pass them to the apply function.
+
+Q31: (meaning (function-of e) table)
+A31: (primitive add1).
+
+Q32: (evlis (argument-of e) table)
+A32: (evlis '(x) table).
+
+Q33: (null? args)
+A33: nil.
+
+Q34: (cons (meaning (car args) table)
+       (evlis (cdr args) table))
+A34: Go get (meaning 'x table) first.
+
+Q35: (*identifier 'x table), where table is
+      (lambda (name)
+        (cond
+          ((member? name (first '((x) (5))))
+           (pick (index name (first '((x) (5))))
+                 (second '((x) (5)))))
+          (t ((lambda (name)
+                (cond
+                  ((member? name (first '((x) (6))))
+                   (pick (index name (first '((x) (6))))
+                         (second '((x) (6)))))
+                  (t ((lambda (name)
+                        (cond
+                          ((eq? name (quote t)) t)
+                          ((eq? name (quote nil)) nil)
+                          (t (build
+                               (quote primitive)
+                               name))))
+                      name))))
+              name)))).
+
+A35: ((lambda (name)
+         (cond
+           ((member? name (first '((x) (5))))
+            (pick (index name (first '((x) (5))))
+                  (second '((x) (5)))))
+           (t ((lambda (name)
+                 (cond
+                   ((member? name (first '((x) (6))))
+                    (pick (index name (first '((x) (6))))
+                          (second '((x) (6)))))
+                   (t ((lambda (name)
+                         (cond
+                           ((eq? name (quote t)) t)
+                           ((eq? name (quote nil)) nil)
+                           (t (build
+                                (quote primitive)
+                                name))))
+                       name))))
+               name)))) 'x).
+
+Q36: (member? name '(x)), where name is x
+A36: t.
+
+Q37: (pick (index name '(x)) '(5)), where name is x
+A37: 5, so the (evlis (argument-of e) table) is (5).
+
+Q38: (apply '(primitive add1) '(5))
+A38: 6.
+
 ```
