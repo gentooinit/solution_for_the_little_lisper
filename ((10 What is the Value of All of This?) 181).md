@@ -2559,3 +2559,63 @@ Q38: (apply '(primitive add1) '(5))
 A38: 6.
 
 ```
+
+### 10.7 Write the function *lambda?, which checks whether an S-expression is really a representation of a lambda-function.
+```lisp
+Example: (*lambda? e5) is true,
+         (*lambda? e6) is false,
+         (*lambda? e2) is false.
+```
+Also write the function *quote? and *cond?, which do the same for quote- and cond- expressions.
+
+```lisp
+(define *lambda?
+  (lambda (e)
+    (cond
+      ((atom? e) nil)
+      ((null? e) nil)
+      ((atom? (car e)) (*lambda?-help e))
+      (t nil))))
+
+(define *lambda?-help
+  (lambda (e)
+    (and
+      (eq? (car e) (quote lambda))
+      (cond
+        ((null? (cdr e)) nil)
+        (t (lat? (car (cdr e)))))
+      (not (null? (cdr (cdr e)))))))
+
+(define *quote?
+  (lambda (e)
+    (cond
+      ((atom? e) nil)
+      ((null? e) nil)
+      ((atom? (car e))
+         (and
+           (eq? (car e) (quote quote))
+           (not (null? (cdr e)))))
+      (t nil))))
+
+(define *cond?
+  (lambda (e)
+    (cond
+      ((atom? e) nil)
+      ((null? e) nil)
+      ((atom? (car e))
+         (and
+           (eq? (car e) (quote cond))
+           (not (null? (cdr e)))
+           (*cond?-help (cdr e))))
+      (t nil))))
+
+(define *cond?-help
+  (lambda (e)
+    (cond
+      ((null? e) t)
+      ((atom? (car e)) nil)
+      ((null? (car e)) nil)
+      ((null? (cdr (car e))) nil)
+      (t (*cond?-help (cdr e))))))
+
+```
