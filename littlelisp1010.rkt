@@ -13,6 +13,10 @@
   (lambda (s)
     (car (cdr (cdr s)))))
 
+(define fourth
+  (lambda (s)
+    (car (cdr (cdr (cdr s))))))
+
 (define build
   (lambda (s1 s2)
     (cons s1 (cons s2 (quote ())))))
@@ -76,8 +80,8 @@
           *quote)
          ((eq? (car e) (quote lambda))
           *lambda)
-         ((eq? (car e) (quote cond))
-          *cond)
+         ((eq? (car e) (quote if))
+          *if)
          (else *application)))
       (else *application))))
 
@@ -126,25 +130,17 @@
 (define formals-of second)
 (define body-of third)
 
-
-; *cond
-(define evcon
-  (lambda (lines table)
-    (cond
-      ((meaning
-         (question-of (car lines)) table)
-       (meaning
-         (answer-of (car lines)) table))
-      (else (evcon (cdr lines) table)))))
-
-(define question-of first)
-(define answer-of second)
-
-(define *cond
+; *if
+(define *if
   (lambda (e table)
-    (evcon (cond-lines e) table)))
+    (if (meaning (test-pt e) table)
+        (meaning (then-pt e) table)
+	(meaning (else-pt e) table))))
 
-(define cond-lines cdr)
+(define test-pt second)
+(define then-pt third)
+(define else-pt fourth)
+
 
 ; *application
 (define evlis

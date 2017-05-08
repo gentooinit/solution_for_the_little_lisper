@@ -3391,3 +3391,610 @@ Generalize:
       (build (quote primitive) cdr)))
     (build (quote primitive) car)))
 ```
+
+### 10.10 In Exercise 2.4 we introduced the (if ...)-form. We saw that (if ...) and (cond ...) are interchangeable. If we replace the function *cond by *if where
+```lisp
+(define *if
+  (lambda (e table)
+    (if (meaning (test-pt e) table)
+        (meaning (then-pt e) table)
+        (meaning (else-pt e) table))))
+```
+we can almost evaluate functions containing (if ...). What other changes do we have to make? Make the changes.
+Take all the examples from the chapter that contain a (cond ...), rewrite them with (if ...), and step through the modified interpreter.
+Do the same for e1 and e2.
+
+```lisp
+We need to implement these functions:
+(define fourth
+  (lambda (s)
+    (car (cdr (cdr (cdr s))))))
+
+(define test-pt second)
+(define then-pt third)
+(define else-pt fourth)
+
+And change the list-to-action function from
+(define list-to-action
+  (lambda (e)
+    (cond
+      ((atom? (car e))
+       (cond
+         ((eq? (car e) (quote quote))
+          *quote)
+         ((eq? (car e) (quote lambda))
+          *lambda)
+         ((eq? (car e) (quote cond))
+          *cond)
+         (else *application)))
+      (else *application))))
+
+to
+(define list-to-action
+  (lambda (e)
+    (cond
+      ((atom? (car e))
+       (cond
+         ((eq? (car e) (quote quote))
+          *quote)
+         ((eq? (car e) (quote lambda))
+          *lambda)
+         ((eq? (car e) (quote if))
+          *if)
+         (else *application)))
+      (else *application))))
+
+Finally, remove all the functions related to the *cond function.
+```
+Let's replace *cond and step through:
+```lisp
+Q1: (value e), where e is
+    ((lambda (nothing)
+       (if nothing
+           (quote something)
+           (quote nothing)))
+     nil)
+
+A1: Let's step through it.
+
+Q2: (meaning e (quote ()))
+A2: ((expression-to-action e) e table).
+
+Q3: (*application e table)
+A3: We have to get the value of (meaning (function-of e) table), which means to get the value of (lambda ...).
+And the value of (evlis (arguments-of e) table), which means to get the list of values of every argument. Then pass them to the apply function.
+
+Q4: (meaning (function-of e) table)
+A4: ((expression-to-action e) e table).
+
+Q5: (*lambda e table)
+A5: (non-primitive
+     (()
+      (nothing)
+      (if nothing
+          (quote something)
+          (quote nothing)))).
+
+Q6: (evlis (arguments-of e) table)
+A6: (nil).
+
+Q7: (apply '(non-primitive
+             (()
+              (nothing)
+              (if nothing
+                  (quote something)
+                  (quote nothing))))
+           '(nil))
+A7: (apply-closure '(()
+                     (nothing)
+                     (if nothing
+                         (quote something)
+                         (quote nothing)))
+                   '(nil))
+
+Q8: (meaning (body-of closure)
+       (extend-table
+         (new-entry
+           (formals-of closure) vals)
+         (table-of closure))),
+     where closure is (() (nothing) (if nothing (quote something) (quote nothing))), and the vals is (nil).
+
+A8: Let's clarify this:
+
+     The (body-of closure) is the third part of closure,
+     which is (if nothing (quote something) (quote nothing)).
+
+     The (formals-of closure) is the second part of closure,
+     which is (nothing).
+
+     The (table-of closure) is the first part of closure,
+     which is ()
+
+     So, it equals to (meaning '(if ...)) new-table),
+     where new-table is (((nothing) (nil))).
+
+Q9: (meaning e table), where e is (if nothing (quote something) (quote nothing))), table is (((nothing) (nil)))
+A9: ((expression-to-action e) e table).
+
+Q10: (*if e table)
+A10: (meaning e table), where e is nothing
+
+Q11: (*identifier e table), where e is nothing, table is (((nothing) (nil))).
+A11: nil.
+
+Q12: (meaning e table), where e is (quote nothing)
+A12: ((expression-to-action e) e table).
+
+Q13: (*quote e table), where e is (quote nothing)
+A13: nothing.
+```
+
+```lisp
+Q1: (*if e table), where e is
+    (if coffee
+        klatsch
+        party),
+    table is
+    (((coffee)
+      (t))
+     ((klatsch party)
+      (5 (6))))
+
+A1: Let's step through it.
+
+Q2: (meaning e table), where e is coffee.
+A2: ((expression-to-action e) e table).
+
+Q3: (*identifier e table)
+A3: t.
+
+Q4: (meaning e table), where e is klatsch
+A4: 5.
+```
+
+```lisp
+Q1: (value e), where e is
+    ((lambda (x)
+       (if (atom? x)
+           (quote done)
+           (if (null? x)
+               (quote almost)
+               (quote never))))
+     (quote ____))
+A1: Let's step through it.
+
+Q2: (meaning e table)
+A2: ((expression-to-action e) e table).
+
+Q3: (*application e table)
+A3: We have to get the value of (meaning (function-of e) table), which means to get the value of (lambda ...).
+And the value of (evlis (arguments-of e) table), which means to get the list of values of every argument. Then pass them to the apply function.
+
+Q4: (meaning (function-of e) table), where (function-of e) is (lambda ...)
+A4: ((expression-to-actioin e) e table).
+
+Q5: (*lambda e table)
+A5: (non-primitive
+     (()
+      (x)
+      (if (atom? x)
+          (quote done)
+          (if (null? x)
+              (quote almost)
+              (quote never)))))
+
+Q6: (evlis (arguments-of e) table)
+A6: (____).
+
+Q7: (apply '(non-primitive
+             (()
+              (x)
+              (if (atom? x)
+                  (quote done)
+                  (if (null? x)
+                      (quote almost)
+                      (quote never)))))
+           '(___))
+A7: (apply-closure '(non-primitive
+                     (()
+                      (x)
+                      (if (atom? x)
+                          (quote done)
+                          (if (null? x)
+                              (quote almost)
+                              (quote never)))))
+                   '(___))
+
+Q8: (meaning (body-of closure)
+       (extend-table
+         (new-entry
+           (formals-of closure) vals)
+         (table-of closure))),
+     where closure is (() (x) (if ...)), and the vals is (____).
+
+A8: Let's clarify this:
+
+     The (body-of closure) is the third part of closure,
+     which is (if ...)
+
+     The (formals-of closure) is the second part of closure,
+     which is (x).
+
+     The (table-of closure) is the first part of closure,
+     which is ()
+
+     So, it equals to (meaning '(if ...)) new-table),
+     where new-table is (((x) (___))).
+
+Q9: (*if e table), e is (if ...), table is (((x) (___)))
+A9: (meaning (test-pt e) table), where e is (if (atom? x) ...)
+
+Q10: (atom? (first vals)), vals is (___)
+A10: t.
+
+Q11: (meaning (then-pt e) table), where e is (if (atom? x) (quote done) (if ...))
+A11: done.
+
+```
+
+```lisp
+Q1: What is the value of (value e), where e is
+    (((lambda (x y)
+        (lambda (u)
+          (if u x y)))
+      1 ())
+     nil)
+A1: Let's step through it.
+
+Q2: (meaning e (quote ()))
+A2: We have to get the value of (expression-to-action e)
+And apply its value as a function, with the arguments e and table.
+
+Q3: (atom? e)
+A3: nil, then (list-to-action e)
+
+Q4: (atom? (car e))
+A4: nil, then the value of (expression-to-action e) is *application.
+
+Q5: (*application e table)
+A5: We have to get the value of (meaning (function-of e) table), which means to get the value of the ((lambda ...)) part.
+And the value of (evlis (arguments-of e) table), which means to get the list of values of every argument. Then pass them to the apply function.
+
+Q6: (meaning (function-of e) table)
+A6: (function-of e) is
+    ((lambda (x y)
+       (lambda (u)
+         (if u x y)))
+     1 ())
+
+    Go get (expression-to-action e) first.
+
+Q7: (atom? e)
+A7: nil, then (list-to-action e).
+
+Q8: (atom? (car e))
+A8: nil, then the value of (expression-to-action e) is *application.
+
+Q9: (*application e table), where e is
+    ((lambda (x y)
+       (lambda (u)
+         (if u x y)))
+     1 ()), table is ()
+A9: We have to get the value of (meaning (function-of e) table), which means to get the value of the (lambda ...) part.
+And the value of (evlis (arguments-of e) table), which means to get the list of values of every argument. Then pass them to the apply function.
+
+Q10: (meaning (function-of e) table), e is
+     ((lambda (x y)
+        (lambda (u)
+          (if u x y)))
+      1 ())
+A10: (function-of e) is
+     (lambda (x y)
+       (lambda (u)
+         (if u x y)))
+
+    Go get (expression-to-action e) first, where e is
+     (lambda (x y)
+       (lambda (u)
+         (if u x y)))
+
+Q11: (atom? e)
+A11: nil, then the value is (list-to-action e).
+
+Q12: (atom? (car e)), where e is (lambda (x y) ...)
+A12: t.
+
+Q13: (eq? (car e) (quote quote))
+A13: nil.
+
+Q14: (eq? (car e) (quote lambda))
+A14: t, so the value of (expression-to-action e) is *lambda.
+
+Q15: (*lambda e table), where e is
+     (lambda (x y)
+       (lambda (u)
+         (if u x y))), and table is ()
+A15: (non-primitive
+      (()
+       (x y)
+       (lambda (u)
+         (if u x y))))
+
+Q16: Let's go get the value of arguments.
+A16: (evlis (arguments-of e) table), where (arguments-of e) is (1 ()).
+
+Q17: (null? args)
+A17: nil, so (cons (meaning (car args) table) (evlis (cdr args) table)).
+
+Q18: (meaning e table), where e is 1
+A18: ((expression-to-action e) e table), where e is 1.
+
+Q19: (atom? e)
+A19: t, then the value is (atom-to-action e).
+
+Q20: (number? e), where e is 1
+A20: t, so the value of (expression-to-action e) is *self-evaluating.
+
+Q21: (*self-evaluating e table), where e is 1
+A21: 1.
+
+Q22: What next?
+A22: We cons the 1 onto the (evlis (cdr args) table), where args is (1 ()).
+
+Q23: (evlis args table), where args is (())
+A23: (null? args), nil, so (cons (meaning (car args) table) (evlis (cdr args) table)).
+
+Q24: (meaning e table), where e is ()
+A24: ((expression-to-action e) e table), where e is ().
+
+Q25: (atom? e)
+A25: t, so the value is (atom-to-action e).
+
+Q26: (atom? (car e))
+A26: nil, so the value of (expression-to-action e) is *identifier.
+
+Q27: (*identifier e table)
+A27: (lookup-in-table e table initial-table), where e is (), table is ().
+
+Q28: (null? table)
+A28: t, go (table-f name), where table-f is initial-table, that is (initial-table name),
+
+Q29: (eq? name (quote t))
+A29: nil.
+
+Q30: (eq? name (quote nil))
+A30: nil, so the value of (meaning e table) is (primitive ()).
+
+Q31: What next?
+A31: We cons the (primitive ()) onto the (evlis (cdr args) table), where args is (()).
+
+Q32: (evlis args table), where args is ().
+A32: (null? args), t, so the value of (evlis '() table) is (),
+then the value of (evlis (arguments-of e) table) is (1 (primitive ())).
+
+Q33: (apply
+       '(non-primitive
+        (()
+         (x y)
+         (lambda (u)
+           (if u x y))))
+       '(1 (primitive ())))
+A33: Let's step through it.
+
+Q34: (primitive? fun)
+A34: The first of the fun is non-primitive, so it is not a primitive function.
+
+Q35: (non-primitive? fun)
+A35: t, then we (apple-closure (second fun) vals), where the fun is (non-primitive ...), and the vals is (1 (primitive ())).
+
+Q36: (meaning (body-of closure)
+       (extend-table
+         (new-entry
+           (formals-of closure) vals)
+         (table-of closure))),
+     where closure is (() (x y) (lambda ...)), and the vals is (1 (primitive ())).
+
+A36: Let's clarify this:
+
+     The (body-of closure) is the third part of closure,
+     which is (lambda (u)
+                (if u x y))
+
+     The (formals-of closure) is the second part of closure,
+     which is (x y).
+
+     The (table-of closure) is the first part of closure,
+     which is ().
+
+     So, it equals to (meaning '(lambda ...) new-table),
+     where new-table is (((x y) (1 (primitive ()))))
+
+Q37: ((expression-to-action e) e table), where e is (lambda ...), and the table is (((x y) (1 (primitive ()))))
+A37: (atom? e), of course not, then (list-to-action e).
+
+Q38: (atom? (car e)), where e is (lambda ...)
+A38: t.
+
+Q39: (eq? (car e) (quote quote))
+A39: nil.
+
+Q40: (eq? (car e) (quote lambda))
+A40: t, so the value of (expression-to-action e) is *lambda.
+
+Q41: (*lambda e table), where e is
+     (lambda (u)
+       (if u x y)), table is (((x y) (1 (primitive ()))))
+A41: (non-primitive
+      ((((x y) (1 (primitive ()))))
+       (u)
+       (if u x y)))
+
+Q42: Let's go get the value of arguments.
+A42: (evlis (arguments-of e) table), where (arguments-of e) is (nil).
+
+Q43: (null? args)
+A43: nil, so (cons (meaning (car args) table) (evlis (cdr args) table)).
+
+Q44: (meaning e table), where e is nil
+A44: ((expression-to-action e) e table), where e is nil.
+
+Q45: (atom? e)
+A45: t, so the value is (atom-to-action e).
+
+Q46: (number? e), where e is nil
+A46: nil, so the value of (expression-to-action e) is *identifier.
+
+Q47: (*identifier e table), where e is nil, table is ()
+A47: (lookup-in-table e table initial-table)
+
+Q48: (null? table)
+A48: t, (table-f name), that is (initial-table name), where name is nil.
+
+Q49: (eq? name (quote t))
+A49: nil.
+
+Q50: (eq? name (quote nil))
+A50: t, so the value of (meaning (car args) table), where args is (nil), is nil.
+
+Q51: (evlis (cdr args) table), where (cdr args) is ()
+A51: (null? args) is t, so the value of (evlis (cdr args) table) is ().
+
+Q52: (cons (meaning (car args) table) (evlis (cdr args) table))
+A52: (nil).
+
+Q53: (apply
+        '(non-primitive
+         ((((x y) (1 (primitive ()))))
+          (u)
+          (if u x y)))
+        '(nil))
+
+A53: Let's step through it.
+
+Q54: (primitive? fun)
+A54: nil.
+
+Q55: (non-primitive? fun)
+A55: t, then we (apple-closure (second fun) vals), where the fun is (non-primitive ...), and the vals is (nil).
+
+Q56: (meaning (body-of closure)
+       (extend-table
+         (new-entry
+           (formals-of closure) vals)
+         (table-of closure))),
+     where closure is ((((x y) (1 (primitive ())))) (u) (cond (u x) (t y))), and the vals is (nil).
+
+A56: Let's clarify this:
+
+     The (body-of closure) is the third part of closure,
+     which is (if u x y)
+
+     The (formals-of closure) is the second part of closure,
+     which is (u).
+
+     The (table-of closure) is the first part of closure,
+     which is (((x y) (1 (primitive ()))))
+
+     So, it equals to (meaning '(if ...) new-table),
+     where new-table is (((u) (nil)) ((x y) (1 (primitive ()))))
+
+Q57: ((expression-to-action e) e table), where e is (if ...), and the table is (((u) (nil)) ((x y) (1 (primitive ()))))
+A57: (atom? e), of course not, then (list-to-action e).
+
+Q58: (atom? (car e))
+A58: t.
+
+Q59: (eq? (car e) (quote quote))
+A59: nil.
+
+Q60: (eq? (car e) (quote lambda))
+A60: nil.
+
+Q61: (eq? (car e) (quote if))
+A61: t, so the value of (expression-to-action e) is *if.
+
+Q62: (*if e table), where e is (if ...)
+A62: (meaning (test-pt e) table).
+
+Q63: (meaning e table), where e is u, table is (((u) (nil)) ((x y) (1 (primitive ())))).
+A63: ((expression-to-action e) e table).
+
+Q64: (atom? e)
+A64: t, so the value is (atom-to-action e).
+
+Q65: (number? e)
+A65: nil, so the value of (expression-to-action e) is *identifier.
+
+Q66: (*identifier e table)
+A66: (lookup-in-table e table initial-table).
+
+Q67: (null? table)
+A67: nil, go (lookup-in-entry name (car table) (lambda ...)), where name is u.
+
+Q68: (lookup-in-entry-help name (first entry) (second entry) entry-f)
+A68: name is u, (first entry) is (u), (second entry) is (nil), entry-f is (lambda ...).
+
+Q69: (null? names)
+A69: nil.
+
+Q70: (eq? (car names) name)
+A70: t, so the value of (*identifier e table) is (car values), that is nil.
+
+Q71: (meaning (else-pt e) table)
+A71: (meaning (fourth e) table).
+
+Q72: ((expression-to-action e) e table), where e is y, table is (((u) (nil)) ((x y) (1 (primitive ()))))
+A72: (atom? e), t, go (atom-ato-action e).
+
+Q73: (number? e)
+A73: nil, so the value is (*identifier).
+
+Q74: (*identifier e table)
+A74: (lookup-in-table e table initial-table).
+
+Q75: (null? table)
+A75: nil, go (lookup-in-entry name (car table) (lambda ...)), where name is y.
+
+Q76: (lookup-in-entry-help name (first entry) (second entry) entry-f)
+A76: name is y, (first entry) is (u), (second entry) is (nil), entry-f is (lambda ...).
+
+Q77: (null? names)
+A77: nil.
+
+Q78: (eq? (car names) name)
+A78: ni.
+
+Q79: (lookup-in-entry-help name (cdr names) (cdr values) entry-f)
+A79: name is y, (cdr names) is (), (cdr values) is (), entry-f is (lambda ...).
+
+Q80: (null? names)
+A80: t, go ((lambda (name)
+             (lookup-in-table
+               name
+               (cdr table)
+               table-f)) name)
+
+Q81: (lookup-in-table name (cdr table) table-f)
+A81: name is y, (cdr table) is (((x y) (1 (primitive ())))).
+
+Q82: (null? table)
+A82: nil, go (lookup-in-entry name (car table) (lambda ...)), where name is y.
+
+Q83: (lookup-in-entry-help name (first entry) (second entry) entry-f)
+A83: name is y, (first entry) is (x y), (second entry) is (1 (primitive ())), entry-f is (lambda ...).
+
+Q84: (null? names)
+A84: nil.
+
+Q85: (eq? (car names) name)
+A85: ni.
+
+Q86: (lookup-in-entry-help name (cdr names) (cdr values) entry-f)
+A86: name is y, (cdr names) is (y), (cdr values) is ((primitive ())), entry-f is (lambda ...).
+
+Q87: (null? names)
+A87: nil.
+
+Q88: (eq? (car names) name)
+A88: t, so the value of the whole expression is (car values), that is (primitive ()).
+```
