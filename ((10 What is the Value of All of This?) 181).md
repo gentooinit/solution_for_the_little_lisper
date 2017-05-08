@@ -2156,7 +2156,7 @@ The *identifier function changes to
   (lambda (e table)
     (table e)))
 
-These funtions are unnecessary: lookup-in-entry-help, lookup-in-entry, lookup-in-table.
+These functions are unnecessary: lookup-in-entry-help, lookup-in-entry, lookup-in-table.
 
 Step through (value e3) with new representation.
 
@@ -3157,4 +3157,237 @@ A111: nil.
 
 Q112: (eq? (car names) name)
 A112: t, so the value of the whole expression is (car values), that is (primitive ()).
+```
+
+### 10.9 Primitive functions are built repeatedly while finding the value of an expression. To see this, step through the application (value e3) and count how often the primitive for add1 is built. However, consider the following table for predetermined identifiers:
+```lisp
+(define initial-table
+  ((lambda (add1)
+     (lambda (name)
+       (cond
+         ((eq? name (quote t)) t)
+         ((eq? name (quote nil)) nil)
+         ((eq? name (quote add1)) add1)
+         (t (build (quote primitive)
+name)))))
+   (build (quote primitive) add1)))
+```
+Using this initial-table, how does the count change? Generalize this approach to include all primitives.
+
+```lisp
+Q1: What is the value of e3?
+A1: Let's step through it.
+
+Q2: (meaning e (quote ()))
+A2: ((expression-to-action e) e table).
+
+Q3: (expression-to-action e)
+A3: *application.
+
+Q4: (*application e table), where e is e3, table is ()
+A4: We have to get the value of (meaning (function-of e) table), which means to get the value of the (lambda ...) part.
+And the value of (evlis (arguments-of e) table), which means to get the list of values of every argument. Then pass them to the apply function.
+
+Q5: (meaning (function-of e) table)
+A5: ((expression-to-action e) e table), where e is (lambda ...), table is ().
+
+Q6: (expression-to-action e)
+A6: *lambda.
+
+Q7: (*lambda e table), where e is
+    (lambda (x)
+      ((lambda (x)
+         (add1 x))
+       (add1 4)))
+A7: (non-primitive
+     (()
+      (x)
+      ((lambda (x)
+         (add1 x)
+       (add1 4)))))
+
+Q8: (evlis (arguments-of e) table)
+A8: (6).
+
+Q9: (apply '(non-primitive
+             (()
+              (x)
+              ((lambda (x)
+                 (add1 x))
+               (add1 4))))
+           '(6))
+A9: Non-primitive function, go (apply-closure (second fun) vals)
+
+Q10: (meaning (body-of closure)
+       (extend-table
+         (new-entry
+           (formals-of closure) vals)
+         (table-of closure))),
+     where closure is (() (x) (cond ...)), and the vals is (6).
+
+A10: Let's clarify this:
+
+     The (body-of closure) is the third part of closure,
+     which is ((lambda (x)
+                 (add1 x))
+               (add1 4))
+
+     The (formals-of closure) is the second part of closure,
+     which is (x).
+
+     The (table-of closure) is the first part of closure,
+     which is ().
+
+     So, it equals to (meaning '((lambda ...)) new-table),
+     where new-table is (((x) (6)))
+
+Q11: (expression-to-action e), where e is ((lambda ...))
+A11: *application.
+
+Q12: (*application e table), where e is ((lambda ...), table is (((x) (6)))
+A12: We have to get the value of (meaning (function-of e) table), which means to get the value of the (lambda ...) part.
+And the value of (evlis (arguments-of e) table), which means to get the list of values of every argument. Then pass them to the apply function.
+
+Q13: (meaning (function-of e) table)
+A13: ((expression-to-action e) e table), where e is (lambda ...), table is (((x) (6))).
+
+Q14: (expression-to-action e)
+A14: *lambda.
+
+Q15: (*lambda e table), where e is
+     (lambda (x)
+       (add1 x))
+A15: (non-primitive
+     ((((x) (6)))
+      (x)
+      (add1 x)))
+
+Q16: (evlis (arguments-of e) table), where (arguments-of e) is ((add1 4)), table is (((x) (6)))
+A16: (null? args), where args is ((add1 4)). It is nil, so (cons (meaning (car args) table) (evlis (cdr args) table)).
+
+Q17: (meaning '(add1 4) table), where table is (((x) (6)))
+A17: ((expression-to-action e) e table).
+
+Q18: (*application e table), where e is (add1 4), table is (((x) (6)))
+A18: We have to get the value of (meaning (function-of e) table), which means to get the value of the add1 part.
+And the value of (evlis (arguments-of e) table), which means to get the list of values of every argument. Then pass them to the apply function.
+
+Q19: (meaning e table), where e is add1
+A19: ((expression-to-action e) e table).
+
+Q20: (*identifier e table)
+A20: (lookup-in-table e table initial-table).
+
+Q21: Can't find inn table, go (table-f name)
+A21: (initial-table name), where name is add1
+
+Q22: (build (quote primitive) name), where name is add1.
+A22: (primitive add1).
+
+Q23: (evlis (arguments-of e) table)
+A23: (4).
+
+Q24: (apply '(primitive add1) '(4))
+A24: (apply-primitive '(primitive add1) '(4)).
+
+Q25: (add1 4)
+A25: 5. So the value of (evlis (arguments-of e) table), where (arguments-of e) is ((add1 4)), is (5).
+
+Q26: (apply '(non-primitive
+             ((((x) (6)))
+              (x)
+              (add1 x)))
+           '(5))
+A26: Non-primitive function, go (apply-closure (second fun) vals)
+
+Q27: (meaning (body-of closure)
+       (extend-table
+         (new-entry
+           (formals-of closure) vals)
+         (table-of closure))),
+     where closure is ((((x) (6))) (x) (add1 x)), and the vals is (5).
+
+A27: Let's clarify this:
+
+     The (body-of closure) is the third part of closure,
+     which is (add1 x)
+
+     The (formals-of closure) is the second part of closure,
+     which is (x).
+
+     The (table-of closure) is the first part of closure,
+     which is (((x) (6))).
+
+     So, it equals to (meaning '(add1 x)) new-table),
+     where new-table is (((x) (5)) ((x) (6))).
+
+Q28: (expression-to-action e), where e is (add1 x)
+A28: *application.
+
+Q29: (*application e table), where e is (add1 x), table is (((x) (5)) ((x) (6)))
+A29: We have to get the value of (meaning (function-of e) table), which means to get the value of the add1 part.
+And the value of (evlis (arguments-of e) table), which means to get the list of values of every argument. Then pass them to the apply function.
+
+Q30: (meaning e table), where e is add1
+A30: ((expression-to-action e) e table).
+
+Q31: (*identifier e table)
+A31: (lookup-in-table e table initial-table).
+
+Q32: Can't find inn table, go (table-f name)
+A32: (initial-table name), where name is add1
+
+Q33: (build (quote primitive) name), where name is add1.
+A33: (primitive add1).
+
+Q34: (evlis (arguments-of e) table)
+A34: (5).
+
+Q35: (apply '(primitive add1) '(5))
+A35: (apply-primitive '(primitive add1) '(5)).
+
+Q36: (add1 5)
+A36: 6.
+
+Two counts of primitive function for add1 are built.
+
+With new initial-table, the count changes to 1.
+
+Generalize:
+(define initial-table
+  ((lambda (car)
+     ((lambda (cdr)
+       ((lambda (cons)
+         ((lambda (atom?)
+           ((lambda (not)
+             ((lambda (null?)
+               ((lambda (number?)
+                 ((lambda (zero?)
+                   ((lambda (add1)
+                     ((lambda (sub1)
+                        (lambda (name)
+                          (cond
+                            ((eq? name (quote t)) #t)
+                            ((eq? name (quote nil)) #f)
+                            ((eq? name (quote car)) car)
+                            ((eq? name (quote cdr)) cdr)
+                            ((eq? name (quote cons)) cons)
+                            ((eq? name (quote atom?)) atom?)
+                            ((eq? name (quote not)) not)
+                            ((eq? name (quote null?)) null?)
+                            ((eq? name (quote number?)) number?)
+                            ((eq? name (quote zero?)) zero?)
+                            ((eq? name (quote add1)) add1)
+                            ((eq? name (quote sub1)) sub1)
+		            (t (build (quote primitive) name)))))
+                      (build (quote primitive) sub1)))
+                    (build (quote primitive) add1)))
+                  (build (quote primitive) zero?)))
+                (build (quote primitive) number?)))
+              (build (quote primitive) null?)))
+            (build (quote primitive) not)))
+          (build (quote primitive) atom?)))
+        (build (quote primitive) cons)))
+      (build (quote primitive) cdr)))
+    (build (quote primitive) car)))
 ```
