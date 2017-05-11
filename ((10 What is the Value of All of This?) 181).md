@@ -3542,14 +3542,23 @@ Q1: (*if e table), where e is
 
 A1: Let's step through it.
 
-Q2: (meaning e table), where e is coffee.
-A2: ((expression-to-action e) e table).
+Q2: (meaning e table), where e is
+    (if coffee
+        klatsch
+        party)
+A2: (*if e table).
 
-Q3: (*identifier e table)
-A3: t.
+Q3: (meaning (test-pt e) table)
+A3: (meaning e table), where e is coffee.
 
-Q4: (meaning e table), where e is klatsch
-A4: 5.
+Q4: ((expression-to-action e) e table)
+A4: (*identifier e table), where e is coffee, that is t.
+
+Q5: (meaning (then-pt e) table)
+A5: (meaning e table), where e is klatsch.
+
+Q6: ((expression-to-action e) e table)
+A6: (*identifier e table), where e is klatsch, that is 5.
 ```
 
 ```lisp
@@ -3571,7 +3580,7 @@ A3: We have to get the value of (meaning (function-of e) table), which means to 
 And the value of (evlis (arguments-of e) table), which means to get the list of values of every argument. Then pass them to the apply function.
 
 Q4: (meaning (function-of e) table), where (function-of e) is (lambda ...)
-A4: ((expression-to-actioin e) e table).
+A4: ((expression-to-action e) e table).
 
 Q5: (*lambda e table)
 A5: (non-primitive
@@ -3629,11 +3638,17 @@ A8: Let's clarify this:
 Q9: (*if e table), e is (if ...), table is (((x) (___)))
 A9: (meaning (test-pt e) table), where e is (if (atom? x) ...)
 
-Q10: (atom? (first vals)), vals is (___)
-A10: t.
+Q10: (*application e table), where e is (atom? x), table is (((x) (___)))
+A10: (atom? (first vals)), where (first vals) is ___, that is t.
 
 Q11: (meaning (then-pt e) table), where e is (if (atom? x) (quote done) (if ...))
-A11: done.
+A11: (meaning e table), where e is (quote done).
+
+Q12: ((expression-to-action e) e table), where e is (quote done)
+A12: (*quote e table).
+
+Q13: (text-of-quotation e), where e is (quote done)
+A13: done.
 
 ```
 
